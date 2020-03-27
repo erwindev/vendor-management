@@ -11,7 +11,7 @@ This is a sample application that will be used to teach SheCanCodeIT members how
 * [Windows](https://www.liquidweb.com/kb/install-pip-windows/)
 * [Mac](https://www.shellhacks.com/python-install-pip-mac-ubuntu-centos/)
 
-#### Install Virtualend (Globally)
+#### Install Virtualenv (Globally)
 ```
 $ pip install virtualenv
 ```
