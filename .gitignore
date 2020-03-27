@@ -1,0 +1,21 @@
+### VirtualEnv ###
+venv
+.Python
+[Bb]in
+[Ii]nclude
+[Ss]cripts
+pyvenv.cfg
+pip-selfcheck.json
+*.log
+*.sqlite
+
+# Pycache
+*.pyc
+__pycache__
+
+# Mac OS X custom attribute files
+.DS_Store
+
+.idea/
+
+app.db
