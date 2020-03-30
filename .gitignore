@@ -17,5 +17,6 @@ __pycache__
 .DS_Store
 
 .idea/
+.vscode
 
 app.db
