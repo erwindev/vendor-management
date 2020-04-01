@@ -10,6 +10,7 @@ class Config:
     SECRET_KEY = os.getenv('SECRET_KEY') or 'my-guess-is-as-good-as-yours-but-you-will-never-guess-this'
     ENV_CONFIG = os.getenv('ENV_CONFIG') or 'not set'
     CURRENT_VERSION = os.getenv('CURRENT_VERSION') or 'not set'
+    SERVICE_NAME = os.getenv('SERVICE_NAME') or 'Vendor ManagetmentS ervice'
 
     # Postgres
     # DB_USER = os.getenv('DB_USER') or 'not set'

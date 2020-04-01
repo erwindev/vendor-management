@@ -26,9 +26,11 @@ def create_app(config_class=Config):
 
     # import blueprints
     from app.vendor.controller import vendor_app
+    from app.vendor.api import apiv1
 
     # register the blueprints
     app.register_blueprint(vendor_app)
+    app.register_blueprint(apiv1)
 
     login.init_app(app)
     login.login_view = 'vendor_app.login'

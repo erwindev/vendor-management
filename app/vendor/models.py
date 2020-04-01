@@ -45,6 +45,17 @@ class User(UserMixin, db.Model):
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
 
+    def to_json(self):
+        json_result = {
+            'id': self.id,
+            'firstname': self.firstname,
+            'lastname': self.lastname,
+            'username': self.username,
+            'username': self.username,
+            'create_date': self.create_date
+        }
+        return json_result        
+
 
 class Software(db.Model):
     id = db.Column(db.Integer, primary_key=True)
