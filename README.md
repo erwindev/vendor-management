@@ -45,7 +45,8 @@ $ flask run
 ```
 
 #### Bring up your application in your browser
-* http://127.0.0.1:5000/
+* http://localhost:5000/
 
-
-
+#### Using the REST API
+Another way of interacting with this application is through a REST APIs.  To see the information about the REST API, you can access the Swagger docs
+* http://localhost:5000/api/v1/
