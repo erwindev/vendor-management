@@ -55,3 +55,22 @@ class User(UserMixin, db.Model):
             'create_date': self.create_date
         }
         return json_result        
+
+
+class BlackListToken(db.Model):
+
+    id = db.Column(db.Integer, primary_key=True)
+    token = db.Column(db.String(500), unique=True, nullable=False)
+    created_date = db.Column(db.DateTime, default=datetime.utcnow)
+
+    def __repr__(self):
+        return '<BlackListToken {}>'.format(self.token)
+
+    @staticmethod
+    def check(auth_token):
+        
+        if BlackListToken.query.filter_by(token=str(auth_token)).first():
+            return True
+        else:
+            return False
+    

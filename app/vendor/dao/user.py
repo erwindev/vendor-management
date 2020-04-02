@@ -1,5 +1,5 @@
 from app import db
-from app.vendor.models.user import User
+from app.vendor.models.user import User, BlackListToken
 
 
 class UserDao:
@@ -21,3 +21,15 @@ class UserDao:
     @staticmethod
     def get_all():
         return User.query.all()
+
+
+class BlackListTokenDao:
+
+    @staticmethod
+    def save_token(token):
+        blacklist_token = BlackListToken(token=token)
+        db.session.add(blacklist_token)
+        db.session.commit()
+        db.session.refresh(blacklist_token)
+        return blacklist_token
+        
