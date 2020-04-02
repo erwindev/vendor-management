@@ -1,3 +1,4 @@
+import os
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
@@ -12,7 +13,11 @@ bootstrap = Bootstrap()
 
 
 def create_app(config_class=Config):
-    app = Flask(__name__)
+    
+    APP_PATH = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    TEMPLATE_PATH = os.path.join(APP_PATH, 'app/vendor/web/templates')
+
+    app = Flask(__name__, template_folder=TEMPLATE_PATH)
 
     bootstrap.init_app(app)
 
@@ -20,12 +25,13 @@ def create_app(config_class=Config):
     app.config.from_object(config_class)
 
     # initialize the database and create tables
-    from app.vendor import models
+    from app.vendor.models.user import User
+    from app.vendor.models.software import Software, SoftwareAttachment, SoftwareNote
     db.init_app(app)
     migrate.init_app(app, db)
 
     # import blueprints
-    from app.vendor.controller import vendor_app
+    from app.vendor.web.controller import vendor_app
     from app.vendor.api import apiv1
 
     # register the blueprints

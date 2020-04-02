@@ -3,9 +3,11 @@ from flask_paginate import Pagination, get_page_parameter
 from datetime import datetime
 from werkzeug.urls import url_parse
 from flask_login import login_required, current_user, login_user, logout_user
-from app.vendor.forms import LoginForm, RegistrationForm, SoftwareForm
-from app.vendor.models import User, Software
-from app.vendor.dao import UserDao, SoftwareDao
+from app.vendor.web.forms import LoginForm, RegistrationForm, SoftwareForm
+from app.vendor.models.user import User
+from app.vendor.models.software import Software
+from app.vendor.dao.user import UserDao
+from app.vendor.dao.software import SoftwareDao
 
 vendor_app = Blueprint('vendor_app', __name__)
 
@@ -13,7 +15,7 @@ vendor_app = Blueprint('vendor_app', __name__)
 @vendor_app.route('/')
 @vendor_app.route('/index')
 def index():
-    return render_template('vendor/index.html', title='Home')
+    return render_template('index.html', title='Home')
 
 
 @vendor_app.route('/login', methods=['GET', 'POST'])
@@ -30,7 +32,7 @@ def login():
         if not next_page or url_parse(next_page).netloc != '':
             next_page = url_for('vendor_app.dashboard')
         return redirect(next_page)
-    return render_template('vendor/login.html', title='Sign In', form=form)
+    return render_template('login.html', title='Sign In', form=form)
 
 
 @vendor_app.route('/register', methods=['GET', 'POST'])
@@ -48,7 +50,7 @@ def register():
         UserDao.save_user(user)
         flash('Congratulations, you are now a registered user!')
         return redirect(url_for('vendor_app.dashboard'))
-    return render_template('vendor/register.html', title='Register', form=form)
+    return render_template('register.html', title='Register', form=form)
 
 
 @vendor_app.route('/dashboard')
@@ -70,7 +72,7 @@ def dashboard():
 
     # get the software
     all_software = SoftwareDao.get_all()
-    return render_template('vendor/dashboard.html',
+    return render_template('dashboard.html',
                            title='Dashboard',
                            all_software=softwares_for_render,
                            pagination=pagination)
@@ -91,7 +93,7 @@ def software():
         software.payment_method = form.payment_method.data
         SoftwareDao.save_software(software)
         return redirect(url_for('vendor_app.dashboard'))
-    return render_template('vendor/software.html', title='Add Software', form=form)
+    return render_template('software.html', title='Add Software', form=form)
 
 
 @vendor_app.route('/editsoftware/<int:id>', methods=['GET', 'POST'])
@@ -111,7 +113,7 @@ def edit_software(id):
             software.last_update_date = datetime.utcnow()
             SoftwareDao.save_software(software)
             return redirect(url_for('vendor_app.dashboard'))
-        return render_template('vendor/software.html', title='Update Software', form=form)
+        return render_template('software.html', title='Update Software', form=form)
 
 
 @vendor_app.route('/software/delete/<int:id>')
@@ -128,7 +130,7 @@ def get_software(id):
 
     if software:
         form = SoftwareForm(formdata=request.form, obj=software)
-        return render_template('vendor/software_detail.html', title='View Software', software=software)
+        return render_template('software_detail.html', title='View Software', software=software)
 
 
 @vendor_app.route('/logout')

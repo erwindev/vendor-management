@@ -1,0 +1,44 @@
+{% extends "layout/layout.html" %}
+
+{% block app_content  %}
+
+<h1>Welcome {{ current_user.firstname }}!</h1>
+
+<p><a href="{{ url_for('vendor_app.software') }}"><button type="button" class="btn btn-primary">Add Software</button></a></p>
+
+<div class="table-responsive">
+{{ pagination.info }}
+{{ pagination.links }}
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Software Name</th>
+      <th>Vendor Name</th>
+      <th>Department</th>
+      <th>Budget Owner</th>
+      <th>Software Owner</th>
+      <th>Expiration Date</th>
+      <th>Payment Method</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for software in all_software %}
+    <tr>
+      <td>{{ loop.index  + pagination.skip }}</td>
+      <td><a href="{{ url_for('vendor_app.get_software', id=software.id)}}">{{ software.software_name }}</a></td>
+      <td>{{ software.provider }}</td>
+      <td>{{ software.department }}</td>
+      <td>{{ software.budget_owner }}</td>
+      <td>{{ software.software_owner }}</td>
+      <td>{{ software.expiration_date.strftime('%Y-%m-%d') }}</td>
+      <td>{{ software.payment_method }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{{ pagination.info }}
+{{ pagination.links }}
+</div>
+
+{% endblock %}

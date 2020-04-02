@@ -2,8 +2,8 @@ import datetime
 import jwt
 from flask import jsonify, request
 from flask_restplus import Api, Resource, Namespace, fields
-from app.vendor.dao import UserDao
-from app.vendor.models import User
+from app.vendor.dao.user import UserDao
+from app.vendor.models.user import User
 from app.vendor.exception import ApplicationException
 from config import Config
 
