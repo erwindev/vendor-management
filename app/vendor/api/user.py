@@ -1,7 +1,7 @@
 from flask import jsonify, request
 from flask_restplus import Api, Resource, Namespace, fields
 from app.vendor.dao.user import UserDao
-from app.vendor.models.user import User
+from app.vendor.models.user import User as UserModel
 from app.vendor.exception import ApplicationException
 from app.vendor.util.decorator import token_required
 
@@ -24,12 +24,8 @@ _user = UserDto.user
 get_parser = api.parser()
 get_parser.add_argument('Authorization', location='headers')
 
-post_parser = api.parser()
-post_parser.add_argument('Authorization', location='headers')
-post_parser.add_argument('user', type=_user)
-
-
 @api.route("/")
+@api.expect(get_parser)
 class UserList(Resource):
     """
     This class contains the functions to run the API request.
@@ -38,8 +34,7 @@ class UserList(Resource):
     """
 
     @api.doc('list_of_registered_users')
-    @api.marshal_list_with(_user, envelope='data')
-    @api.expect(get_parser)
+    @api.marshal_list_with(_user, envelope='userlist')
     @token_required
     def get(self):
         """Get all users"""
@@ -55,20 +50,22 @@ class UserList(Resource):
 
     @api.response(201, 'User successfully created.')
     @api.doc('create a new user')
-    @api.expect(post_parser)
+    @api.expect(_user, validate=False)
+    @api.marshal_with(_user)
     @token_required
     def post(self):
         """Insert a user"""
         try:
+            # ToDo: need to add logic to check if email and user already exist
             user_data = request.json
-            user = User()
-            user.firstname = user_data['firstname']
-            user.lastname = user_data['lastname']
-            user.username = user_data['username']
-            user.email = user_data['email']
-            user.set_password(user_data['password'])
-            user = UserDao.save_user(user)
-            return user
+            new_user = UserModel()
+            new_user.firstname = user_data['firstname']
+            new_user.lastname = user_data['lastname']
+            new_user.username = user_data['username']
+            new_user.email = user_data['email']
+            new_user.set_password(user_data['password'])
+            new_user = UserDao.save_user(new_user)
+            return new_user
         except ApplicationException as e:
             error_message = str(e)
             return jsonify(error_message=error_message[:200]) 
