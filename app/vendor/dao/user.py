@@ -11,7 +11,7 @@ class UserDao:
         return user
 
     @staticmethod
-    def get_by_id(self, id):
+    def get_by_id(id):
         return User.query.filter_by(id=id).first()
 
     @staticmethod

@@ -3,6 +3,7 @@ from flask_restplus import Api, Resource, Namespace, fields
 from app.vendor.dao.user import UserDao
 from app.vendor.models.user import User
 from app.vendor.exception import ApplicationException
+from app.vendor.util.decorator import token_required
 
 
 class UserDto:
@@ -20,6 +21,14 @@ class UserDto:
 api = UserDto.api
 _user = UserDto.user
 
+get_parser = api.parser()
+get_parser.add_argument('Authorization', location='headers')
+
+post_parser = api.parser()
+post_parser.add_argument('Authorization', location='headers')
+post_parser.add_argument('user', type=_user)
+
+
 @api.route("/")
 class UserList(Resource):
     """
@@ -30,6 +39,8 @@ class UserList(Resource):
 
     @api.doc('list_of_registered_users')
     @api.marshal_list_with(_user, envelope='data')
+    @api.expect(get_parser)
+    @token_required
     def get(self):
         """Get all users"""
         try:
@@ -37,14 +48,15 @@ class UserList(Resource):
             user_ret_list = []
             for user in users:
                 user_ret_list.append(user.to_json())
-            return jsonify(message=user_ret_list)
+            return user_ret_list
         except ApplicationException as e:
             error_message = str(e)
             return jsonify(error_message=error_message[:200])
 
     @api.response(201, 'User successfully created.')
     @api.doc('create a new user')
-    @api.expect(_user, validate=True)
+    @api.expect(post_parser)
+    @token_required
     def post(self):
         """Insert a user"""
         try:
@@ -56,7 +68,7 @@ class UserList(Resource):
             user.email = user_data['email']
             user.set_password(user_data['password'])
             user = UserDao.save_user(user)
-            return jsonify(user=user.to_json())
+            return user
         except ApplicationException as e:
             error_message = str(e)
             return jsonify(error_message=error_message[:200]) 
@@ -69,6 +81,8 @@ class User(Resource):
 
     @api.doc('get a user')
     @api.marshal_with(_user)
+    @api.expect(get_parser)
+    @token_required
     def get(self, id):
         """Get a user given its identifier"""
         user = UserDao.get_by_id(id)
