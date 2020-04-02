@@ -20,7 +20,7 @@ class UserDto:
 api = UserDto.api
 _user = UserDto.user
 
-@api.route("/user/")
+@api.route("/")
 class UserList(Resource):
     """
     This class contains the functions to run the API request.

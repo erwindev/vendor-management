@@ -1,6 +1,5 @@
 from app import db
 from app.vendor.models.user import User
-from sqlalchemy.exc import OperationalError
 
 
 class UserDao:

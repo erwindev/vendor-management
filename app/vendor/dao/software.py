@@ -1,6 +1,5 @@
 from app import db
 from app.vendor.models.software import Software, SoftwareAttachment, SoftwareNote
-from sqlalchemy.exc import OperationalError
 
 
 class SoftwareDao:

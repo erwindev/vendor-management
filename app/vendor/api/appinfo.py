@@ -1,5 +1,5 @@
-from flask import jsonify, request, jsonify
-from flask_restplus import Api, Resource, Namespace, fields
+from flask import jsonify
+from flask_restplus import Api, Resource, Namespace
 from config import Config
 
 class AppInfoDto:
