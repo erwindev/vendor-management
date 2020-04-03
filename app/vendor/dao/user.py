@@ -22,6 +22,10 @@ class UserDao:
     def get_all():
         return User.query.all()
 
+    @staticmethod
+    def get_by_email(email_data):
+        return User.query.filter_by(email=email_data).first()
+
 
 class BlackListTokenDao:
 

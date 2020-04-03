@@ -2,7 +2,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, SelectField
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
 from wtforms.fields.html5 import DateField
-from app.vendor.models.user import User
+from app.vendor.dao.user import UserDao
 
 
 class LoginForm(FlaskForm):
@@ -23,12 +23,12 @@ class RegistrationForm(FlaskForm):
     submit = SubmitField('Register')
 
     def validate_username(self, username):
-        user = User.query.filter_by(username=username.data).first()
+        user = UserDao.get_by_username(username.data)
         if user is not None:
             raise ValidationError('Please use a different username.')
 
     def validate_email(self, email):
-        user = User.query.filter_by(email=email.data).first()
+        user = UserDao.get_by_email(email.data)
         if user is not None:
             raise ValidationError('Please use a different email address.')
 
@@ -62,7 +62,7 @@ class SoftwareForm(FlaskForm):
 
     payment_method = SelectField(
         'Payment Method', [DataRequired()],
-        choices=[('creditcard', 'Credit Card'),
-                 ('invoice', 'Invoice')])
+        choices=[('Credit Card', 'Credit Card'),
+                 ('Invoice', 'Invoice')])
 
     submit = SubmitField('Save')
