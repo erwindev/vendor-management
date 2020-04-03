@@ -39,8 +39,8 @@ class SoftwareAttachmentDao:
         return SoftwareAttachment.filter_by(id=id).first()
 
     @staticmethod
-    def get_all():
-        return SoftwareAttachment.order_by(SoftwareAttachment.create_date)
+    def get_by_software_id(software_id):
+        return SoftwareAttachment.filter_by(software_id=software_id)
 
     @staticmethod
     def delete(id):
@@ -60,8 +60,8 @@ class SoftwareNoteDao:
         return SoftwareNote.filter_by(id=id).first()
 
     @staticmethod
-    def get_all():
-        return SoftwareNote.order_by(SoftwareNote.create_date)
+    def get_by_software_id(software_id):
+        return SoftwareNote.filter_by(software_id=software_id)
 
     @staticmethod
     def delete(id):

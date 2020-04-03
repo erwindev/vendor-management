@@ -1,17 +1,35 @@
 import os
 from dotenv import load_dotenv
 
+
 basedir = os.path.abspath(os.path.dirname(__file__))
 load_dotenv(os.path.join(basedir, '.env'))
 
 
 class Config:
 
-    SECRET_KEY = os.getenv('SECRET_KEY') or 'my-guess-is-as-good-as-yours-but-you-will-never-guess-this'
-    ENV_CONFIG = os.getenv('ENV_CONFIG') or 'not set'
-    CURRENT_VERSION = os.getenv('CURRENT_VERSION') or '0.1'
-    SERVICE_NAME = os.getenv('SERVICE_NAME') or 'Vendor Managetment Service'
+    SECRET_KEY = os.getenv('SECRET_KEY') or 'not set'
+    CURRENT_VERSION = os.getenv('CURRENT_VERSION') or 'not set'
+    SERVICE_NAME = os.getenv('SERVICE_NAME') or 'not set'
+    DEBUG = False
 
+
+class DevelopmentConfig(Config):
+    DEBUG = True
+    # SQLITE database
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or 'sqlite:///' + os.path.join(basedir, 'app.db')
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
+
+
+class TestingConfig(Config):
+    DEBUG = True
+    # SQLITE database
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or 'sqlite:///' + os.path.join(basedir, 'app-test.db')
+    SQLALCHEMY_TRACK_MODIFICATIONS = False    
+
+
+class ProductionConfig(Config):
+    DEBUG = False
     # Postgres
     # DB_USER = os.getenv('DB_USER') or 'not set'
     # DB_PASSWORD = os.getenv('DB_PASSWORD') or 'not set'
@@ -24,7 +42,9 @@ class Config:
     #                                                                DB_PORT,
     #                                                                DB_NAME)
 
-    # SQLITE database
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or 'sqlite:///' + os.path.join(basedir, 'app.db')
 
-    SQLALCHEMY_TRACK_MODIFICATIONS = False
+config_by_name = dict(
+    development=DevelopmentConfig,
+    test=TestingConfig,
+    production=ProductionConfig
+)    

@@ -5,6 +5,7 @@ from flask_migrate import Migrate
 from flask_login import LoginManager
 from flask_bootstrap import Bootstrap
 from config import Config
+from config import config_by_name
 
 db = SQLAlchemy()
 migrate = Migrate()
@@ -12,8 +13,8 @@ login = LoginManager()
 bootstrap = Bootstrap()
 
 
-def create_app(config_class=Config):
-    
+def create_app(config_name):
+
     APP_PATH = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     TEMPLATE_PATH = os.path.join(APP_PATH, 'app/vendor/web/templates')
 
@@ -22,7 +23,7 @@ def create_app(config_class=Config):
     bootstrap.init_app(app)
 
     # load the config
-    app.config.from_object(config_class)
+    app.config.from_object(config_by_name[config_name])
 
     # initialize the database and create tables
     from app.vendor.models.user import User
