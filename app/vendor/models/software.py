@@ -19,6 +19,21 @@ class Software(db.Model):
     def __repr__(self):
         return '<Software {}>'.format(self.software_name)
 
+    def to_json(self):
+        json_result = {
+            'id': self.id,
+            'software_name': self.software_name,
+            'provider': self.provider,
+            'department': self.department,
+            'budget_owner': self.budget_owner,
+            'software_owner': self.software_owner,
+            'expiration_date': self.expiration_date,
+            'payment_method': self.payment_method,
+            'create_date': self.create_date,            
+            'last_update_date': self.last_update_date
+        }
+        return json_result                
+
 
 class SoftwareAttachment(db.Model):
     id = db.Column(db.Integer, primary_key=True)

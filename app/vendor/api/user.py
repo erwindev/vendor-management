@@ -32,11 +32,6 @@ api = UserDto.api
 @api.route("/")
 @api.expect(api.parser().add_argument('Authorization', location='headers'))
 class UserList(Resource):
-    """
-    This class contains the functions to run the API request.
-    HTTP methods are implemented as functions.  Currently,
-    this API only supports HTTP GET
-    """
 
     @api.doc('list_of_registered_users')
     @api.marshal_list_with(UserDto.user, envelope='userlist')
@@ -49,9 +44,11 @@ class UserList(Resource):
             for user in users:
                 user_ret_list.append(user.to_json())
             return user_ret_list
-        except ApplicationException as e:
-            error_message = str(e)
-            return jsonify(error_message=error_message[:200])
+        except Exception as e:
+            return {
+                'status': 'error',
+                'message': 'Internal Server Error'
+            }, 500    
 
     @api.response(201, 'User successfully created.')
     @api.response(409, 'User already exists.')
