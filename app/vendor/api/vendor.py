@@ -80,7 +80,7 @@ class Vendor(Resource):
     @token_required
     def get(self, id):
         """Get a vendor given its identifier"""
-        vendor = Vednor.get_by_id(id)
+        vendor = VendorDao.get_by_id(id)
         if not vendor:
             response_object = {
                 'status': 'fail',
