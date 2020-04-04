@@ -6,6 +6,7 @@ from datetime import datetime
 #   1000 = vendor
 #   1001 = product
 ##
+
 class Contact(db.Model):
     contact_id = db.Column(db.Integer, primary_key=True)
     contact_type_id = db.Column(db.Integer, primary_key=True)
@@ -20,6 +21,8 @@ class Contact(db.Model):
     country = db.Column(db.String(100))
     zipcode = db.Column(db.String(15))    
     create_date = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_date = db.Column(db.DateTime)
+    status = db.Column(db.String(3))
 
     def __repr__(self):
         return '<Contact: {} {} {}>'.format(
@@ -55,3 +58,7 @@ class Contact(db.Model):
             'create_date': self.create_date
         }
         return json_data
+
+
+    VENDOR_TYPE_ID = 1000
+    PRODUCT_TYPE_ID = 1001

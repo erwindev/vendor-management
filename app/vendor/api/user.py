@@ -15,16 +15,23 @@ class UserDto:
         'lastname': fields.String(required=True),
         'username': fields.String(required=True),
         'email': fields.String(required=True),
-        'created_date': fields.DateTime(required=True),
-        'last_login_date': fields.String(required=True)
+        'create_date': fields.DateTime(required=True),
+        'last_login_date': fields.String(required=True),
+        'status': fields.String(required=True)
     })
-    ruser = api.model('user', {
+    reg_user = api.model('user', {
         'firstname': fields.String(required=True),
         'lastname': fields.String(required=True),
         'username': fields.String(required=True),
         'email': fields.String(required=True),
         'password': fields.String(required=True)
     })     
+    update_user = api.model('user', {
+        'id': fields.String(),
+        'firstname': fields.String(required=True),
+        'lastname': fields.String(required=True),
+        'status': fields.String(required=True)
+    })        
 
 
 api = UserDto.api
@@ -53,14 +60,13 @@ class UserList(Resource):
     @api.response(201, 'User successfully created.')
     @api.response(409, 'User already exists.')
     @api.doc('create a new user')
-    @api.expect(UserDto.ruser, validate=False)
+    @api.expect(UserDto.reg_user, validate=False)
     @token_required
     def post(self):
         """Insert a user"""
         try:
             user_data = request.json
 
-            # ToDo: need to add logic to check if email and user already exist
             if UserDao.get_by_email(user_data['email']) is not None:
                 response_object = {
                     'status': 'fail',
@@ -92,6 +98,32 @@ class UserList(Resource):
                 'status': 'error',
                 'message': 'Internal Server Error'
             }, 500
+
+
+    @api.response(201, 'User successfully updated.')
+    @api.doc('update a user')
+    @api.expect(UserDto.update_user, validate=False)
+    @token_required
+    def put(self):
+        """Update a user"""
+        try:
+            user_data = request.json
+            existing_user = UserDao.get_by_id(user_data['id'])
+
+            existing_user.firstname = user_data['firstname']
+            existing_user.lastname = user_data['lastname']
+            existing_user.status = user_data['status']
+            existing_user = UserDao.update_user(existing_user)
+            response_object = {
+                'status': 'success',
+                'message': 'Successfully updated.'
+            }
+            return response_object, 201
+        except Exception as e:
+            return {
+                'status': 'error',
+                'message': 'Internal Server Error'
+            }, 500            
 
 
 @api.route('/<id>')

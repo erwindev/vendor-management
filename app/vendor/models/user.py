@@ -12,7 +12,9 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(120), index=True, unique=True)
     password_hash = db.Column(db.String(128))
     create_date = db.Column(db.DateTime, default=datetime.utcnow)
-    last_login_date = db.Column(db.DateTime, default=datetime.utcnow)
+    last_login_date = db.Column(db.DateTime)
+    updated_date = db.Column(db.DateTime)
+    status = db.Column(db.String(3))
 
     def __repr__(self):
         return '<User {}>'.format(self.username)
@@ -32,7 +34,7 @@ class User(UserMixin, db.Model):
             'id': self.id,
             'firstname': self.firstname,
             'lastname': self.lastname,
-            'username': self.username,
+            'email': self.email,
             'username': self.username,
             'create_date': self.create_date
         }

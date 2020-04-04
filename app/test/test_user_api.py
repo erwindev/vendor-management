@@ -21,6 +21,21 @@ def register_user(self, auth_token):
         content_type='application/json'
     )
 
+def update_user(self, auth_token, user_id, firstname, lastname, status):
+    return self.client.put(
+        '/api/v1/user/',
+        headers=dict(
+            Authorization='Bearer {}'.format(auth_token) 
+        ),        
+        data=json.dumps(dict(
+            id=user_id,
+            firstname=firstname,
+            lastname=lastname,
+            status=status
+        )),
+        content_type='application/json'
+    )        
+
 
 def get_user(self, auth_token, user_id):
     return self.client.get(
@@ -87,7 +102,35 @@ class TestUser(BaseTestCase):
             data = json.loads(response.data.decode())
             self.assertTrue(len(data) == 1)
             self.assertTrue(response.content_type == 'application/json')
-            self.assertEqual(response.status_code, 200)            
+            self.assertEqual(response.status_code, 200)      
+
+    def test_update_user(self):
+        """ Test for getting user """
+        auth_token, user_loggedin_data = BaseTestCase.get_token_and_loggedin_user()
+        with self.client:
+            user_id = user_loggedin_data['user_id']
+            # get logged in user
+            response = get_user(self, auth_token, user_id)
+            data = json.loads(response.data.decode())
+            self.assertTrue(data['username'] == 'joe.tester')
+            self.assertTrue(data['firstname'] == 'joe')
+            self.assertTrue(data['lastname'] == 'tester')
+            self.assertTrue(response.content_type == 'application/json')
+            self.assertEqual(response.status_code, 200)          
+
+            # update logged in user
+            response = update_user(self, auth_token, user_id, 'joex', 'testerx', 'act')    
+            self.assertTrue(response.content_type == 'application/json')
+            self.assertEqual(response.status_code, 201)    
+
+            response = get_user(self, auth_token, user_id)
+            data = json.loads(response.data.decode())
+            self.assertTrue(data['username'] == 'joe.tester')
+            self.assertTrue(data['firstname'] == 'joex')
+            self.assertTrue(data['lastname'] == 'testerx')
+            self.assertTrue(data['status'] == 'act')
+            self.assertTrue(response.content_type == 'application/json')
+            self.assertEqual(response.status_code, 200)                           
 
 
 class TestLogout(BaseTestCase):

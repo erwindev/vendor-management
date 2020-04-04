@@ -38,6 +38,7 @@ class UserLogin(Resource):
                         'user_id': user.id,
                         'Authorization': auth_token.decode()
                     }
+                    UserDao.set_last_login_date(user.id)
                     return response_object, 200
             else:
                 response_object = {

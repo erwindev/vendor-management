@@ -2,7 +2,9 @@ import sys
 from flask import jsonify, request
 from flask_restplus import Api, Resource, Namespace, fields
 from app.vendor.dao.vendor import VendorDao
+from app.vendor.dao.contact import ContactDao
 from app.vendor.models.vendor import Vendor as VendorModel
+from app.vendor.models.contact import Contact as ContactModel
 from app.vendor.util.decorator import token_required
 
 
@@ -12,12 +14,14 @@ class VendorDto:
         'id': fields.String(),
         'name': fields.String(required=True),
         'website': fields.String(required=True),
-        'create_date': fields.DateTime(required=True)   
+        'status': fields.String(required=True),
+        'create_date': fields.DateTime(),
+        'updated_date': fields.DateTime()      
     })      
     vendor_add = api.model('vendor_add', {
         'name': fields.String(required=True),
         'website': fields.String(required=True)
-    })         
+    })
 
 
 api = VendorDto.api
@@ -67,6 +71,33 @@ class VendorList(Resource):
                 'status': 'error',
                 'message': 'Internal Server Error'
             }, 500
+
+    @api.response(201, 'Vendor successfully updated.')
+    @api.doc('update a new vendor')
+    @api.expect(VendorDto.vendor, validate=False)
+    @token_required
+    def put(self):
+        """Update a vendor"""
+        try:
+            vendor_data = request.json
+
+            existing_vendor = VendorModel()
+            existing_vendor.id = vendor_data['id']
+            existing_vendor.name = vendor_data['name']
+            existing_vendor.website = vendor_data['website']
+            existing_vendor.status = vendor_data['status']
+            existing_vendor = VendorDao.update_vendor(existing_vendor)
+            response_object = {
+                'status': 'success',
+                'message': 'Vendor successfully updated.'
+            }
+            return response_object, 201
+        except Exception as e:
+            return {
+                'status': 'error',
+                'message': 'Internal Server Error'
+            }, 500
+
 
 
 @api.route('/<id>')

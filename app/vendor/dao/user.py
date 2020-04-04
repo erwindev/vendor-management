@@ -1,3 +1,4 @@
+import datetime
 from app import db
 from app.vendor.models.user import User, BlackListToken
 
@@ -9,6 +10,25 @@ class UserDao:
         db.session.commit()
         db.session.refresh(user)
         return user
+
+    @staticmethod
+    def update_user(user):
+        existing_user = User.query.filter_by(id=user.id).first()
+        existing_user.fistname = user.firstname
+        existing_user.lastname = user.lastname
+        existing_user.status = user.status
+        existing_user.updated_date = datetime.datetime.now()
+        db.session.commit()
+        db.session.refresh(existing_user)
+        return existing_user   
+
+    @staticmethod
+    def set_last_login_date(id):
+        existing_user = User.query.filter_by(id=id).first()
+        existing_user.last_login_date = datetime.datetime.now()
+        db.session.commit()
+        db.session.refresh(existing_user)
+        return existing_user   
 
     @staticmethod
     def get_by_id(id):
