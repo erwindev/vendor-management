@@ -92,6 +92,7 @@ class LogoutApi(Resource):
 
 class Util:
 
+    
     @staticmethod
     def encode_auth_token(user_id):
         """
@@ -117,7 +118,7 @@ class Util:
     def decode_auth_token(auth_token):
 
         try:
-            payload = jwt.decode(auth_token, Config.SECRET_KEY)
+            payload = jwt.decode(auth_token, Config.SECRET_KEY, algorithms=['HS256'])
 
             is_blacklisted_token = BlackListToken.check(auth_token)
             if is_blacklisted_token:

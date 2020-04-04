@@ -1,5 +1,6 @@
 import os
 import unittest
+from coverage import coverage
 from app import create_app
 
 

@@ -3,6 +3,7 @@ aniso8601==8.0.0
 astroid==2.3.3
 attrs==19.3.0
 click==7.1.1
+coverage==5.0.4
 dominate==2.5.1
 Flask==1.1.1
 Flask-Bootstrap==3.3.7.1

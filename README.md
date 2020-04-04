@@ -38,6 +38,11 @@ Note: For this application, we will be using SQLite.
 ```
 $ flask db upgrade
 ```
+If you made changes to the models code, you will need to run the migration script
+```
+$ flask migrate -m 'add comment here'
+$ flask db upgrade
+```
 
 #### Run the application
 ```
@@ -52,3 +57,15 @@ $ flask run
 #### Using the REST API
 Another way of interacting with this application is through a REST APIs.  To see the information about the REST API, you can access the Swagger docs
 * http://localhost:5000/api/v1/
+
+
+#### Test the application
+Run unittest
+```
+$ flask test
+```
+Run test coverage and show coverage reports
+```
+$ coverage report -m unittest app/test/test*.py
+$ coverage report app/vendor/*/*.py
+```
