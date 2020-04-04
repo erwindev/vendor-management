@@ -30,7 +30,6 @@ def create_app(config_name):
     from app.vendor.models.vendor import Vendor
     from app.vendor.models.product import Product  
     from app.vendor.models.contact import Contact
-    from app.vendor.models.address import Address    
     from app.vendor.models.notes import Notes
     from app.vendor.models.attachment import Attachment
     from app.vendor.models.software import Software, SoftwareAttachment, SoftwareNote    
