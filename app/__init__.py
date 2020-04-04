@@ -26,8 +26,13 @@ def create_app(config_name):
     app.config.from_object(config_by_name[config_name])
 
     # initialize the database and create tables
-    from app.vendor.models.user import User
-    from app.vendor.models.software import Software, SoftwareAttachment, SoftwareNote
+    from app.vendor.models.user import User, BlackListToken
+    from app.vendor.models.vendor import Vendor
+    from app.vendor.models.product import Product, ProductAttachment, ProductNote    
+    from app.vendor.models.contact import Contact
+    from app.vendor.models.address import Address    
+    from app.vendor.models.software import Software, SoftwareAttachment, SoftwareNote    
+    
     db.init_app(app)
     migrate.init_app(app, db)
 

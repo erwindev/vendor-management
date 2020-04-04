@@ -4,24 +4,6 @@ from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 
 
-class TempTable(db.Model):
-    __tablename__ = 'temp_table'
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(80))
-    create_date = db.Column(db.DateTime, default=datetime.utcnow)
-
-
-    def __init__(self, name):
-        self.name = name
-
-    def __repr__(self):
-        return '<Temp Table: {} {} {}>'.format(
-            self.id,
-            self.name,
-            self.create_date
-        )
-
-
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     firstname = db.Column(db.String(80))
@@ -74,3 +56,20 @@ class BlackListToken(db.Model):
         else:
             return False
     
+class TempTable(db.Model):
+    __tablename__ = 'temp_table'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(80))
+    create_date = db.Column(db.DateTime, default=datetime.utcnow)
+
+
+    def __init__(self, name):
+        self.name = name
+
+    def __repr__(self):
+        return '<Temp Table: {} {} {}>'.format(
+            self.id,
+            self.name,
+            self.create_date
+        )
+
