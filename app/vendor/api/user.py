@@ -19,12 +19,12 @@ class UserDto:
         'last_login_date': fields.String(required=True)
     })
     ruser = api.model('user', {
-            'firstname': fields.String(required=True),
-            'lastname': fields.String(required=True),
-            'username': fields.String(required=True),
-            'email': fields.String(required=True),
-            'password': fields.String(required=True)
-        })     
+        'firstname': fields.String(required=True),
+        'lastname': fields.String(required=True),
+        'username': fields.String(required=True),
+        'email': fields.String(required=True),
+        'password': fields.String(required=True)
+    })     
 
 
 api = UserDto.api
@@ -88,7 +88,10 @@ class UserList(Resource):
             }
             return response_object, 201
         except Exception as e:
-            api.abort(500)
+            return {
+                'status': 'error',
+                'message': 'Internal Server Error'
+            }, 500
 
 
 @api.route('/<id>')

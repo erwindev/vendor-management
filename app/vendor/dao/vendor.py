@@ -9,7 +9,7 @@ class VendorDao:
         db.session.add(vendor)
         db.session.commit()
         db.session.refresh(vendor)
-        return user
+        return vendor
 
     @staticmethod
     def get_by_id(id):

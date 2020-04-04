@@ -1,11 +1,9 @@
-import datetime
-import jwt
 from flask import jsonify, request
 from flask_restplus import Api, Resource, Namespace, fields
 from app.vendor.dao.user import UserDao, BlackListTokenDao
 from app.vendor.models.user import User, BlackListToken
 from app.vendor.exception import ApplicationException
-from app.config import Config
+from app.vendor.util.token_util import TokenUtil
 
 
 class AuthDto:
@@ -32,7 +30,7 @@ class UserLogin(Resource):
         try:
             user = UserDao.get_by_username(post_data['username'])
             if user and user.check_password(post_data['password']):
-                auth_token = Util.encode_auth_token(user.id)
+                auth_token = TokenUtil.encode_token(user.id)
                 if auth_token:
                     response_object = {
                         'status': 'success',
@@ -68,7 +66,16 @@ class LogoutApi(Resource):
             auth_token = ''
         
         if auth_token:
-            resp = Util.decode_auth_token(auth_token)
+            is_blacklisted_token = BlackListToken.check(auth_token)
+            if is_blacklisted_token:
+                response_object = {
+                    'status': 'fail',
+                    'message': 'Token is blacklisted.'
+                }                
+                return response_object, 403
+            
+            resp = TokenUtil.decode_token(auth_token)
+
             if not isinstance(resp, str):
                 BlackListTokenDao.save_token(auth_token)
                 response_object = {
@@ -88,81 +95,4 @@ class LogoutApi(Resource):
                 'message': 'Provide a valid auth token.'
             }
             return response_object, 403            
-            
-
-class Util:
-
-    
-    @staticmethod
-    def encode_auth_token(user_id):
-        """
-        Generates the Auth Token
-        :return: string
-        """
-        try:
-            payload = {
-                'exp': datetime.datetime.utcnow() + datetime.timedelta(days=1, seconds=5),
-                'iat': datetime.datetime.utcnow(),
-                'sub': user_id
-            }
-            return jwt.encode(
-                payload,
-                Config.SECRET_KEY,
-                algorithm='HS256'
-            )
-        except ApplicationException as e:
-            return e 
-
-
-    @staticmethod
-    def decode_auth_token(auth_token):
-
-        try:
-            payload = jwt.decode(auth_token, Config.SECRET_KEY, algorithms=['HS256'])
-
-            is_blacklisted_token = BlackListToken.check(auth_token)
-            if is_blacklisted_token:
-                return 'Token blacklisted.'
-            else:
-                return payload['sub']
-        except jwt.ExpiredSignatureError:
-            return 'Signature expired.'
-        except jwt.InvalidTokenError:
-            return 'Invalid token.'
-
-
-    @staticmethod
-    def get_logged_in_user(new_request):
-            # get the auth token
-            auth_token = new_request.headers.get('Authorization')
-            
-            if auth_token:                        
-                auth_token = auth_token.split(' ')
-                if len(auth_token) < 2:
-                    response_object = {
-                        'status': 'fail',
-                        'message': 'Provide a valid auth token.'
-                    }
-                    return response_object, 401                        
-                resp = Util.decode_auth_token(auth_token[1])
-                if not isinstance(resp, str):
-                    user = UserDao.get_by_id(resp)
-                    response_object = {
-                        'status': 'success',
-                        'data': {
-                            'user_id': user.id,
-                            'email': user.email
-                        }
-                    }
-                    return response_object, 200
-                response_object = {
-                    'status': 'fail',
-                    'message': resp
-                }
-                return response_object, 401
-            else:
-                response_object = {
-                    'status': 'fail',
-                    'message': 'Provide a valid auth token.'
-                }
-                return response_object, 401            
+                

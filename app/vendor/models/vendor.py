@@ -10,3 +10,12 @@ class Vendor(db.Model):
 
     def __repr__(self):
         return '<Vendor {}>'.format(self.name)
+
+    def to_json(self):
+        json_result = {
+            'id': self.id,
+            'name': self.name,
+            'website': self.website,
+            'create_date': self.create_date
+        }
+        return json_result                
