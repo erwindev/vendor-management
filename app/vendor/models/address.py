@@ -7,7 +7,6 @@ from datetime import datetime
 #   1000 = vendor
 #   1001 = contact
 ##
-
 class Address(db.Model):
     address_id = db.Column(db.Integer, primary_key=True)
     address_type_id = db.Column(db.Integer, primary_key=True)

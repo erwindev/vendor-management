@@ -35,25 +35,3 @@ class Product(db.Model):
             'last_update_date': self.last_update_date
         }
         return json_result                
-
-
-class ProductAttachment(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    product_id = db.Column(db.Integer, db.ForeignKey('product.id'))
-    name = db.Column(db.String(100))
-    description = db.Column(db.String(2000))
-    link = db.Column(db.String(1000))
-    create_date = db.Column(db.DateTime, default=datetime.utcnow)
-
-    def __repr__(self):
-        return '<ProductAttachment {}>'.format(self.name)
-
-
-class ProductNote(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    product_id = db.Column(db.Integer, db.ForeignKey('product.id'))
-    note = db.Column(db.String(2000))
-    create_date = db.Column(db.DateTime, default=datetime.utcnow)
-
-    def __repr__(self):
-        return '<ProductNote {}>'.format(self.name)

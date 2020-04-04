@@ -6,7 +6,6 @@ from datetime import datetime
 #   1000 = vendor
 #   1001 = product
 ##
-
 class Contact(db.Model):
     contact_id = db.Column(db.Integer, primary_key=True)
     contact_type_id = db.Column(db.Integer, primary_key=True)

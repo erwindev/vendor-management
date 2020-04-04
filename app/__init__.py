@@ -28,9 +28,11 @@ def create_app(config_name):
     # initialize the database and create tables
     from app.vendor.models.user import User, BlackListToken
     from app.vendor.models.vendor import Vendor
-    from app.vendor.models.product import Product, ProductAttachment, ProductNote    
+    from app.vendor.models.product import Product  
     from app.vendor.models.contact import Contact
     from app.vendor.models.address import Address    
+    from app.vendor.models.notes import Notes
+    from app.vendor.models.attachment import Attachment
     from app.vendor.models.software import Software, SoftwareAttachment, SoftwareNote    
     
     db.init_app(app)
