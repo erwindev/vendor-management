@@ -3,6 +3,7 @@ from app.vendor.models.software import Software, SoftwareAttachment, SoftwareNot
 
 
 class SoftwareDao:
+    
     @staticmethod
     def save_software(software):
         db.session.add(software)
@@ -28,6 +29,7 @@ class SoftwareDao:
 
 
 class SoftwareAttachmentDao:
+
     @staticmethod
     def save_software_attachment(software_attachment):
         db.session.add(software_attachment)
@@ -44,11 +46,12 @@ class SoftwareAttachmentDao:
 
     @staticmethod
     def delete(id):
-        db.session.delete(SoftwareAttachment.get_by_id(id))
+        db.session.delete(SoftwareAttachmentDao.get_by_id(id))
         db.session.commit()
 
 
 class SoftwareNoteDao:
+
     @staticmethod
     def save_software_note(software_note):
         db.session.add(software_note)
@@ -65,5 +68,5 @@ class SoftwareNoteDao:
 
     @staticmethod
     def delete(id):
-        db.session.delete(SoftwareNote.get_by_id(id))
+        db.session.delete(SoftwareNoteDao.get_by_id(id))
         db.session.commit()
