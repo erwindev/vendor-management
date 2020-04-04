@@ -66,6 +66,6 @@ $ flask test
 ```
 Run test coverage and show coverage reports
 ```
-$ coverage report -m unittest app/test/test*.py
+$ coverage run -m unittest app/test/test*.py
 $ coverage report app/vendor/*/*.py
 ```
