@@ -37,6 +37,7 @@ class UserLogin(Resource):
                     response_object = {
                         'status': 'success',
                         'message': 'Successfully logged in.',
+                        'user_id': user.id,
                         'Authorization': auth_token.decode()
                     }
                     return response_object, 200

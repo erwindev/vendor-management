@@ -19,6 +19,6 @@ __pycache__
 .idea/
 .vscode
 
-app.db
+app*.db
 
 .env

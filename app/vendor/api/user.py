@@ -62,10 +62,18 @@ class UserList(Resource):
 
             # ToDo: need to add logic to check if email and user already exist
             if UserDao.get_by_email(user_data['email']) is not None:
-                return "User already exist", 409
+                response_object = {
+                    'status': 'fail',
+                    'message': 'User already exists.'
+                }
+                return response_object, 409
 
             if UserDao.get_by_username(user_data['username']) is not None:
-                return "User already exist", 409
+                response_object = {
+                    'status': 'fail',
+                    'message': 'User already exists.'
+                }
+                return response_object, 409
 
             new_user = UserModel()
             new_user.firstname = user_data['firstname']
@@ -96,7 +104,11 @@ class User(Resource):
         """Get a user given its identifier"""
         user = UserDao.get_by_id(id)
         if not user:
-            api.abort(404)
+            response_object = {
+                'status': 'fail',
+                'message': 'User not found.'
+            }
+            return response_object, 404
         else:
             return user
 
