@@ -5,7 +5,7 @@ from flask_restplus import Api, Resource, Namespace, fields
 from app.vendor.dao.user import UserDao, BlackListTokenDao
 from app.vendor.models.user import User, BlackListToken
 from app.vendor.exception import ApplicationException
-from config import Config
+from app.config import Config
 
 
 class AuthDto:

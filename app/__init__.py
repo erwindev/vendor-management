@@ -4,8 +4,8 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager
 from flask_bootstrap import Bootstrap
-from config import Config
-from config import config_by_name
+from app.config import Config
+from app.config import config_by_name
 
 db = SQLAlchemy()
 migrate = Migrate()

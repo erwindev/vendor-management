@@ -1,6 +1,6 @@
 from flask import jsonify
 from flask_restplus import Api, Resource, Namespace
-from config import Config
+from app.config import Config
 
 class AppInfoDto:
     api = Namespace('appinfo', description='appinfo related operations')
