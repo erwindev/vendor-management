@@ -22,7 +22,9 @@ class ContactDto:
         'state': fields.String(required=True),  
         'country': fields.String(required=True),  
         'zipcode': fields.String(required=True),  
-        'create_date': fields.DateTime()   
+        'create_date': fields.DateTime(),   
+        'updated_date': fields.DateTime(),
+        'status': fields.String(required=True)  
     })            
 
 
@@ -35,7 +37,7 @@ api = ContactDto.api
 class VendorContactList(Resource):
 
     @api.doc('get all vendor contacts')
-    @api.marshal_with(VendorDto.contact)
+    @api.marshal_with(ContactDto.contact)
     @token_required
     def get(self, id):
         """Get contacts for vendor given its identifier"""
@@ -56,7 +58,7 @@ class VendorContactList(Resource):
 
     @api.response(201, 'Vendor contact successfully created.')
     @api.doc('create a new vendor contact')
-    @api.expect(VendorDto.vendor_add, validate=False)
+    @api.expect(ContactDto.contact, validate=False)
     @token_required
     def post(self, id):
         """Insert a vendor contact"""

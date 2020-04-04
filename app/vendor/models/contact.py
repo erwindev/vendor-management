@@ -38,7 +38,9 @@ class Contact(db.Model):
             self.state,
             self.country,
             self.zipcode,            
-            self.create_date
+            self.create_date,
+            self.updated_date,
+            self.status
         )
 
     def to_json(self):
@@ -55,7 +57,9 @@ class Contact(db.Model):
             'state': self.state,
             'country': self.country,
             'zipcode': self.zipcode,            
-            'create_date': self.create_date
+            'create_date': self.create_date,
+            'updated_date': self.updated_date,
+            'status': self.status                        
         }
         return json_data
 
