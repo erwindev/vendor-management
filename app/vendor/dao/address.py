@@ -14,3 +14,7 @@ class AddressDao:
     @staticmethod
     def get_by_id(address_id, address_type_id):
         return Address.query.filter_by(address_id=address_id, address_type_id=address_type_id).first()
+
+    @staticmethod
+    def get_all_by_type(address_type_id):
+        return Address.query.filter_by(address_type_id=address_type_id)           

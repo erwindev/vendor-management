@@ -14,8 +14,6 @@ class Product(db.Model):
     product_type = db.Column(db.String(100))
     create_date = db.Column(db.DateTime, default=datetime.utcnow)
     last_update_date = db.Column(db.DateTime)
-    notes = db.relationship('ProductNote', backref="product", cascade="all, delete-orphan", lazy='dynamic')
-    attachments = db.relationship('ProductAttachment', backref="product", cascade="all, delete-orphan", lazy='dynamic')
 
     def __repr__(self):
         return '<Product {}>'.format(self.product_name)
