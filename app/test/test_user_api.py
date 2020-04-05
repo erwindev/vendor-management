@@ -5,63 +5,12 @@ from app import db
 from app.test.base import BaseTestCase
 
 
-def register_user(self, auth_token):
-    return self.client.post(
-        '/api/v1/user/',
-        headers=dict(
-            Authorization='Bearer {}'.format(auth_token) 
-        ),        
-        data=json.dumps(dict(
-            email='ealberto-test@me.com',
-            username='ealberto-test',
-            firstname='erwin',
-            lastname='alberto',
-            password='test'
-        )),
-        content_type='application/json'
-    )
-
-def update_user(self, auth_token, user_id, firstname, lastname, status):
-    return self.client.put(
-        '/api/v1/user/',
-        headers=dict(
-            Authorization='Bearer {}'.format(auth_token) 
-        ),        
-        data=json.dumps(dict(
-            id=user_id,
-            firstname=firstname,
-            lastname=lastname,
-            status=status
-        )),
-        content_type='application/json'
-    )        
-
-
-def get_user(self, auth_token, user_id):
-    return self.client.get(
-        '/api/v1/user/{}'.format(user_id),
-        headers=dict(
-            Authorization='Bearer {}'.format(auth_token) 
-        ),        
-        content_type='application/json'
-    )    
-
-def get_all_user(self, auth_token):
-    return self.client.get(
-        '/api/v1/user/',
-        headers=dict(
-            Authorization='Bearer {}'.format(auth_token) 
-        ),        
-        content_type='application/json'
-    )  
-
-
 class TestUserResgistration(BaseTestCase):
     def test_registration(self):
         """ Test for user registration """
         auth_token, user_loggedin_data = BaseTestCase.get_token_and_loggedin_user()
         with self.client:
-            response = register_user(self, auth_token)
+            response = BaseTestCase().register_user(auth_token)
             data = json.loads(response.data.decode())
             self.assertTrue(data['status'] == 'success')
             self.assertTrue(data['message'] == 'Successfully registered.')
@@ -72,9 +21,9 @@ class TestUserResgistration(BaseTestCase):
         """ Test registration with already registered username"""
         auth_token, user_loggedin_data = BaseTestCase.get_token_and_loggedin_user()
 
-        register_user(self, auth_token)
+        BaseTestCase.register_user(auth_token)
         with self.client:
-            response = register_user(self, auth_token)
+            response = BaseTestCase().register_user(auth_token)
             data = json.loads(response.data.decode())
             self.assertTrue(data['status'] == 'fail')
             self.assertTrue(data['message'] == 'User already exists.')
@@ -88,7 +37,7 @@ class TestUser(BaseTestCase):
         auth_token, user_loggedin_data = BaseTestCase.get_token_and_loggedin_user()
         with self.client:
             user_id = user_loggedin_data['user_id']
-            response = get_user(self, auth_token, user_id)
+            response = BaseTestCase().get_user(auth_token, user_id)
             data = json.loads(response.data.decode())
             self.assertTrue(data['username'] == 'joe.tester')
             self.assertTrue(response.content_type == 'application/json')
@@ -98,7 +47,7 @@ class TestUser(BaseTestCase):
         """ Test for getting all users """
         auth_token, user_loggedin_data = BaseTestCase.get_token_and_loggedin_user()
         with self.client:
-            response = get_all_user(self, auth_token)
+            response = BaseTestCase().get_all_user(auth_token)
             data = json.loads(response.data.decode())
             self.assertTrue(len(data) == 1)
             self.assertTrue(response.content_type == 'application/json')
@@ -110,7 +59,7 @@ class TestUser(BaseTestCase):
         with self.client:
             user_id = user_loggedin_data['user_id']
             # get logged in user
-            response = get_user(self, auth_token, user_id)
+            response = BaseTestCase().get_user(auth_token, user_id)
             data = json.loads(response.data.decode())
             self.assertTrue(data['username'] == 'joe.tester')
             self.assertTrue(data['firstname'] == 'joe')
@@ -119,11 +68,11 @@ class TestUser(BaseTestCase):
             self.assertEqual(response.status_code, 200)          
 
             # update logged in user
-            response = update_user(self, auth_token, user_id, 'joex', 'testerx', 'act')    
+            response = BaseTestCase().update_user(auth_token, user_id, 'joex', 'testerx', 'act')    
             self.assertTrue(response.content_type == 'application/json')
             self.assertEqual(response.status_code, 201)    
 
-            response = get_user(self, auth_token, user_id)
+            response = BaseTestCase().get_user(auth_token, user_id)
             data = json.loads(response.data.decode())
             self.assertTrue(data['username'] == 'joe.tester')
             self.assertTrue(data['firstname'] == 'joex')
@@ -134,17 +83,6 @@ class TestUser(BaseTestCase):
 
 
 class TestLogout(BaseTestCase):
-    def test_successful_logout(self):
-        """ Test for logging out user """
-        auth_token, user_loggedin_data = BaseTestCase.get_token_and_loggedin_user()
-        with self.client:
-            response = logged_out(self, auth_token, user_id)
-            data = json.loads(response.data.decode())
-            self.assertTrue(data['status'] == 'success')
-            self.assertTrue(data['message'] == 'USuccessfully logged out.')
-            self.assertTrue(response.content_type == 'application/json')
-            self.assertEqual(response.status_code, 200)     
-
 
     def test_successful_logout(self):
         """ Test for logging out user """

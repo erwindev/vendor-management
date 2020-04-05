@@ -29,6 +29,11 @@ class BaseTestCase(TestCase):
         db.session.remove()
         db.drop_all()
 
+    ######################
+    #
+    # auth api
+    #
+    ######################
     @staticmethod
     def login_user():
         return app.test_client().post(
@@ -56,4 +61,187 @@ class BaseTestCase(TestCase):
                 Authorization='Bearer {}'.format(auth_token) 
             ),        
             content_type='application/json'
-        )           
+        )  
+
+    ######################
+    #
+    # user api
+    #
+    ######################
+    @staticmethod
+    def register_user(auth_token):
+        return app.test_client().post(
+            '/api/v1/user/',
+            headers=dict(
+                Authorization='Bearer {}'.format(auth_token) 
+            ),        
+            data=json.dumps(dict(
+                email='ealberto-test@me.com',
+                username='ealberto-test',
+                firstname='erwin',
+                lastname='alberto',
+                password='test'
+            )),
+            content_type='application/json'
+        )
+
+    @staticmethod
+    def update_user(auth_token, user_id, firstname, lastname, status):
+        return app.test_client().put(
+            '/api/v1/user/',
+            headers=dict(
+                Authorization='Bearer {}'.format(auth_token) 
+            ),        
+            data=json.dumps(dict(
+                id=user_id,
+                firstname=firstname,
+                lastname=lastname,
+                status=status
+            )),
+            content_type='application/json'
+        )        
+
+    @staticmethod
+    def get_user(auth_token, user_id):
+        return app.test_client().get(
+            '/api/v1/user/{}'.format(user_id),
+            headers=dict(
+                Authorization='Bearer {}'.format(auth_token) 
+            ),        
+            content_type='application/json'
+        )    
+
+    @staticmethod
+    def get_all_user(auth_token):
+        return app.test_client().get(
+            '/api/v1/user/',
+            headers=dict(
+                Authorization='Bearer {}'.format(auth_token) 
+            ),        
+            content_type='application/json'
+        )  
+
+
+    ######################
+    #
+    # vendor api
+    #
+    ######################
+    @staticmethod
+    def add_vendor(auth_token, vendor_name, website_name):
+        return app.test_client().post(
+            '/api/v1/vendor/',
+            headers=dict(
+                Authorization='Bearer {}'.format(auth_token) 
+            ),        
+            data=json.dumps(dict(
+                name=vendor_name,
+                website=website_name
+            )),
+            content_type='application/json'
+        )
+
+    @staticmethod
+    def get_vendor(auth_token, vendor_id):
+        return app.test_client().get(
+            '/api/v1/vendor/{}'.format(vendor_id),
+            headers=dict(
+                Authorization='Bearer {}'.format(auth_token) 
+            ),        
+            content_type='application/json'
+        )    
+
+    @staticmethod
+    def update_vendor(auth_token, vendor_id, vendor_name, website_name, status):
+        return app.test_client().put(
+            '/api/v1/vendor/',
+            headers=dict(
+                Authorization='Bearer {}'.format(auth_token) 
+            ),        
+            data=json.dumps(dict(
+                id=vendor_id,
+                name=vendor_name,
+                website=website_name,
+                status=status
+            )),
+            content_type='application/json'
+        )     
+
+    @staticmethod
+    def get_all_vendor(auth_token):
+        return app.test_client().get(
+            '/api/v1/vendor/',
+            headers=dict(
+                Authorization='Bearer {}'.format(auth_token) 
+            ),        
+            content_type='application/json'
+        )          
+
+
+    ######################
+    #
+    # product api
+    #
+    ######################
+    @staticmethod
+    def add_product(auth_token, product):
+        return app.test_client().post(
+            '/api/v1/product/vendor/{}'.format(product.vendor_id),
+            headers=dict(
+                Authorization='Bearer {}'.format(auth_token) 
+            ),        
+            data=json.dumps(dict(
+                product_name = product.product_name,
+                department = product.department,
+                budget_owner = product.budget_owner,
+                product_owner = product.product_owner,
+                expiration_date = str(product.expiration_date),
+                payment_method = product.payment_method,
+                product_type = product.product_type,
+                status = product.status            
+            )),
+            content_type='application/json'
+        )        
+
+    @staticmethod
+    def update_product(auth_token, product):
+        return app.test_client().put(
+            '/api/v1/productvendor/',
+            headers=dict(
+                Authorization='Bearer {}'.format(auth_token) 
+            ),        
+            data=json.dumps(dict(
+                product_name = product.product_name,
+                vendor_id = product.vendor_id,
+                deparment = product.department,
+                budget_owner = product.budget_owner,
+                product_owner = product.product_owner,
+                expiration_date = product.expiration_date,
+                payment_method = product.payment_method,
+                product_type = product.product_type,
+                status = product.status            
+            )),
+            content_type='application/json'
+        )    
+
+
+    @staticmethod
+    def get_product(auth_token, product_id):
+        return app.test_client().get(
+            '/api/v1/product/{}'.format(product_id),
+            headers=dict(
+                Authorization='Bearer {}'.format(auth_token) 
+            ),        
+            content_type='application/json'
+        )    
+
+
+    @staticmethod
+    def get_all_product_by_vendor(auth_token, vendor_id):
+        return app.test_client().get(
+            '/api/v1/product/vendor/{}'.format(vendor_id),
+            headers=dict(
+                Authorization='Bearer {}'.format(auth_token) 
+            ),        
+            content_type='application/json'
+        )  
