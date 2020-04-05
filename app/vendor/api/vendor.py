@@ -14,14 +14,10 @@ class VendorDto:
         'id': fields.String(),
         'name': fields.String(required=True),
         'website': fields.String(required=True),
-        'status': fields.String(required=True),
+        'status': fields.String(),
         'create_date': fields.DateTime(),
         'updated_date': fields.DateTime()      
     })      
-    vendor_add = api.model('vendor_add', {
-        'name': fields.String(required=True),
-        'website': fields.String(required=True)
-    })
 
 
 api = VendorDto.api
@@ -50,7 +46,7 @@ class VendorList(Resource):
 
     @api.response(201, 'Vendor successfully created.')
     @api.doc('create a new vendor')
-    @api.expect(VendorDto.vendor_add, validate=False)
+    @api.expect(VendorDto.vendor, validate=False)
     @token_required
     def post(self):
         """Insert a vendor"""

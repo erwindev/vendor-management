@@ -8,13 +8,12 @@ from app.vendor.util.token_util import TokenUtil
 
 class AuthDto:
     api = Namespace('auth', description='authentication related operations')
-    user_auth = api.model('auth_details', {
+    logindata = api.model('logindata', {
         'username': fields.String(required=True, description='The email address'),
         'password': fields.String(required=True, description='The user password '),
     })
 
 api = AuthDto.api
-_user_auth = AuthDto.user_auth
 
 
 @api.route('/login')
@@ -23,7 +22,7 @@ class UserLogin(Resource):
         User Login Resource
     """
     @api.doc('user login')
-    @api.expect(_user_auth, validate=True)
+    @api.expect(AuthDto.logindata, validate=True)
     def post(self):
         # get the post data
         post_data = request.json

@@ -15,23 +15,10 @@ class UserDto:
         'lastname': fields.String(required=True),
         'username': fields.String(required=True),
         'email': fields.String(required=True),
-        'create_date': fields.DateTime(required=True),
-        'last_login_date': fields.String(required=True),
-        'status': fields.String(required=True)
-    })
-    reg_user = api.model('user', {
-        'firstname': fields.String(required=True),
-        'lastname': fields.String(required=True),
-        'username': fields.String(required=True),
-        'email': fields.String(required=True),
-        'password': fields.String(required=True)
-    })     
-    update_user = api.model('user', {
-        'id': fields.String(),
-        'firstname': fields.String(required=True),
-        'lastname': fields.String(required=True),
-        'status': fields.String(required=True)
-    })        
+        'create_date': fields.DateTime(),
+        'last_login_date': fields.String(),
+        'status': fields.String()
+    })      
 
 
 api = UserDto.api
@@ -60,7 +47,7 @@ class UserList(Resource):
     @api.response(201, 'User successfully created.')
     @api.response(409, 'User already exists.')
     @api.doc('create a new user')
-    @api.expect(UserDto.reg_user, validate=False)
+    @api.expect(UserDto.user, validate=True)
     @token_required
     def post(self):
         """Insert a user"""
@@ -102,7 +89,7 @@ class UserList(Resource):
 
     @api.response(201, 'User successfully updated.')
     @api.doc('update a user')
-    @api.expect(UserDto.update_user, validate=False)
+    @api.expect(UserDto.user, validate=False)
     @token_required
     def put(self):
         """Update a user"""
