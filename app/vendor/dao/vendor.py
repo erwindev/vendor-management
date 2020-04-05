@@ -14,7 +14,7 @@ class VendorDao:
 
     @staticmethod
     def update_vendor(vendor):
-        existing_vendor = Vendor.query.filter_by(id=vendor.id).first()
+        existing_vendor = VendorDao.get_by_id(vendor.id)
         existing_vendor.name = vendor.name
         existing_vendor.website = vendor.website
         existing_vendor.status = vendor.status

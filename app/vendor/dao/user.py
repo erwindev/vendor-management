@@ -13,7 +13,7 @@ class UserDao:
 
     @staticmethod
     def update_user(user):
-        existing_user = User.query.filter_by(id=user.id).first()
+        existing_user = UserDao.get_by_id(user.id)
         existing_user.fistname = user.firstname
         existing_user.lastname = user.lastname
         existing_user.status = user.status

@@ -4,8 +4,8 @@ from datetime import datetime
 
 class Product(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    vendor_id = db.Column(db.Integer, db.ForeignKey('vendor.id'))
     product_name = db.Column(db.String(80))
-    provider = db.Column(db.String(100))
     department = db.Column(db.String(100))
     budget_owner = db.Column(db.String(100))
     product_owner = db.Column(db.String(100))
@@ -13,7 +13,7 @@ class Product(db.Model):
     payment_method = db.Column(db.String(100))
     product_type = db.Column(db.String(100))
     create_date = db.Column(db.DateTime, default=datetime.utcnow)
-    last_update_date = db.Column(db.DateTime)
+    updated_date = db.Column(db.DateTime)
     status = db.Column(db.String(3))
 
     def __repr__(self):
@@ -22,15 +22,15 @@ class Product(db.Model):
     def to_json(self):
         json_result = {
             'id': self.id,
+            'vendor_id': self.vendor_id,
             'product_name': self.software_name,
-            'provider': self.provider,
             'department': self.department,
             'budget_owner': self.budget_owner,
-            'product_owner': self.software_owner,
+            'product_owner': self.product_owner,
             'expiration_date': self.expiration_date,
             'payment_method': self.payment_method,
             'product_type': self.product_type,
             'create_date': self.create_date,            
-            'last_update_date': self.last_update_date
+            'updated_date': self.updated_date
         }
         return json_result                

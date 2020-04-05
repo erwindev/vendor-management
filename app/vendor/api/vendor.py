@@ -2,9 +2,7 @@ import sys
 from flask import jsonify, request
 from flask_restplus import Api, Resource, Namespace, fields
 from app.vendor.dao.vendor import VendorDao
-from app.vendor.dao.contact import ContactDao
 from app.vendor.models.vendor import Vendor as VendorModel
-from app.vendor.models.contact import Contact as ContactModel
 from app.vendor.util.decorator import token_required
 
 
