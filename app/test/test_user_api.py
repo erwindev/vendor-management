@@ -21,8 +21,10 @@ class TestUserResgistration(BaseTestCase):
         """ Test registration with already registered username"""
         auth_token, user_loggedin_data = BaseTestCase.get_token_and_loggedin_user()
 
+        # register user
         BaseTestCase.register_user(auth_token)
         with self.client:
+            # register user again
             response = BaseTestCase().register_user(auth_token)
             data = json.loads(response.data.decode())
             self.assertTrue(data['status'] == 'fail')
@@ -72,6 +74,7 @@ class TestUser(BaseTestCase):
             self.assertTrue(response.content_type == 'application/json')
             self.assertEqual(response.status_code, 201)    
 
+            #get user
             response = BaseTestCase().get_user(auth_token, user_id)
             data = json.loads(response.data.decode())
             self.assertTrue(data['username'] == 'joe.tester')
@@ -88,6 +91,7 @@ class TestLogout(BaseTestCase):
         """ Test for logging out user """
         auth_token, user_loggedin_data = BaseTestCase.get_token_and_loggedin_user()
         with self.client:
+            # logout user using a valid token
             response = BaseTestCase.logged_out(auth_token)
             data = json.loads(response.data.decode())
             self.assertTrue(data['status'] == 'success')
@@ -95,6 +99,7 @@ class TestLogout(BaseTestCase):
             self.assertTrue(response.content_type == 'application/json')
             self.assertEqual(response.status_code, 200)            
 
+            # logout user using a blacklisted token
             response = BaseTestCase.logged_out(auth_token)
             data = json.loads(response.data.decode())
             self.assertTrue(data['status'] == 'fail')
@@ -102,6 +107,7 @@ class TestLogout(BaseTestCase):
             self.assertTrue(response.content_type == 'application/json')
             self.assertEqual(response.status_code, 403)             
 
+            # logout user using an invalid token
             response = BaseTestCase.logged_out('xxx')
             data = json.loads(response.data.decode())
             self.assertTrue(data['status'] == 'fail')

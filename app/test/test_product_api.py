@@ -46,6 +46,18 @@ class TestProductApi(BaseTestCase):
             self.assertTrue(response.content_type == 'application/json')
             self.assertEqual(response.status_code, 201)
 
+            # get all products by vendor
+            response = BaseTestCase.get_all_product_by_vendor(auth_token, vendor_id)
+            data = json.loads(response.data.decode())
+            product_id = data["productlist"][0]['id']
+
+            # get product 1
+            response = BaseTestCase.get_product(auth_token, product_id)
+            data = json.loads(response.data.decode())
+            self.assertTrue(data['product_name'] == 'Product 1')
+            self.assertTrue(response.content_type == 'application/json')
+            self.assertEqual(response.status_code, 200)               
+
     def test_update_product(self):
         """ Test for update product """
         auth_token, user_loggedin_data = BaseTestCase.get_token_and_loggedin_user()
