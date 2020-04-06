@@ -11,13 +11,13 @@ class ProductDto:
     api = Namespace('product', description='product related operations')
     product = api.model('product', {
         'id': fields.String(),
-        'vednor_id': fields.String(),
-        'product_name': fields.String(),
-        'department': fields.String(),
-        'budget_owner': fields.String(),
-        'expiration_date': fields.String(),
-        'payment_method': fields.String(),
-        'product_type': fields.String(),
+        'vendor_id': fields.String(),
+        'product_name': fields.String(required=True),
+        'department': fields.String(required=True),
+        'budget_owner': fields.String(required=True),
+        'expiration_date': fields.String(required=True),
+        'payment_method': fields.String(required=True),
+        'product_type': fields.String(required=True),
         'status': fields.String(),
         'create_date': fields.DateTime(),
         'updated_date': fields.DateTime()      
@@ -50,7 +50,7 @@ class ProductList(Resource):
 
     @api.response(201, 'Product successfully created.')
     @api.doc('create a new product')
-    @api.expect(ProductDto.product, validate=False)
+    @api.expect(ProductDto.product, validate=True)
     @token_required
     def post(self, vendor_id):
         """Insert a product"""
@@ -90,16 +90,32 @@ class ProductList(Resource):
 
             existing_product = ProductModel()
             existing_product.id = product_data['id']
-            existing_product.vendor_id = product_data['vendor_id']
-            existing_product.product_name = product_data['product_name']
-            existing_product.department = product_data['department']
-            existing_product.budget_owner = product_data['budget_owner']
-            existing_product.product_owner = product_data['product_owner']
-            new_product.expiration_date = datetime.strptime(product_data['expiration_date'],"%Y-%m-%d").date()
-            existing_product.payment_method = product_data['payment_method']
-            existing_product.product_type = product_data['product_type']
-            existing_product.status = product_data['status']            
-            existing_product = ProductDto.update_product(existing_vendor)
+            existing_product.vendor_id = vendor_id
+            if 'product_name' in product_data:
+                existing_product.product_name = product_data['product_name']
+            
+            if 'department' in product_data:
+                existing_product.department = product_data['department']
+
+            if 'budget_owner' in product_data:
+                existing_product.budget_owner = product_data['budget_owner']
+
+            if 'product_owner' in product_data:
+                existing_product.product_owner = product_data['product_owner']
+            
+            if 'expiration_date' in product_data:
+                new_product.expiration_date = datetime.strptime(product_data['expiration_date'],"%Y-%m-%d").date()
+
+            if 'payment_method' in product_data:
+                existing_product.payment_method = product_data['payment_method']
+            
+            if 'product_type' in product_data:
+                existing_product.product_type = product_data['product_type']
+
+            if 'status' in product_data:
+                existing_product.status = product_data['status']            
+
+            existing_product = ProductDao.update_product(existing_product)
             response_object = {
                 'status': 'success',
                 'message': 'Product successfully updated.'

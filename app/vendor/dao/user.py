@@ -14,9 +14,15 @@ class UserDao:
     @staticmethod
     def update_user(user):
         existing_user = UserDao.get_by_id(user.id)
-        existing_user.fistname = user.firstname
-        existing_user.lastname = user.lastname
-        existing_user.status = user.status
+        if user.firstname:
+            existing_user.fistname = user.firstname
+        
+        if user.lastname:
+            existing_user.lastname = user.lastname
+
+        if user.status:
+            existing_user.status = user.status
+            
         existing_user.updated_date = datetime.datetime.now()
         db.session.commit()
         db.session.refresh(existing_user)

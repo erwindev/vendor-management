@@ -44,7 +44,7 @@ class VendorList(Resource):
 
     @api.response(201, 'Vendor successfully created.')
     @api.doc('create a new vendor')
-    @api.expect(VendorDto.vendor, validate=False)
+    @api.expect(VendorDto.vendor, validate=True)
     @token_required
     def post(self):
         """Insert a vendor"""
@@ -54,6 +54,7 @@ class VendorList(Resource):
             new_vendor = VendorModel()
             new_vendor.name = vendor_data['name']
             new_vendor.website = vendor_data['website']
+            new_vendor.status = vendor_data['status']
             new_vendor = VendorDao.save_vendor(new_vendor)
             response_object = {
                 'status': 'success',
@@ -77,9 +78,16 @@ class VendorList(Resource):
 
             existing_vendor = VendorModel()
             existing_vendor.id = vendor_data['id']
-            existing_vendor.name = vendor_data['name']
-            existing_vendor.website = vendor_data['website']
-            existing_vendor.status = vendor_data['status']
+            
+            if 'name' in vendor_data:
+                existing_vendor.name = vendor_data['name']
+
+            if 'website' in vendor_data:    
+                existing_vendor.website = vendor_data['website']
+
+            if 'status' in vendor_data:
+                existing_vendor.status = vendor_data['status']
+
             existing_vendor = VendorDao.update_vendor(existing_vendor)
             response_object = {
                 'status': 'success',

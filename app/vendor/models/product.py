@@ -23,7 +23,7 @@ class Product(db.Model):
         json_result = {
             'id': self.id,
             'vendor_id': self.vendor_id,
-            'product_name': self.software_name,
+            'product_name': self.product_name,
             'department': self.department,
             'budget_owner': self.budget_owner,
             'product_owner': self.product_owner,

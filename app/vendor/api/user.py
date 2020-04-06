@@ -97,9 +97,15 @@ class UserList(Resource):
             user_data = request.json
             existing_user = UserDao.get_by_id(user_data['id'])
 
-            existing_user.firstname = user_data['firstname']
-            existing_user.lastname = user_data['lastname']
-            existing_user.status = user_data['status']
+            if 'firstname' in user_data:
+                existing_user.firstname = user_data['firstname']
+
+            if 'lastname' in user_data:
+                existing_user.lastname = user_data['lastname']
+
+            if 'status' in user_data:
+                existing_user.status = user_data['status']
+                
             existing_user = UserDao.update_user(existing_user)
             response_object = {
                 'status': 'success',

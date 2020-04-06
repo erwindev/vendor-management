@@ -15,9 +15,16 @@ class VendorDao:
     @staticmethod
     def update_vendor(vendor):
         existing_vendor = VendorDao.get_by_id(vendor.id)
-        existing_vendor.name = vendor.name
-        existing_vendor.website = vendor.website
-        existing_vendor.status = vendor.status
+
+        if vendor.name:
+            existing_vendor.name = vendor.name
+
+        if vendor.website:
+            existing_vendor.website = vendor.website
+
+        if vendor.status:
+            existing_vendor.status = vendor.status
+        
         existing_vendor.updated_date = datetime.datetime.now()
         db.session.commit()
         db.session.refresh(existing_vendor)

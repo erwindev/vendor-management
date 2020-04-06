@@ -136,7 +136,8 @@ class BaseTestCase(TestCase):
             ),        
             data=json.dumps(dict(
                 name=vendor_name,
-                website=website_name
+                website=website_name,
+                status="active"
             )),
             content_type='application/json'
         )
@@ -184,9 +185,9 @@ class BaseTestCase(TestCase):
     #
     ######################
     @staticmethod
-    def add_product(auth_token, product):
+    def add_product(auth_token, vendor_id, product):
         return app.test_client().post(
-            '/api/v1/product/vendor/{}'.format(product.vendor_id),
+            '/api/v1/product/vendor/{}'.format(vendor_id),
             headers=dict(
                 Authorization='Bearer {}'.format(auth_token) 
             ),        
@@ -204,22 +205,15 @@ class BaseTestCase(TestCase):
         )        
 
     @staticmethod
-    def update_product(auth_token, product):
+    def update_product(auth_token, vendor_id, product):
         return app.test_client().put(
-            '/api/v1/productvendor/',
+            '/api/v1/product/vendor/{}'.format(vendor_id),
             headers=dict(
                 Authorization='Bearer {}'.format(auth_token) 
             ),        
             data=json.dumps(dict(
-                product_name = product.product_name,
-                vendor_id = product.vendor_id,
-                deparment = product.department,
-                budget_owner = product.budget_owner,
-                product_owner = product.product_owner,
-                expiration_date = product.expiration_date,
-                payment_method = product.payment_method,
-                product_type = product.product_type,
-                status = product.status            
+                id = product.id,
+                product_name = product.product_name           
             )),
             content_type='application/json'
         )    

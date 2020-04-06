@@ -24,13 +24,13 @@ class ContactDto:
         'zipcode': fields.String(required=True),  
         'create_date': fields.DateTime(),   
         'updated_date': fields.DateTime(),
-        'status': fields.String(required=True)  
+        'status': fields.String()  
     })            
 
 
 api = ContactDto.api
 
-@api.route('/vendor/<id>')
+@api.route('/<contact_id>/<contact_type_id>')
 @api.param('id', 'The Vendor identifier')
 @api.response(404, 'Vendor not found.')
 @api.expect(api.parser().add_argument('Authorization', location='headers'))
@@ -39,9 +39,9 @@ class VendorContactList(Resource):
     @api.doc('get all vendor contacts')
     @api.marshal_with(ContactDto.contact)
     @token_required
-    def get(self, id):
+    def get(self, contact_id, contact_type_id):
         """Get contacts for vendor given its identifier"""
-        vendor = VendorDao.get_by_id(id)
+        vendor = VendorDao.get_by_id(contact_id)
         if not vendor:
             response_object = {
                 'status': 'fail',
@@ -49,7 +49,7 @@ class VendorContactList(Resource):
             }
             return response_object, 404
         else:
-            contacts = ContactDao.get_by_id(vendor.id, 1000)
+            contacts = ContactDao.get_by_id(contact_id, contact_type_id)
             contact_ret_list = []
             for contact in contacts:
                 contact_ret_list.append(contact.to_json())
@@ -58,27 +58,47 @@ class VendorContactList(Resource):
 
     @api.response(201, 'Vendor contact successfully created.')
     @api.doc('create a new vendor contact')
-    @api.expect(ContactDto.contact, validate=False)
+    @api.expect(ContactDto.contact, validate=True)
     @token_required
-    def post(self, id):
+    def post(self, contact_id, contact_type_id):
         """Insert a vendor contact"""
         try:
             vendor = VendorDao.get_by_id(id)            
             contact_data = request.json
 
             new_contact = ContactModel()
-            new_contact.name = contact_data['name']
-            new_contact.email = contact_data['email']
-            new_contact.phone1 = contact_data['phone1']
-            new_contact.phone2 = contact_data['phone2']
-            new_contact.street1 = contact_data['street1']
-            new_contact.street2 = contact_data['street2']
-            new_contact.city = contact_data['city']
-            new_contact.state = contact_data['state']
-            new_contact.country = contact_data['country']
-            new_contact.zipcode = contact_data['zipcode']
+            if 'name' in contact_data:
+                new_contact.name = contact_data['name']
+
+            if 'email' in contact_data:
+                new_contact.email = contact_data['email']
+
+            if 'phone1' in contact_data:
+                new_contact.phone1 = contact_data['phone1']
+
+            if 'phone2' in contact_data:
+                new_contact.phone2 = contact_data['phone2']
+
+            if 'street1' in contact_data:
+                new_contact.street1 = contact_data['street1']
+
+            if 'street2' in contact_data:
+                new_contact.street2 = contact_data['street2']
+
+            if 'city' in contact_data:
+                new_contact.city = contact_data['city']
+
+            if 'state' in contact_data:
+                new_contact.state = contact_data['state']
+
+            if 'country' in contact_data:
+                new_contact.country = contact_data['country']
+
+            if 'zipcode' in contact_data:
+                new_contact.zipcode = contact_data['zipcode']
+
             new_contact.contact_id = vendor.id
-            new_contact.contact_type_id = ContactModel.VENDOR_TYPE_ID
+            new_contact.contact_type_id = contact_type_id
 
             new_contact = ContactDao.save_contact(new_contact)
             response_object = {
