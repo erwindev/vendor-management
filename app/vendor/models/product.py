@@ -15,6 +15,7 @@ class Product(db.Model):
     create_date = db.Column(db.DateTime, default=datetime.utcnow)
     updated_date = db.Column(db.DateTime)
     status = db.Column(db.String(3))
+    user_by = db.Column(db.String(100))
 
     def __repr__(self):
         return '<Product {}>'.format(self.product_name)
@@ -31,6 +32,7 @@ class Product(db.Model):
             'payment_method': self.payment_method,
             'product_type': self.product_type,
             'create_date': self.create_date,            
-            'updated_date': self.updated_date
+            'updated_date': self.updated_date,
+            'user_by': self.user_by
         }
         return json_result                

@@ -8,21 +8,30 @@ from datetime import datetime
 #   1001 = product
 ##
 class Notes(db.Model):
-    notes_id = db.Column(db.Integer, primary_key=True)
-    notes_type_id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
+    notes_id = db.Column(db.Integer)
+    notes_type_id = db.Column(db.Integer)
     notes = db.Column(db.String(2000))
+    create_date = db.Column(db.DateTime, default=datetime.utcnow)
+    user_by = db.Column(db.String(100))
 
     def __repr__(self):
         return '<Notes: {} {} {}>'.format(
+            self.id,
             self.notes_id,
             self.notes_type_id,
-            self.notes
+            self.notes,
+            self.create_date,
+            self.user_by
         )
 
     def to_json(self):
         json_data = {
+            'id': self.id,
             'notes_id': self.notes_id,
             'notes_type_id': self.notes_type_id,
-            'notes': self.notes
+            'notes': self.notes,
+            'create_date': self.create_date,
+            'user_by': self.user_by
         }
         return json_data

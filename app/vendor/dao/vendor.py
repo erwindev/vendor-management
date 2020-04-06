@@ -24,6 +24,9 @@ class VendorDao:
 
         if vendor.status:
             existing_vendor.status = vendor.status
+
+        if vendor.user_by:
+            existing_vendor.user_by = vendor.user_by               
         
         existing_vendor.updated_date = datetime.datetime.now()
         db.session.commit()

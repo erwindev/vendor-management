@@ -39,6 +39,9 @@ class ProductDao:
         if product.status:
             existing_product.status = product.status
 
+        if product.user_by:
+            existing_product.user_by = product.user_by                    
+
         existing_product.updatee_date = datetime.datetime.now()
         db.session().commit()
         db.session.refresh(existing_product)

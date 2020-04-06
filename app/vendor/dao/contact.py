@@ -47,6 +47,9 @@ class ContactDao:
 
         if contact.status:
             existing_contact.status = contact.status
+
+        if contact.user_by:
+            existing_contact.user_by = contact.user_by            
             
         existing_contact.update_date = datetime.datetime.now()  
         db.session.commit()

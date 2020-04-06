@@ -9,6 +9,7 @@ class Vendor(db.Model):
     create_date = db.Column(db.DateTime, default=datetime.utcnow)
     updated_date = db.Column(db.DateTime)
     status = db.Column(db.String(3))
+    user_by = db.Column(db.String(100))
 
     def __repr__(self):
         return '<Vendor {}>'.format(self.name)
@@ -18,6 +19,7 @@ class Vendor(db.Model):
             'id': self.id,
             'name': self.name,
             'website': self.website,
-            'create_date': self.create_date
+            'create_date': self.create_date,
+            'user_by': self.user_by
         }
         return json_result                

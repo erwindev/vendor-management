@@ -24,6 +24,7 @@ class Contact(db.Model):
     create_date = db.Column(db.DateTime, default=datetime.utcnow)
     updated_date = db.Column(db.DateTime)
     status = db.Column(db.String(3))
+    user_by = db.Column(db.String(100))
 
     def __repr__(self):
         return '<Contact: {} {} {}>'.format(
@@ -42,7 +43,8 @@ class Contact(db.Model):
             self.zipcode,            
             self.create_date,
             self.updated_date,
-            self.status
+            self.status,
+            self.user_by
         )
 
     def to_json(self):
@@ -62,7 +64,8 @@ class Contact(db.Model):
             'zipcode': self.zipcode,            
             'create_date': self.create_date,
             'updated_date': self.updated_date,
-            'status': self.status                        
+            'status': self.status,
+            'user_by': self.user_by                
         }
         return json_data
 
