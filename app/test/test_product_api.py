@@ -88,11 +88,11 @@ class TestProductApi(BaseTestCase):
             temp_product = Object()
             temp_product.product_name = "Product 2"
             temp_product.department = "Department 2"
-            temp_product.budget_owner = "Johnny Budget"
-            temp_product.product_owner = "Johnny Owner"
+            temp_product.budget_owner = "Johnny Budget2"
+            temp_product.product_owner = "Johnny Owner2"
             temp_product.expiration_date = datetime.date.today() + datetime.timedelta(days=365)
-            temp_product.payment_method = "Credit Card"
-            temp_product.product_type = "Software"
+            temp_product.payment_method = "Credit Card2"
+            temp_product.product_type = "Software2"
             temp_product.status = "Active"
             
             response = BaseTestCase.add_product(auth_token, vendor_id, temp_product)
@@ -126,6 +126,7 @@ class TestProductApi(BaseTestCase):
             response = BaseTestCase.get_product(auth_token, product_id)
             data = json.loads(response.data.decode())
             self.assertTrue(data['product_name'] == 'Product xxxxx')
+            self.assertTrue(data['department'] == 'Department 1')
             self.assertTrue(response.content_type == 'application/json')
             self.assertEqual(response.status_code, 200)                           
 
