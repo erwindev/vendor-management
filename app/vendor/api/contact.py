@@ -10,14 +10,15 @@ from app.vendor.util.decorator import token_required
 class ContactDto:
     api = Namespace('contact', description='contact related operations')
     contact = api.model('contact', {
-        'contact_id': fields.String(),
-        'contact_type_id': fields.String(),        
+        'id': fields.String(),
+        'contact_id': fields.String(required=True),
+        'contact_type_id': fields.String(required=True),        
         'name': fields.String(required=True),
         'email': fields.String(required=True),        
         'phone1': fields.String(required=True),       
         'phone2': fields.String(required=True),         
         'street1': fields.String(required=True),                        
-        'street2': fields.String(required=True),  
+        'street2': fields.String(),  
         'city': fields.String(required=True),  
         'state': fields.String(required=True),  
         'country': fields.String(required=True),  
@@ -31,79 +32,63 @@ class ContactDto:
 api = ContactDto.api
 
 @api.route('/<contact_id>/<contact_type_id>')
-@api.param('id', 'The Vendor identifier')
-@api.response(404, 'Vendor not found.')
+@api.response(404, 'Contact not found.')
 @api.expect(api.parser().add_argument('Authorization', location='headers'))
-class VendorContactList(Resource):
+class ContactList(Resource):
 
-    @api.doc('get all vendor contacts')
-    @api.marshal_with(ContactDto.contact)
+    @api.doc('get all contacts per contact_id')
+    @api.marshal_list_with(ContactDto.contact, envelope='contactlist')
     @token_required
     def get(self, contact_id, contact_type_id):
-        """Get contacts for vendor given its identifier"""
-        vendor = VendorDao.get_by_id(contact_id)
-        if not vendor:
+        """Get contacts based on the given identifier"""
+        contacts = ContactDao.get_contacts(contact_id, contact_type_id)
+        if not contacts:
             response_object = {
                 'status': 'fail',
-                'message': 'Vendor not found.'
+                'message': 'No data found.'
             }
             return response_object, 404
         else:
-            contacts = ContactDao.get_by_id(contact_id, contact_type_id)
             contact_ret_list = []
             for contact in contacts:
                 contact_ret_list.append(contact.to_json())
             return contact_ret_list
 
 
-    @api.response(201, 'Vendor contact successfully created.')
-    @api.doc('create a new vendor contact')
+@api.route('/')
+@api.expect(api.parser().add_argument('Authorization', location='headers'))
+class AddContact(Resource):
+
+    @api.response(201, 'Contact successfully created.')
+    @api.doc('create a new contact')
     @api.expect(ContactDto.contact, validate=True)
     @token_required
-    def post(self, contact_id, contact_type_id):
-        """Insert a vendor contact"""
+    def post(self):
+        """Insert a new contact"""
         try:
-            vendor = VendorDao.get_by_id(id)            
             contact_data = request.json
-
+            
             new_contact = ContactModel()
-            if 'name' in contact_data:
-                new_contact.name = contact_data['name']
-
-            if 'email' in contact_data:
-                new_contact.email = contact_data['email']
-
-            if 'phone1' in contact_data:
-                new_contact.phone1 = contact_data['phone1']
-
-            if 'phone2' in contact_data:
-                new_contact.phone2 = contact_data['phone2']
-
-            if 'street1' in contact_data:
-                new_contact.street1 = contact_data['street1']
+            new_contact.contact_id = contact_data['contact_id']
+            new_contact.contact_type_id = contact_data['contact_type_id']
+            new_contact.name = contact_data['name']
+            new_contact.email = contact_data['email']
+            new_contact.phone1 = contact_data['phone1']
+            new_contact.phone2 = contact_data['phone2']
+            new_contact.street1 = contact_data['street1']
 
             if 'street2' in contact_data:
                 new_contact.street2 = contact_data['street2']
 
-            if 'city' in contact_data:
-                new_contact.city = contact_data['city']
-
-            if 'state' in contact_data:
-                new_contact.state = contact_data['state']
-
-            if 'country' in contact_data:
-                new_contact.country = contact_data['country']
-
-            if 'zipcode' in contact_data:
-                new_contact.zipcode = contact_data['zipcode']
-
-            new_contact.contact_id = vendor.id
-            new_contact.contact_type_id = contact_type_id
+            new_contact.city = contact_data['city']
+            new_contact.state = contact_data['state']
+            new_contact.country = contact_data['country']
+            new_contact.zipcode = contact_data['zipcode']
 
             new_contact = ContactDao.save_contact(new_contact)
             response_object = {
                 'status': 'success',
-                'message': 'Vendor contact successfully added.'
+                'message': 'Contact successfully added.'
             }
             return response_object, 201
         except Exception as e:
@@ -112,6 +97,86 @@ class VendorContactList(Resource):
                 'message': 'Internal Server Error'
             }, 500
 
+
+@api.route('/<id>')
+@api.param('id', 'The Contact identifier')
+@api.expect(api.parser().add_argument('Authorization', location='headers'))
+class Contact(Resource):
+
+    @api.response(201, 'Contact successfully created.')
+    @api.doc('update a contact')
+    @api.expect(ContactDto.contact, validate=False)
+    @token_required
+    def put(self, id):
+        """Update a contact"""
+        try:
+            contact_data = request.json
+            existing_contact = ContactDao.get_by_id(id)            
+
+            if 'contact_id' in contact_data:
+                existing_contact.contact_id = contact_data['contact_id']
+
+            if 'contact_type_id' in contact_data:
+                existing_contact.contact_type_id = contact_data['contact_type_id']
+
+            if 'name' in contact_data:
+                existing_contact.name = contact_data['name']
+
+            if 'email' in contact_data:
+                existing_contact.email = contact_data['email']
+
+            if 'phone1' in contact_data:
+                existing_contact.phone1 = contact_data['phone1']
+
+            if 'phone2' in contact_data:
+                existing_contact.phone2 = contact_data['phone2']
+
+            if 'street1' in contact_data:
+                existing_contact.street1 = contact_data['street1']
+
+            if 'street2' in contact_data:
+                existing_contact.street2 = contact_data['street2']
+
+            if 'city' in contact_data:
+                existing_contact.city = contact_data['city']
+
+            if 'state' in contact_data:
+                existing_contact.state = contact_data['state']
+
+            if 'country' in contact_data:
+                existing_contact.country = contact_data['country']
+
+            if 'zipcode' in contact_data:
+                existing_contact.zipcode = contact_data['zipcode']
+
+            existing_contact = ContactDao.update_contact(existing_contact)
+            response_object = {
+                'status': 'success',
+                'message': 'Vendor contact successfully added.'
+            }
+
+            return response_object, 201
+        except Exception as e:
+            return {
+                'status': 'error',
+                'message': 'Internal Server Error'
+            }, 500
+
+
+    @api.doc('get a contact')
+    @api.marshal_with(ContactDto.contact)
+    @token_required
+    def get(self, id):
+        """Get a contact given its identifier"""
+        contact = ContactDao.get_by_id(id)  
+        if not contact:
+            response_object = {
+                'status': 'fail',
+                'message': 'Contact not found.'
+            }
+            return response_object, 404
+        else:
+            return contact
 
 @api.errorhandler(Exception)
 def generic_exception_handler(e: Exception):

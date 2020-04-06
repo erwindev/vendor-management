@@ -13,7 +13,7 @@ class ContactDao:
 
     @staticmethod
     def update_contact(contact):
-        existing_contact = get_by_id(contact.contact_id, contact.contact_type_id)
+        existing_contact = ContactDao.get_by_id(contact.id)
 
         if contact.name:
             existing_contact.name = contact.name
@@ -54,5 +54,9 @@ class ContactDao:
         return existing_contact        
 
     @staticmethod
-    def get_by_id(contact_id, contact_type_id):
-        return Contact.query.filter_by(contact_id=contact_id, contact_type_id=contact_type_id).first()
+    def get_contacts(contact_id, contact_type_id):
+        return Contact.query.filter_by(contact_id=contact_id, contact_type_id=contact_type_id)
+
+    @staticmethod
+    def get_by_id(id):
+        return Contact.query.filter_by(id=id).first()

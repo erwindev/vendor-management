@@ -27,6 +27,7 @@ class ProductDto:
 api = ProductDto.api
 
 @api.route("/vendor/<vendor_id>")
+@api.param('vendor_id', 'The Vendor identifier')
 @api.expect(api.parser().add_argument('Authorization', location='headers'))
 class ProductList(Resource):
 
@@ -129,8 +130,8 @@ class ProductList(Resource):
 
 
 
-@api.route('/<id>')
-@api.param('id', 'The Product identifier')
+@api.route('/<product_id>')
+@api.param('product_id', 'The Product identifier')
 @api.response(404, 'Product not found.')
 @api.expect(api.parser().add_argument('Authorization', location='headers'))
 class Product(Resource):
@@ -138,9 +139,9 @@ class Product(Resource):
     @api.doc('get a product')
     @api.marshal_with(ProductDto.product)
     @token_required
-    def get(self, id):
+    def get(self, product_id):
         """Get a product given its identifier"""
-        product = ProductDao.get_by_id(id)
+        product = ProductDao.get_by_id(product_id)
         if not product:
             response_object = {
                 'status': 'fail',

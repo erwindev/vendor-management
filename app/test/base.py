@@ -239,3 +239,66 @@ class BaseTestCase(TestCase):
             ),        
             content_type='application/json'
         )  
+
+
+    ######################
+    #
+    # contact api
+    #
+    ######################
+    @staticmethod
+    def add_contact(auth_token, contact):
+        return app.test_client().post(
+            '/api/v1/contact/',
+            headers=dict(
+                Authorization='Bearer {}'.format(auth_token) 
+            ),        
+            data=json.dumps(dict(
+                contact_id = contact.contact_id,
+                contact_type_id = contact.contact_type_id,
+                name = contact.name,
+                email = contact.email,
+                phone1 = contact.phone1,
+                phone2 = contact.phone2,
+                street1 = contact.street1,
+                city = contact.city,
+                state = contact.state,
+                country = contact.country,
+                zipcode = contact.zipcode,
+                status = contact.status            
+            )),
+            content_type='application/json'
+        )        
+
+    @staticmethod
+    def get_contacts(auth_token, contact_id, contact_type_id):
+        return app.test_client().get(
+            '/api/v1/contact/{}/{}'.format(contact_id, contact_type_id),
+            headers=dict(
+                Authorization='Bearer {}'.format(auth_token) 
+            ),        
+            content_type='application/json'
+        )    
+
+    @staticmethod
+    def get_contact(auth_token, id):
+        return app.test_client().get(
+            '/api/v1/contact/{}'.format(id),
+            headers=dict(
+                Authorization='Bearer {}'.format(auth_token) 
+            ),        
+            content_type='application/json'
+        )            
+
+    @staticmethod
+    def update_contact(auth_token, id, contact):
+        return app.test_client().put(
+            '/api/v1/contact/{}'.format(id),
+            headers=dict(
+                Authorization='Bearer {}'.format(auth_token) 
+            ),        
+            data=json.dumps(dict(
+                name = contact.name           
+            )),
+            content_type='application/json'
+        )            

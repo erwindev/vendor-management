@@ -8,8 +8,9 @@ from datetime import datetime
 ##
 
 class Contact(db.Model):
-    contact_id = db.Column(db.Integer, primary_key=True)
-    contact_type_id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
+    contact_id = db.Column(db.Integer)
+    contact_type_id = db.Column(db.Integer)
     name = db.Column(db.String(100))
     email = db.Column(db.String(100))
     phone1 = db.Column(db.String(100))
@@ -26,6 +27,7 @@ class Contact(db.Model):
 
     def __repr__(self):
         return '<Contact: {} {} {}>'.format(
+            self.id,
             self.contact_id,
             self.contact_type_id,
             self.name,
@@ -45,6 +47,7 @@ class Contact(db.Model):
 
     def to_json(self):
         json_data = {
+            'id': self.id,            
             'contact_id': self.contact_id,
             'contact_type_id': self.contact_type_id,
             'name': self.name,
