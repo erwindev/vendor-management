@@ -17,7 +17,7 @@ class NotesDto:
         'link': fields.String(required=True),
         'create_date': fields.DateTime(),   
         'update_date': fields.DateTime(),
-        'status': fields.String()  
+        'user_by': fields.String(required=True)
     })            
 
 
@@ -66,6 +66,7 @@ class AddNotes(Resource):
             new_attachment.name = attachment_data['name']
             new_attachment.link = attachment_data['link']
             new_attachment.description = attachment_data['description']
+            new_attachment.user_by = attachment_data['user_by']
 
             new_attachment = AttachmentDao.save_attachment(new_attachment)
             response_object = {

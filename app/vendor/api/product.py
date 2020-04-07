@@ -20,7 +20,8 @@ class ProductDto:
         'product_type': fields.String(required=True),
         'status': fields.String(),
         'create_date': fields.DateTime(),
-        'updated_date': fields.DateTime()      
+        'updated_date': fields.DateTime(),
+        'user_by': fields.String(required=True)        
     })      
 
 
@@ -68,6 +69,7 @@ class ProductList(Resource):
             new_product.payment_method = product_data['payment_method']
             new_product.product_type = product_data['product_type']
             new_product.status = product_data['status']
+            new_product.user_by = product_data['user_by']
             new_product = ProductDao.save_product(new_product)
             response_object = {
                 'status': 'success',
@@ -114,7 +116,10 @@ class ProductList(Resource):
                 existing_product.product_type = product_data['product_type']
 
             if 'status' in product_data:
-                existing_product.status = product_data['status']            
+                existing_product.status = product_data['status']     
+
+            if 'user_by' in product_data:
+                existing_product.user_by = product_data['user_by']                             
 
             existing_product = ProductDao.update_product(existing_product)
             response_object = {

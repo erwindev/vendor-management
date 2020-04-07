@@ -137,7 +137,8 @@ class BaseTestCase(TestCase):
             data=json.dumps(dict(
                 name=vendor_name,
                 website=website_name,
-                status="active"
+                status="active",
+                user_by = 'ealberto' 
             )),
             content_type='application/json'
         )
@@ -163,7 +164,8 @@ class BaseTestCase(TestCase):
                 id=vendor_id,
                 name=vendor_name,
                 website=website_name,
-                status=status
+                status=status,
+                user_by = 'jalberto' 
             )),
             content_type='application/json'
         )     
@@ -199,7 +201,8 @@ class BaseTestCase(TestCase):
                 expiration_date = str(product.expiration_date),
                 payment_method = product.payment_method,
                 product_type = product.product_type,
-                status = product.status            
+                status = product.status,
+                user_by = 'ealberto'            
             )),
             content_type='application/json'
         )        
@@ -213,7 +216,8 @@ class BaseTestCase(TestCase):
             ),        
             data=json.dumps(dict(
                 id = product.id,
-                product_name = product.product_name           
+                product_name = product.product_name,
+                user_by = 'jalberto'           
             )),
             content_type='application/json'
         )    
@@ -265,7 +269,8 @@ class BaseTestCase(TestCase):
                 state = contact.state,
                 country = contact.country,
                 zipcode = contact.zipcode,
-                status = contact.status            
+                status = contact.status,
+                user_by = 'ealberto'            
             )),
             content_type='application/json'
         )        
@@ -298,7 +303,8 @@ class BaseTestCase(TestCase):
                 Authorization='Bearer {}'.format(auth_token) 
             ),        
             data=json.dumps(dict(
-                name = contact.name           
+                name = contact.name,
+                user_by = 'jalberto'          
             )),
             content_type='application/json'
         )            
@@ -318,7 +324,8 @@ class BaseTestCase(TestCase):
             data=json.dumps(dict(
                 notes_id = notes.notes_id,
                 notes_type_id = notes.notes_type_id,
-                notes = notes.notes          
+                notes = notes.notes,
+                user_by = 'ealberto'          
             )),
             content_type='application/json'
         )        
@@ -351,7 +358,8 @@ class BaseTestCase(TestCase):
                 Authorization='Bearer {}'.format(auth_token) 
             ),        
             data=json.dumps(dict(
-                notes = notes.notes           
+                notes = notes.notes,
+                user_by = 'jalberto'           
             )),
             content_type='application/json'
         )            
@@ -373,7 +381,8 @@ class BaseTestCase(TestCase):
                 attachment_type_id = attachment.attachment_type_id,
                 name = attachment.name,
                 link = attachment.link,
-                description = attachment.description          
+                description = attachment.description,
+                user_by = 'ealberto'          
             )),
             content_type='application/json'
         )        
@@ -406,7 +415,8 @@ class BaseTestCase(TestCase):
                 Authorization='Bearer {}'.format(auth_token) 
             ),        
             data=json.dumps(dict(
-                name = attachment.name           
+                name = attachment.name,
+                user_by = 'jalberto'           
             )),
             content_type='application/json'
         )                    

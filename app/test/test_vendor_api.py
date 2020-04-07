@@ -80,6 +80,7 @@ class TestVendorApi(BaseTestCase):
             data = json.loads(response.data.decode())
             self.assertTrue(data['name'] == 'Vendor Y')
             self.assertTrue(data['status'] == 'act')
+            self.assertTrue(data['user_by'] == 'jalberto')
             self.assertTrue(response.content_type == 'application/json')
             self.assertEqual(response.status_code, 200)                                  
 

@@ -6,13 +6,13 @@ from app import db
 from app.test.base import BaseTestCase
 
 
-class TestNotesApi(BaseTestCase):
-    def test_notes(self):
-        """ Test for add notes """
+class TestContactApi(BaseTestCase):
+    def test_contact(self):
+        """ Test for add contact """
         auth_token, user_loggedin_data = BaseTestCase.get_token_and_loggedin_user()
         with self.client:
 
-            notes_type_id = '1000' 
+            contact_type_id = '1000' 
 
             # add vendor
             response = BaseTestCase.add_vendor(auth_token, 'Vendor 1', 'www.vendor1.com')
@@ -30,43 +30,53 @@ class TestNotesApi(BaseTestCase):
             self.assertEqual(response.status_code, 200)     
             vendor_id = data['id']          
 
-            # add notes
-            temp_notes = Object()
-            temp_notes.notes_id = vendor_id
-            temp_notes.notes_type_id = notes_type_id
-            temp_notes.notes = "This is my notes"
+            # add contact
+            temp_contact = Object()
+            temp_contact.contact_id = vendor_id
+            temp_contact.contact_type_id = contact_type_id
+            temp_contact.name = "Erwin Alberto"
+            temp_contact.email = "ealberto@ppeoe.com"
+            temp_contact.phone1 = "904-555-4444"
+            temp_contact.phone2 = "904-555-4445"
+            temp_contact.street1 = "123 main st"
+            temp_contact.city = "Jacksonville"
+            temp_contact.state = "FL"
+            temp_contact.zipcode = "32256"
+            temp_contact.country = "USA"
+            temp_contact.status = "Active"
             
-            response = BaseTestCase.add_notes(auth_token, temp_notes)
+            response = BaseTestCase.add_contact(auth_token, temp_contact)
             data = json.loads(response.data.decode())
             self.assertTrue(data['status'] == 'success')
-            self.assertTrue(data['message'] == 'Notes successfully added.')
+            self.assertTrue(data['message'] == 'Contact successfully added.')
             self.assertTrue(response.content_type == 'application/json')
             self.assertEqual(response.status_code, 201)
 
-            # get all notes by vendor
-            response = BaseTestCase.get_all_notes(auth_token, vendor_id, notes_type_id)
+            # get all contacts by vendor
+            response = BaseTestCase.get_contacts(auth_token, vendor_id, contact_type_id)
             data = json.loads(response.data.decode())
-            notes_id = data["noteslist"][0]['id']
+            contact_id = data["contactlist"][0]['id']
 
-            # get notes
-            response = BaseTestCase.get_notes(auth_token, notes_id)
+            # get contact
+            response = BaseTestCase.get_contact(auth_token, contact_id)
             data = json.loads(response.data.decode())
-            self.assertTrue(data['notes'] == 'This is my notes')
+            self.assertTrue(data['name'] == 'Erwin Alberto')
             self.assertTrue(response.content_type == 'application/json')
             self.assertEqual(response.status_code, 200)      
 
-            # update notes
-            another_temp_notes = Object()
-            another_temp_notes.notes = 'I updated this note'
-            response = BaseTestCase.update_notes(auth_token, notes_id, another_temp_notes)
+            # update contact
+            another_temp_contact = Object()
+            another_temp_contact.name = 'Julian Alberto'
+            response = BaseTestCase.update_contact(auth_token, contact_id, another_temp_contact)
             data = json.loads(response.data.decode())
             self.assertTrue(response.content_type == 'application/json')
             self.assertEqual(response.status_code, 201)           
 
-            # get updated notes
-            response = BaseTestCase.get_notes(auth_token, notes_id)
+            # get updated contact
+            response = BaseTestCase.get_contact(auth_token, contact_id)
             data = json.loads(response.data.decode())
-            self.assertTrue(data['notes'] == 'I updated this note')
+            self.assertTrue(data['name'] == 'Julian Alberto')
+            self.assertTrue(data['user_by'] == 'jalberto')
             self.assertTrue(response.content_type == 'application/json')
             self.assertEqual(response.status_code, 200)                       
 

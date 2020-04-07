@@ -24,7 +24,8 @@ class ContactDto:
         'zipcode': fields.String(required=True),  
         'create_date': fields.DateTime(),   
         'updated_date': fields.DateTime(),
-        'status': fields.String()  
+        'status': fields.String(),
+        'user_by': fields.String(required=True)   
     })            
 
 
@@ -83,6 +84,7 @@ class AddContact(Resource):
             new_contact.state = contact_data['state']
             new_contact.country = contact_data['country']
             new_contact.zipcode = contact_data['zipcode']
+            new_contact.user_by = contact_data['user_by']
 
             new_contact = ContactDao.save_contact(new_contact)
             response_object = {

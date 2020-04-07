@@ -139,6 +139,7 @@ class TestProductApi(BaseTestCase):
             data = json.loads(response.data.decode())
             self.assertTrue(data['product_name'] == 'Product xxxxx')
             self.assertTrue(data['department'] == 'Department 1')
+            self.assertTrue(data['user_by'] == 'jalberto')
             self.assertTrue(response.content_type == 'application/json')
             self.assertEqual(response.status_code, 200)                           
 

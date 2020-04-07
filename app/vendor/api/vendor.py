@@ -14,7 +14,8 @@ class VendorDto:
         'website': fields.String(required=True),
         'status': fields.String(),
         'create_date': fields.DateTime(),
-        'updated_date': fields.DateTime()      
+        'updated_date': fields.DateTime(),
+        'user_by': fields.String(required=True)        
     })      
 
 
@@ -55,6 +56,7 @@ class VendorList(Resource):
             new_vendor.name = vendor_data['name']
             new_vendor.website = vendor_data['website']
             new_vendor.status = vendor_data['status']
+            new_vendor.user_by = vendor_data['user_by']
             new_vendor = VendorDao.save_vendor(new_vendor)
             response_object = {
                 'status': 'success',
@@ -87,6 +89,9 @@ class VendorList(Resource):
 
             if 'status' in vendor_data:
                 existing_vendor.status = vendor_data['status']
+
+            if 'user_by' in vendor_data:
+                existing_vendor.user_by = vendor_data['user_by']                    
 
             existing_vendor = VendorDao.update_vendor(existing_vendor)
             response_object = {

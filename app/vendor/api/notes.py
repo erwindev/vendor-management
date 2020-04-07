@@ -15,7 +15,7 @@ class NotesDto:
         'notes': fields.String(required=True),
         'create_date': fields.DateTime(),   
         'updated_date': fields.DateTime(),
-        'status': fields.String()  
+        'user_by': fields.String(required=True)  
     })            
 
 
@@ -62,7 +62,7 @@ class AddNotes(Resource):
             new_notes.notes_id = notes_data['notes_id']
             new_notes.notes_type_id = notes_data['notes_type_id']
             new_notes.notes = notes_data['notes']
-
+            new_notes.user_by = notes_data['user_by']
             new_notes = NotesDao.save_notes(new_notes)
             response_object = {
                 'status': 'success',

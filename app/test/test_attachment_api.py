@@ -71,6 +71,7 @@ class TestAttachmentApi(BaseTestCase):
             response = BaseTestCase.get_attachment(auth_token, attachment_id)
             data = json.loads(response.data.decode())
             self.assertTrue(data['name'] == 'Contract linkxxxxx')
+            self.assertTrue(data['user_by'] == 'jalberto')
             self.assertTrue(response.content_type == 'application/json')
             self.assertEqual(response.status_code, 200)                       
 
