@@ -148,6 +148,9 @@ class Contact(Resource):
             if 'zipcode' in contact_data:
                 existing_contact.zipcode = contact_data['zipcode']
 
+            if 'user_by' in contact_data:
+                existing_contact.user_by = contact_data['user_by']                
+
             existing_contact = ContactDao.update_contact(existing_contact)
             response_object = {
                 'status': 'success',

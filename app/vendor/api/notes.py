@@ -100,6 +100,9 @@ class Notes(Resource):
             if 'notes' in notes_data:
                 existing_notes.notes = notes_data['notes']
 
+            if 'user_by' in notes_data:
+                existing_notes.user_by = notes_data['user_by']                 
+
             existing_notes = NotesDao.update_notes(existing_notes)
             response_object = {
                 'status': 'success',

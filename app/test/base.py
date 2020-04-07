@@ -355,3 +355,58 @@ class BaseTestCase(TestCase):
             )),
             content_type='application/json'
         )            
+
+    ######################
+    #
+    # attachment api
+    #
+    ######################
+    @staticmethod
+    def add_attachment(auth_token, attachment):
+        return app.test_client().post(
+            '/api/v1/attachment/',
+            headers=dict(
+                Authorization='Bearer {}'.format(auth_token) 
+            ),        
+            data=json.dumps(dict(
+                attachment_id = attachment.attachment_id,
+                attachment_type_id = attachment.attachment_type_id,
+                name = attachment.name,
+                link = attachment.link,
+                description = attachment.description          
+            )),
+            content_type='application/json'
+        )        
+
+    @staticmethod
+    def get_all_attachments(auth_token, attachmment_id, attachment_type_id):
+        return app.test_client().get(
+            '/api/v1/attachment/{}/{}'.format(attachmment_id, attachment_type_id),
+            headers=dict(
+                Authorization='Bearer {}'.format(auth_token) 
+            ),        
+            content_type='application/json'
+        )    
+
+    @staticmethod
+    def get_attachment(auth_token, id):
+        return app.test_client().get(
+            '/api/v1/attachment/{}'.format(id),
+            headers=dict(
+                Authorization='Bearer {}'.format(auth_token) 
+            ),        
+            content_type='application/json'
+        )            
+
+    @staticmethod
+    def update_attachment(auth_token, id, attachment):
+        return app.test_client().put(
+            '/api/v1/attachment/{}'.format(id),
+            headers=dict(
+                Authorization='Bearer {}'.format(auth_token) 
+            ),        
+            data=json.dumps(dict(
+                name = attachment.name           
+            )),
+            content_type='application/json'
+        )                    

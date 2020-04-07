@@ -22,7 +22,7 @@ class NotesDao:
         if notes.user_by:
             existing_notes.user_by = notes.user_by            
 
-        notes.update_date = datetime.datetime.now()  
+        existing_notes.update_date = datetime.datetime.now()  
         db.session.commit()
         db.session.refresh(existing_notes)
 
