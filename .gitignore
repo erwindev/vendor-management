@@ -24,3 +24,5 @@ app*.db
 .env
 
 .coverage
+
+htmlcov/

@@ -68,4 +68,7 @@ Run test coverage and show coverage reports
 ```
 $ coverage run -m unittest app/test/test*.py
 $ coverage report app/vendor/*/*.py
+$ coverage html app/vendor/*/*.py 
 ```
+
+The html coverage report will be generated under htmlcov folder.  Under that folder launch index.html in your favorite browser.
