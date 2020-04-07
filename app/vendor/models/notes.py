@@ -13,6 +13,7 @@ class Notes(db.Model):
     notes_type_id = db.Column(db.Integer)
     notes = db.Column(db.String(2000))
     create_date = db.Column(db.DateTime, default=datetime.utcnow)
+    update_date = db.Column(db.DateTime, default=datetime.utcnow)
     user_by = db.Column(db.String(100))
 
     def __repr__(self):
@@ -32,6 +33,7 @@ class Notes(db.Model):
             'notes_type_id': self.notes_type_id,
             'notes': self.notes,
             'create_date': self.create_date,
+            'update_date': self.update_date,
             'user_by': self.user_by
         }
         return json_data

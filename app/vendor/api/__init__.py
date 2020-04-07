@@ -7,6 +7,7 @@ from app.vendor.api.auth import api as auth_ns
 from app.vendor.api.vendor import api as vendor_ns
 from app.vendor.api.contact import api as contact_ns
 from app.vendor.api.product import api as product_ns
+from app.vendor.api.notes import api as notes_ns
 
 apiv1 = Blueprint('api', __name__, url_prefix='/api/v1')
 
@@ -21,4 +22,5 @@ api.add_namespace(user_ns, path="/user")
 api.add_namespace(vendor_ns, path="/vendor")
 api.add_namespace(product_ns, path="/product")
 api.add_namespace(contact_ns, path="/contact")
+api.add_namespace(notes_ns, path="/notes")
 api.add_namespace(app_info_ns)

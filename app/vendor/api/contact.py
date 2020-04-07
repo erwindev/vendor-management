@@ -2,7 +2,6 @@ import sys
 from flask import jsonify, request
 from flask_restplus import Api, Resource, Namespace, fields
 from app.vendor.dao.contact import ContactDao
-from app.vendor.dao.vendor import VendorDao
 from app.vendor.models.contact import Contact as ContactModel
 from app.vendor.util.decorator import token_required
 
@@ -103,7 +102,7 @@ class AddContact(Resource):
 @api.expect(api.parser().add_argument('Authorization', location='headers'))
 class Contact(Resource):
 
-    @api.response(201, 'Contact successfully created.')
+    @api.response(201, 'Contact successfully updated.')
     @api.doc('update a contact')
     @api.expect(ContactDto.contact, validate=False)
     @token_required
@@ -152,7 +151,7 @@ class Contact(Resource):
             existing_contact = ContactDao.update_contact(existing_contact)
             response_object = {
                 'status': 'success',
-                'message': 'Vendor contact successfully added.'
+                'message': 'Contact successfully updated.'
             }
 
             return response_object, 201

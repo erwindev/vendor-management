@@ -302,3 +302,56 @@ class BaseTestCase(TestCase):
             )),
             content_type='application/json'
         )            
+
+    ######################
+    #
+    # notes api
+    #
+    ######################
+    @staticmethod
+    def add_notes(auth_token, notes):
+        return app.test_client().post(
+            '/api/v1/notes/',
+            headers=dict(
+                Authorization='Bearer {}'.format(auth_token) 
+            ),        
+            data=json.dumps(dict(
+                notes_id = notes.notes_id,
+                notes_type_id = notes.notes_type_id,
+                notes = notes.notes          
+            )),
+            content_type='application/json'
+        )        
+
+    @staticmethod
+    def get_all_notes(auth_token, notes_id, notes_type_id):
+        return app.test_client().get(
+            '/api/v1/notes/{}/{}'.format(notes_id, notes_type_id),
+            headers=dict(
+                Authorization='Bearer {}'.format(auth_token) 
+            ),        
+            content_type='application/json'
+        )    
+
+    @staticmethod
+    def get_notes(auth_token, id):
+        return app.test_client().get(
+            '/api/v1/notes/{}'.format(id),
+            headers=dict(
+                Authorization='Bearer {}'.format(auth_token) 
+            ),        
+            content_type='application/json'
+        )            
+
+    @staticmethod
+    def update_notes(auth_token, id, notes):
+        return app.test_client().put(
+            '/api/v1/notes/{}'.format(id),
+            headers=dict(
+                Authorization='Bearer {}'.format(auth_token) 
+            ),        
+            data=json.dumps(dict(
+                notes = notes.notes           
+            )),
+            content_type='application/json'
+        )            
