@@ -18,11 +18,11 @@ $ pip install virtualenv
 
 ## Setup the app
 #### Clone the repo
-* git clone https://github.com/erwindev/shecancodeit-vms.git
+* git clone https://github.com/erwindev/vendor-management.git
 
 #### Setup the development environment
 ```
-$ cd shecancodeit
+$ cd vendor-management
 $ virtualenv venv
 $ . venv/bin/activate
 ```
@@ -42,6 +42,17 @@ If you made changes to the models code, you will need to run the migration scrip
 ```
 $ flask migrate -m 'add comment here'
 $ flask db upgrade
+```
+
+#### Create the environment settings
+```
+$ cat .env
+```
+Add the following entries
+```
+SERVICE_NAME=Vendor Managetment Service
+CURRENT_VERSION=0.1
+SECRET_KEY=yourverysecuresecretkey
 ```
 
 #### Run the application
