@@ -46,8 +46,6 @@ $ flask db upgrade
 
 #### Run the application
 ```
-$ export FLASK_APP=application.py
-$ export FLASK_ENV=development
 $ flask run
 ```
 
