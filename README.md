@@ -44,17 +44,6 @@ $ flask migrate -m 'add comment here'
 $ flask db upgrade
 ```
 
-#### Create the environment settings
-```
-$ cat .env
-```
-Add the following entries
-```
-SERVICE_NAME=Vendor Managetment Service
-CURRENT_VERSION=0.1
-SECRET_KEY=yourverysecuresecretkey
-```
-
 #### Run the application
 ```
 $ export FLASK_APP=application.py
@@ -89,7 +78,7 @@ Before you can do this, you will ned to install `docker`.  You can find instruct
 
 You will also need to create a `vms.env` file that contains settings for your database.  
 ```
-$ cat vms.env
+$ touch vms.env
 ```
 
 Add the following settings in the `vms.env` file.
