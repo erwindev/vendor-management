@@ -111,4 +111,5 @@ $ docker-compose build
 $ docker-compose up
 ```
 
-Access your application via this url - http://localhost:8080
+Access the application via this url - http://localhost:8080
+Access the API via this url - http://localhost:8080/api/v1
