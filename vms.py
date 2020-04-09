@@ -7,6 +7,7 @@ from app import create_app
 environment = os.environ.get('FLASK_ENV') or 'development'
 
 app = create_app(environment)
+print("Environment: {}".format(environment))
 
 
 @app.cli.command()

@@ -86,6 +86,26 @@ The html coverage report will be generated under htmlcov folder.  Under that fol
 
 #### Running in Docker
 Before you can do this, you will ned to install `docker`.  You can find instructions on how to install Docker [here](https://docs.docker.com/get-docker/).
+
+You will also need to create a `vms.env` file that contains settings for your database.  
+```
+$ cat vms.env
+```
+
+Add the following settings in the `vms.env` file.
+```
+SERVICE_NAME=Vendor Managetment Service
+CURRENT_VERSION=1.0-uat
+SECRET_KEY=secretkey
+FLASK_ENV=production
+POSTGRES_DB=vms
+POSTGRES_USER=vms_user
+POSTGRES_PASSWORD=vms_user
+POSTGRES_HOST=vms-db
+POSTGRES_PORT=5432
+```
+
+Build and run the docker containers.  `docker-compose build` will build your application into a docker image.  `docker-compose up` will run your application pointed to a Postgress database.  
 ```
 $ docker-compose build
 $ docker-compose up

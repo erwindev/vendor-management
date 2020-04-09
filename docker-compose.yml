@@ -1,6 +1,15 @@
 
 version: '3'
 services:
+  vms-db:
+    container_name: vms-db
+    image: postgres:12.2-alpine
+    ports:
+      - "55432:5432"
+    volumes:
+      - "./init.sql:/docker-entrypoint-initdb.d/init.sql"
+    env_file: vms.env
+  
   vms-app:
     image: vms-app
     ports:
@@ -10,4 +19,4 @@ services:
       dockerfile: Dockerfile
     volumes:
       - "./:/app"
-    env_file: .env
+    env_file: vms.env

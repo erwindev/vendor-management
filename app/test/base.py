@@ -3,7 +3,7 @@ import json
 from flask_testing import TestCase
 
 from app import db
-from application import app
+from vms import app
 from app.vendor.models.user import User
 
 

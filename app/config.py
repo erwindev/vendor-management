@@ -8,9 +8,9 @@ load_dotenv(os.path.join(basedir, '.env'))
 
 class Config:
 
-    SECRET_KEY = os.getenv('SECRET_KEY') or 'not set'
-    CURRENT_VERSION = os.getenv('CURRENT_VERSION') or 'not set'
-    SERVICE_NAME = os.getenv('SERVICE_NAME') or 'not set'
+    SECRET_KEY = os.getenv('SECRET_KEY') or 'notsosecretkey'
+    CURRENT_VERSION = os.getenv('CURRENT_VERSION') or 'development'
+    SERVICE_NAME = os.getenv('SERVICE_NAME') or 'Vendor Management System'
     DEBUG = False
 
 
@@ -33,16 +33,17 @@ class TestingConfig(Config):
 class ProductionConfig(Config):
     DEBUG = False
     # Postgres
-    # DB_USER = os.getenv('DB_USER') or 'not set'
-    # DB_PASSWORD = os.getenv('DB_PASSWORD') or 'not set'
-    # DB_HOST = os.getenv('DB_HOST') or 'not set'
-    # DB_PORT = os.getenv('DB_PORT') or 'not set'
-    # DB_NAME = os.getenv('DB_NAME') or 'not set'
-    # SQLALCHEMY_DATABASE_URI = 'postgresql://{}:{}@{}:{}/{}'.format(DB_USER,
-    #                                                                DB_PASSWORD,
-    #                                                                DB_HOST,
-    #                                                                DB_PORT,
-    #                                                                DB_NAME)
+    POSTGRES_USER = os.getenv('POSTGRES_USER') or 'not set'
+    POSTGRES_PASSWORD = os.getenv('POSTGRES_PASSWORD') or 'not set'
+    POSTGRES_HOST = os.getenv('POSTGRES_HOST') or 'not set'
+    POSTGRES_PORT = os.getenv('POSTGRES_PORT') or 'not set'
+    POSTGRES_DB = os.getenv('POSTGRES_DB') or 'not set'
+    SQLALCHEMY_DATABASE_URI = 'postgresql://{}:{}@{}:{}/{}'.format(POSTGRES_USER,
+                                                                   POSTGRES_PASSWORD,
+                                                                   POSTGRES_HOST,
+                                                                   POSTGRES_PORT,
+                                                                   POSTGRES_DB)
+    SQLALCHEMY_TRACK_MODIFICATIONS = False                                                                   
 
 
 config_by_name = dict(
