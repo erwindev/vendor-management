@@ -83,3 +83,12 @@ $ coverage html app/vendor/*/*.py
 ```
 
 The html coverage report will be generated under htmlcov folder.  Under that folder launch index.html in your favorite browser.
+
+#### Running in Docker
+Before you can do this, you will ned to install `docker`.  You can find instructions on how to install Docker [here](https://docs.docker.com/get-docker/).
+```
+$ docker-compose build
+$ docker-compose up
+```
+
+Access your application via this url - http://localhost:8080
