@@ -1,0 +1,13 @@
+
+version: '3'
+services:
+  vms-app:
+    image: vms-app
+    ports:
+        - "8080:5000" 
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - "./:/app"
+    env_file: .env
