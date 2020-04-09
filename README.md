@@ -1,6 +1,6 @@
 # Vendor Management System
 
-This is a sample application that will be used to teach SheCanCodeIT members how to build a web application using Python+Flask.
+This is a sample application that will be used to teach SheCanCodeIT members how to build a web application using Python and Flask.
 
 ## Get Started
 #### Install Python 3
