@@ -31,7 +31,7 @@ jobs:
       id: vars
       run: echo ::set-output name=VERSION::$(echo ${GITHUB_REF/refs\/tags\//})
     - name: Build the tagged Docker image
-      run: docker build --file Dockerfile --tag ealberto/vms:latest .     
+      run: docker build --file Dockerfile --tag ealberto/vms-app:latest .     
     - name: Push the latest Docker image
       run: docker push ealberto/vms:latest
 

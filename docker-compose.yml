@@ -11,7 +11,7 @@ services:
     env_file: vms.env
   
   vms-app:
-    image: vms-app
+    image: ealberto/vms-app:latest
     ports:
         - "8080:5000" 
     build:
