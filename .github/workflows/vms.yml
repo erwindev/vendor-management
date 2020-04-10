@@ -33,5 +33,5 @@ jobs:
     - name: Build the tagged Docker image
       run: docker build --file Dockerfile --tag ealberto/vms-app:latest .     
     - name: Push the latest Docker image
-      run: docker push ealberto/vms:latest
+      run: docker push ealberto/vms-app:latest
 
