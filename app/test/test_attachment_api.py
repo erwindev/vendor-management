@@ -43,7 +43,7 @@ class TestAttachmentApi(BaseTestCase):
             self.assertTrue(data['status'] == 'success')
             self.assertTrue(data['message'] == 'Attachment successfully added.')
             self.assertTrue(response.content_type == 'application/json')
-            self.assertEqual(response.status_code, 204)
+            self.assertEqual(response.status_code, 201)
 
             # get all attachment by vendor
             response = BaseTestCase.get_all_attachments(auth_token, vendor_id, attachment_type_id)
