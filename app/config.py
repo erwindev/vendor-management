@@ -43,6 +43,7 @@ class ProductionConfig(Config):
                                                                    POSTGRES_HOST,
                                                                    POSTGRES_PORT,
                                                                    POSTGRES_DB)
+    SQLALCHEMY_POOL_SIZE = os.getenv('SQLALCHEMY_POOL_SIZE') or 10
     SQLALCHEMY_TRACK_MODIFICATIONS = False                                                                   
 
 
