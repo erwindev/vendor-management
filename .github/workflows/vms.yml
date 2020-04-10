@@ -29,6 +29,6 @@ jobs:
       run: echo ${{ secrets.DOCKERHUB_PASSWORD }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
     - name: Get the version
       id: vars
-      run: echo ::set-output name=tag::$(echo ${GITHUB_REF:10})
+      run: echo ::set-output name=VERSION::$(echo ${GITHUB_REF/refs\/tags\//})
     - name: Build the tagged Docker image
       run: docker build --file Dockerfile --tag ealberto/vms:${{steps.vars.outputs.tag}} .        
