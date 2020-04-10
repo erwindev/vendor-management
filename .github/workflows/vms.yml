@@ -24,7 +24,7 @@ jobs:
     - name: Run tests
       run: |
         flask db upgrade
-        flask test
+        python -m unittest discover app/test "test_*.py"
     - name: Login to Dockerhub Registry
       run: echo ${{ secrets.DOCKERHUB_PASSWORD }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
     - name: Get the version
