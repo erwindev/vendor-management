@@ -31,4 +31,4 @@ jobs:
       id: vars
       run: echo ::set-output name=tag::$(echo ${GITHUB_REF:10})
     - name: Build the tagged Docker image
-      run: docker build -t ealberto/vms:latest .        
+      run: docker build -t ealberto/vms:${{steps.vars.outputs.tag}} .        
