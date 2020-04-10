@@ -13,13 +13,6 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: Login to Dockerhub Registry
-      run: echo ${{ secrets.DOCKERHUB_PASSWORD }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
-    - name: Get the version
-      id: vars
-      run: echo ::set-output name=tag::$(echo ${GITHUB_REF:10})
-    - name: Build the tagged Docker image
-      run: docker build . --file Dockerfile --tag pjlamb12/angular-cli:${{steps.vars.outputs.tag}}
     - name: Set up Python 3.8
       uses: actions/setup-python@v1
       with:
@@ -32,3 +25,10 @@ jobs:
       run: |
         flask db upgrade
         flask test
+    - name: Login to Dockerhub Registry
+      run: echo ${{ secrets.DOCKERHUB_PASSWORD }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
+    - name: Get the version
+      id: vars
+      run: echo ::set-output name=tag::$(echo ${GITHUB_REF:10})
+    - name: Build the tagged Docker image
+      run: docker build -t ealberto/vms:latest .        
