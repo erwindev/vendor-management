@@ -100,9 +100,9 @@ $ docker-compose build
 $ docker-compose up
 ```
 
-Access the application via this url - http://localhost:8080.
+Access the application via this url - http://localhost.
 
-Access the API via this url - http://localhost:8080/api/v1.
+Access the API via this url - http://localhost/api/v1.
 
 ## Load test the application
 For load testing, we will use [Locust](http://locust.io).  The load testing script is located under the `loadtest` folder.  Curerntly, we are only load testing the `api/v1/auth/login` api.  To run the scrip,
