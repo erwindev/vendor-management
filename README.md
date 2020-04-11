@@ -3,24 +3,24 @@
 This is a sample application that will be used to teach SheCanCodeIT members how to build a web application using Python and Flask.
 
 ## Get Started
-#### Install Python 3
+Install Python 3
 * [Windows](https://realpython.com/installing-python/#windows)
 * [MacOSX](https://realpython.com/installing-python/#macos-mac-os-x)
 
-#### Install Pip
+Install Pip
 * [Windows](https://www.liquidweb.com/kb/install-pip-windows/)
 * [Mac](https://www.shellhacks.com/python-install-pip-mac-ubuntu-centos/)
 
-#### Install Virtualenv (Globally)
+Install Virtualenv (Globally)
 ```
 $ pip install virtualenv
 ```
 
 ## Setup the app
-#### Clone the repo
+Clone the repo
 * git clone https://github.com/erwindev/vendor-management.git
 
-#### Setup the development environment
+Setup the development environment
 ```
 $ cd vendor-management
 $ virtualenv venv
@@ -28,7 +28,7 @@ $ . venv/bin/activate
 ```
 Note: This will setup a virtual environment in your machine.
 
-#### Install application requirements in your virtual environment
+Install application requirements in your virtual environment
 ```
 $ pip install -r requirements.txt
 ```
@@ -49,10 +49,11 @@ $ flask db upgrade
 $ flask run
 ```
 
-#### Bring up your application in your browser
+Bring up your application in your browser
 * http://localhost:5000/
 
-#### Using the REST API
+Using the REST API
+
 Another way of interacting with this application is through a REST APIs.  To see the information about the REST API, you can access the Swagger docs
 * http://localhost:5000/api/v1/
 
@@ -99,8 +100,9 @@ $ docker-compose build
 $ docker-compose up
 ```
 
-Access the application via this url - http://localhost:8080
-Access the API via this url - http://localhost:8080/api/v1
+Access the application via this url - http://localhost:8080.
+
+Access the API via this url - http://localhost:8080/api/v1.
 
 ## Load test the application
 For load testing, we will use [Locust](http://locust.io).  The load testing script is located under the `loadtest` folder.  Curerntly, we are only load testing the `api/v1/auth/login` api.  To run the scrip,
@@ -108,6 +110,7 @@ For load testing, we will use [Locust](http://locust.io).  The load testing scri
 $ cd loadtest
 $ locust -f vmsloadtest.py
 ```
+
 Bring up the Locust dashboard by going to http://localhost:8089.  Enter the following information,
 ```
 Number of total users to simulate: 100
