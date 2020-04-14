@@ -6,7 +6,7 @@ from app.vendor.dao.user import UserDao
 
 
 class LoginForm(FlaskForm):
-    username = StringField('Username', validators=[DataRequired()])
+    email = StringField('Email', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])
     remember_me = BooleanField('Remember Me')
     submit = SubmitField('Sign In')
@@ -15,17 +15,11 @@ class LoginForm(FlaskForm):
 class RegistrationForm(FlaskForm):
     firstname = StringField('First Name', validators=[DataRequired()])
     lastname = StringField('Last Name', validators=[DataRequired()])
-    username = StringField('Username', validators=[DataRequired()])
     email = StringField('Email', validators=[DataRequired(), Email()])
     password = PasswordField('Password', validators=[DataRequired()])
     password2 = PasswordField(
         'Repeat Password', validators=[DataRequired(), EqualTo('password')])
     submit = SubmitField('Register')
-
-    def validate_username(self, username):
-        user = UserDao.get_by_username(username.data)
-        if user is not None:
-            raise ValidationError('Please use a different username.')
 
     def validate_email(self, email):
         user = UserDao.get_by_email(email.data)

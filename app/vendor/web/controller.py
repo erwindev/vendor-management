@@ -22,9 +22,9 @@ def index():
 def login():
     form = LoginForm()
     if form.validate_on_submit():
-        user = UserDao.get_by_username(form.username.data)
+        user = UserDao.get_by_email(form.email.data)
         if user is None or not user.check_password(form.password.data):
-            flash('Invalid username or password')
+            flash('Invalid email or password')
             return redirect(url_for('vendor_app.index'))
         user.last_login_date = datetime.utcnow
         login_user(user, remember=form.remember_me.data)
@@ -42,7 +42,6 @@ def register():
     form = RegistrationForm()
     if form.validate_on_submit():
         user = User()
-        user.username = form.username.data
         user.email = form.email.data
         user.firstname = form.firstname.data
         user.lastname = form.lastname.data

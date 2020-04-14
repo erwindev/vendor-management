@@ -13,7 +13,6 @@ class UserDto:
         'id': fields.String(),
         'firstname': fields.String(required=True),
         'lastname': fields.String(required=True),
-        'username': fields.String(required=True),
         'email': fields.String(required=True),
         'create_date': fields.DateTime(),
         'last_login_date': fields.String(),
@@ -61,7 +60,7 @@ class UserList(Resource):
                 }
                 return response_object, 409
 
-            if UserDao.get_by_username(user_data['username']) is not None:
+            if UserDao.get_by_email(user_data['email']) is not None:
                 response_object = {
                     'status': 'fail',
                     'message': 'User already exists.'
@@ -71,7 +70,6 @@ class UserList(Resource):
             new_user = UserModel()
             new_user.firstname = user_data['firstname']
             new_user.lastname = user_data['lastname']
-            new_user.username = user_data['username']
             new_user.email = user_data['email']
             new_user.set_password(user_data['password'])
             new_user = UserDao.save_user(new_user)

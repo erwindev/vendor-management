@@ -45,6 +45,10 @@ class UserDao:
         return User.query.filter_by(username=username).first()
 
     @staticmethod
+    def get_by_email(email):
+        return User.query.filter_by(email=email).first()        
+
+    @staticmethod
     def get_all():
         return User.query.all()
 

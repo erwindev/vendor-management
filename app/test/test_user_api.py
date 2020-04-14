@@ -41,7 +41,7 @@ class TestUser(BaseTestCase):
             user_id = user_loggedin_data['user_id']
             response = BaseTestCase().get_user(auth_token, user_id)
             data = json.loads(response.data.decode())
-            self.assertTrue(data['username'] == 'joe.tester')
+            self.assertTrue(data['email'] == 'joetester@se.com')
             self.assertTrue(response.content_type == 'application/json')
             self.assertEqual(response.status_code, 200)
 
@@ -63,7 +63,7 @@ class TestUser(BaseTestCase):
             # get logged in user
             response = BaseTestCase().get_user(auth_token, user_id)
             data = json.loads(response.data.decode())
-            self.assertTrue(data['username'] == 'joe.tester')
+            self.assertTrue(data['email'] == 'joetester@se.com')
             self.assertTrue(data['firstname'] == 'joe')
             self.assertTrue(data['lastname'] == 'tester')
             self.assertTrue(response.content_type == 'application/json')
@@ -77,7 +77,7 @@ class TestUser(BaseTestCase):
             #get user
             response = BaseTestCase().get_user(auth_token, user_id)
             data = json.loads(response.data.decode())
-            self.assertTrue(data['username'] == 'joe.tester')
+            self.assertTrue(data['email'] == 'joetester@se.com')
             self.assertTrue(data['firstname'] == 'joex')
             self.assertTrue(data['lastname'] == 'testerx')
             self.assertTrue(data['status'] == 'act')

@@ -21,7 +21,6 @@ class BaseTestCase(TestCase):
         user.lastname = 'tester'
         user.email = 'joetester@se.com'
         user.set_password('test')
-        user.username = 'joe.tester'
         db.session.add(user)
         db.session.commit()
 
@@ -39,7 +38,7 @@ class BaseTestCase(TestCase):
         return app.test_client().post(
             '/api/v1/auth/login',
             data=json.dumps(dict(
-                username='joe.tester',
+                email='joetester@se.com',
                 password='test'
             )),
             content_type='application/json'
@@ -77,7 +76,6 @@ class BaseTestCase(TestCase):
             ),        
             data=json.dumps(dict(
                 email='ealberto-test@me.com',
-                username='ealberto-test',
                 firstname='erwin',
                 lastname='alberto',
                 password='test'

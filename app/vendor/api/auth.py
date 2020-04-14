@@ -9,7 +9,7 @@ from app.vendor.util.token_util import TokenUtil
 class AuthDto:
     api = Namespace('auth', description='authentication related operations')
     logindata = api.model('logindata', {
-        'username': fields.String(required=True, description='The email address'),
+        'email': fields.String(required=True, description='The email address'),
         'password': fields.String(required=True, description='The user password '),
     })
 
@@ -27,7 +27,7 @@ class UserLogin(Resource):
         # get the post data
         post_data = request.json
         try:
-            user = UserDao.get_by_username(post_data['username'])
+            user = UserDao.get_by_email(post_data['email'])
             if user and user.check_password(post_data['password']):
                 auth_token = TokenUtil.encode_token(user.id)
                 if auth_token:
@@ -42,7 +42,7 @@ class UserLogin(Resource):
             else:
                 response_object = {
                     'status': 'fail',
-                    'message': 'username or password does not match.'
+                    'message': 'email or password does not match.'
                 }
                 return response_object, 401   
         except ApplicationException as e:
