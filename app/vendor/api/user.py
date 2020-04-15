@@ -47,7 +47,6 @@ class UserList(Resource):
     @api.response(409, 'User already exists.')
     @api.doc('create a new user')
     @api.expect(UserDto.user, validate=True)
-    @token_required
     def post(self):
         """Insert a user"""
         try:

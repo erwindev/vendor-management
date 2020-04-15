@@ -40,7 +40,7 @@ $ flask db upgrade
 ```
 If you made changes to the models code, you will need to run the migration script
 ```
-$ flask migrate -m 'add comment here'
+$ flask db migrate -m 'add comment here'
 $ flask db upgrade
 ```
 

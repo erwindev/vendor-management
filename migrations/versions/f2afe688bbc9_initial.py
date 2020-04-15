@@ -1,8 +1,8 @@
 """initial
 
-Revision ID: a1cc1a75cd6e
+Revision ID: f2afe688bbc9
 Revises: 
-Create Date: 2020-04-05 22:11:05.922525
+Create Date: 2020-04-14 22:08:54.222651
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'a1cc1a75cd6e'
+revision = 'f2afe688bbc9'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -26,6 +26,7 @@ def upgrade():
     sa.Column('description', sa.String(length=2000), nullable=True),
     sa.Column('link', sa.String(length=1000), nullable=True),
     sa.Column('create_date', sa.DateTime(), nullable=True),
+    sa.Column('update_date', sa.DateTime(), nullable=True),
     sa.Column('user_by', sa.String(length=100), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
@@ -62,6 +63,7 @@ def upgrade():
     sa.Column('notes_type_id', sa.Integer(), nullable=True),
     sa.Column('notes', sa.String(length=2000), nullable=True),
     sa.Column('create_date', sa.DateTime(), nullable=True),
+    sa.Column('update_date', sa.DateTime(), nullable=True),
     sa.Column('user_by', sa.String(length=100), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
@@ -88,7 +90,6 @@ def upgrade():
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('firstname', sa.String(length=80), nullable=True),
     sa.Column('lastname', sa.String(length=80), nullable=True),
-    sa.Column('username', sa.String(length=64), nullable=True),
     sa.Column('email', sa.String(length=120), nullable=True),
     sa.Column('password_hash', sa.String(length=128), nullable=True),
     sa.Column('create_date', sa.DateTime(), nullable=True),
@@ -98,7 +99,6 @@ def upgrade():
     sa.PrimaryKeyConstraint('id')
     )
     op.create_index(op.f('ix_user_email'), 'user', ['email'], unique=True)
-    op.create_index(op.f('ix_user_username'), 'user', ['username'], unique=True)
     op.create_table('vendor',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name', sa.String(length=100), nullable=True),
@@ -153,7 +153,6 @@ def downgrade():
     op.drop_table('software_attachment')
     op.drop_table('product')
     op.drop_table('vendor')
-    op.drop_index(op.f('ix_user_username'), table_name='user')
     op.drop_index(op.f('ix_user_email'), table_name='user')
     op.drop_table('user')
     op.drop_table('temp_table')
