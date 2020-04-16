@@ -14,13 +14,14 @@ class UserDto:
         'firstname': fields.String(required=True),
         'lastname': fields.String(required=True),
         'email': fields.String(required=True),
+        'password': fields.String(required=True),
         'create_date': fields.DateTime(),
         'last_login_date': fields.String(),
         'status': fields.String()
-    })      
-
+    })         
 
 api = UserDto.api
+
 
 @api.route("/")
 @api.expect(api.parser().add_argument('Authorization', location='headers'))
@@ -35,6 +36,7 @@ class UserList(Resource):
             users = UserDao.get_all()
             user_ret_list = []
             for user in users:
+                user.password = None
                 user_ret_list.append(user.to_json())
             return user_ret_list
         except Exception as e:
@@ -99,6 +101,9 @@ class UserList(Resource):
 
             if 'lastname' in user_data:
                 existing_user.lastname = user_data['lastname']
+
+            if 'password' in user_data:
+                existing_user.set_password(user_data['password'])                
 
             if 'status' in user_data:
                 existing_user.status = user_data['status']

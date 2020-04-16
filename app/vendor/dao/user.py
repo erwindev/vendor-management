@@ -20,6 +20,9 @@ class UserDao:
         if user.lastname:
             existing_user.lastname = user.lastname
 
+        if user.password_hash:
+            existing_user.password_hash = user.password_hash            
+
         if user.status:
             existing_user.status = user.status
             
