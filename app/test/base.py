@@ -49,7 +49,7 @@ class BaseTestCase(TestCase):
         response = BaseTestCase.login_user()
         data = json.loads(response.data.decode())
         user_loggedin_data = json.loads(response.data.decode())                  
-        auth_token = user_loggedin_data['Authorization']      
+        auth_token = user_loggedin_data['token']      
         return auth_token, user_loggedin_data  
 
     @staticmethod

@@ -12,6 +12,10 @@ class AuthDto:
         'email': fields.String(required=True, description='The email address'),
         'password': fields.String(required=True, description='The user password '),
     })
+    authdata = api.model('authdata', {
+        'user_id': fields.String(required=True, description='User id'),
+        'token': fields.String(required=True, description='Auth token'),
+    })
 
 api = AuthDto.api
 
@@ -23,6 +27,7 @@ class UserLogin(Resource):
     """
     @api.doc('user login')
     @api.expect(AuthDto.logindata, validate=True)
+    @api.marshal_with(AuthDto.authdata)
     def post(self):
         # get the post data
         post_data = request.json
@@ -32,10 +37,8 @@ class UserLogin(Resource):
                 auth_token = TokenUtil.encode_token(user.id)
                 if auth_token:
                     response_object = {
-                        'status': 'success',
-                        'message': 'Successfully logged in.',
                         'user_id': user.id,
-                        'Authorization': auth_token.decode()
+                        'token': auth_token.decode()
                     }
                     UserDao.set_last_login_date(user.id)
                     return response_object, 200
