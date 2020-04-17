@@ -13,6 +13,9 @@ class AuthDto:
         'password': fields.String(required=True, description='The user password '),
     })
     authdata = api.model('authdata', {
+        'first_name': fields.String(required=True, description='First name'),
+        'last_name': fields.String(required=True, description='Last name'),
+        'is_admin': fields.String(required=True, description='Last name'),
         'user_id': fields.String(required=True, description='User id'),
         'token': fields.String(required=True, description='Auth token'),
     })
@@ -37,6 +40,9 @@ class UserLogin(Resource):
                 auth_token = TokenUtil.encode_token(user.id)
                 if auth_token:
                     response_object = {
+                        'first_name': user.firstname,
+                        'last_name': user.lastname,
+                        'is_admin': 0,
                         'user_id': user.id,
                         'token': auth_token.decode()
                     }
