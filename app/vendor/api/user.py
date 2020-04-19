@@ -15,8 +15,9 @@ class UserDto:
         'lastname': fields.String(required=True),
         'email': fields.String(required=True),
         'password': fields.String(required=True),
-        'create_date': fields.DateTime(),
-        'last_login_date': fields.String(),
+        'create_date': fields.Date(),
+        'last_login_date': fields.Date(),
+        'updated_date' :fields.Date(),
         'status': fields.String()
     })         
 

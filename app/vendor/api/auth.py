@@ -15,7 +15,11 @@ class AuthDto:
     authdata = api.model('authdata', {
         'firstname': fields.String(required=True, description='First name'),
         'lastname': fields.String(required=True, description='Last name'),
-        'is_admin': fields.String(required=True, description='Last name'),
+        'email': fields.String(required=True, description='Email'),
+        'create_date': fields.Date(description='Create Date'),
+        'last_login_date': fields.Date(description='Last Login Date'),
+        'updated_date': fields.Date(description='Updated Date'),
+        'is_admin': fields.String(required=True, description='Admin'),
         'user_id': fields.String(required=True, description='User id'),
         'token': fields.String(required=True, description='Auth token'),
     })
@@ -42,8 +46,12 @@ class UserLogin(Resource):
                     response_object = {
                         'firstname': user.firstname,
                         'lastname': user.lastname,
+                        'email': user.email,
                         'is_admin': 0,
                         'user_id': user.id,
+                        'create_date': user.create_date,
+                        'updated_date': user.updated_date,
+                        'last_login_date': user.last_login_date,
                         'token': auth_token.decode()
                     }
                     UserDao.set_last_login_date(user.id)
