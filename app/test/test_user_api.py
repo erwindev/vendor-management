@@ -38,8 +38,8 @@ class TestUser(BaseTestCase):
         """ Test for getting user """
         auth_token, user_loggedin_data = BaseTestCase.get_token_and_loggedin_user()
         with self.client:
-            user_id = user_loggedin_data['user_id']
-            response = BaseTestCase().get_user(auth_token, user_id)
+            id = user_loggedin_data['id']
+            response = BaseTestCase().get_user(auth_token, id)
             data = json.loads(response.data.decode())
             self.assertTrue(data['email'] == 'joetester@se.com')
             self.assertTrue(response.content_type == 'application/json')
@@ -59,9 +59,9 @@ class TestUser(BaseTestCase):
         """ Test for getting user """
         auth_token, user_loggedin_data = BaseTestCase.get_token_and_loggedin_user()
         with self.client:
-            user_id = user_loggedin_data['user_id']
+            id = user_loggedin_data['id']
             # get logged in user
-            response = BaseTestCase().get_user(auth_token, user_id)
+            response = BaseTestCase().get_user(auth_token, id)
             data = json.loads(response.data.decode())
             self.assertTrue(data['email'] == 'joetester@se.com')
             self.assertTrue(data['firstname'] == 'joe')
@@ -70,12 +70,12 @@ class TestUser(BaseTestCase):
             self.assertEqual(response.status_code, 200)          
 
             # update logged in user
-            response = BaseTestCase().update_user(auth_token, user_id, 'joex', 'testerx', 'act')    
+            response = BaseTestCase().update_user(auth_token, id, 'joex', 'testerx', 'act')    
             self.assertTrue(response.content_type == 'application/json')
             self.assertEqual(response.status_code, 201)    
 
             #get user
-            response = BaseTestCase().get_user(auth_token, user_id)
+            response = BaseTestCase().get_user(auth_token, id)
             data = json.loads(response.data.decode())
             self.assertTrue(data['email'] == 'joetester@se.com')
             self.assertTrue(data['firstname'] == 'joex')

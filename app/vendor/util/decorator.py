@@ -37,7 +37,7 @@ def get_logged_in_user(new_request):
             response_object = {
                 'status': 'success',
                 'data': {
-                    'user_id': user.id,
+                    'id': user.id,
                     'email': user.email
                 }
             }

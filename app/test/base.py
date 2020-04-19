@@ -84,14 +84,14 @@ class BaseTestCase(TestCase):
         )
 
     @staticmethod
-    def update_user(auth_token, user_id, firstname, lastname, status):
+    def update_user(auth_token, id, firstname, lastname, status):
         return app.test_client().put(
             '/api/v1/user/',
             headers=dict(
                 Authorization='Bearer {}'.format(auth_token) 
             ),        
             data=json.dumps(dict(
-                id=user_id,
+                id=id,
                 firstname=firstname,
                 lastname=lastname,
                 status=status
@@ -100,9 +100,9 @@ class BaseTestCase(TestCase):
         )        
 
     @staticmethod
-    def get_user(auth_token, user_id):
+    def get_user(auth_token, id):
         return app.test_client().get(
-            '/api/v1/user/{}'.format(user_id),
+            '/api/v1/user/{}'.format(id),
             headers=dict(
                 Authorization='Bearer {}'.format(auth_token) 
             ),        

@@ -6,7 +6,7 @@ from app.config import Config
 class TokenUtil:
 
     @staticmethod
-    def encode_token(user_id):
+    def encode_token(id):
         """
         Generates the Auth Token
         :return: string
@@ -15,7 +15,7 @@ class TokenUtil:
             payload = {
                 'exp': datetime.datetime.utcnow() + datetime.timedelta(days=1, seconds=5),
                 'iat': datetime.datetime.utcnow(),
-                'sub': user_id
+                'sub': id
             }
             return jwt.encode(
                 payload,
