@@ -23,6 +23,10 @@ class AuthDto:
         'id': fields.String(required=True, description='User id'),
         'token': fields.String(required=True, description='Auth token'),
     })
+    message = api.model('message', {
+        'status': fields.String(required=True),
+        'message': fields.String(required=True),
+    })
 
 api = AuthDto.api
 
@@ -34,7 +38,8 @@ class UserLogin(Resource):
     """
     @api.doc('user login')
     @api.expect(AuthDto.logindata, validate=True)
-    @api.marshal_with(AuthDto.authdata)
+    @api.marshal_with(AuthDto.authdata, code=200)
+    @api.response(code=401, description='Email or password does not match.')
     def post(self):
         # get the post data
         post_data = request.json
@@ -59,7 +64,7 @@ class UserLogin(Resource):
             else:
                 response_object = {
                     'status': 'fail',
-                    'message': 'email or password does not match.'
+                    'message': 'Email or password does not match.'
                 }
                 return response_object, 401   
         except ApplicationException as e:
@@ -74,6 +79,9 @@ class UserLogin(Resource):
 @api.header('Authorization: Bearer', 'JWT TOKEN', required=True)
 class LogoutApi(Resource):     
 
+    @api.response(code=200, description='Successfully logged out.')
+    @api.response(code=403, description='Provide a valid auth token.')
+    @api.response(code=401, description='Token is blacklisted.or')    
     def post(self):
         auth_header = request.headers.get('Authorization')
 

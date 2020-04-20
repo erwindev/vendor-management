@@ -13,7 +13,7 @@ class TestUserResgistration(BaseTestCase):
             response = BaseTestCase().register_user(auth_token)
             data = json.loads(response.data.decode())
             self.assertTrue(data['status'] == 'success')
-            self.assertTrue(data['message'] == 'Successfully registered.')
+            self.assertTrue(data['message'] == 'User successfully created.')
             self.assertTrue(response.content_type == 'application/json')
             self.assertEqual(response.status_code, 201)
 
@@ -28,7 +28,7 @@ class TestUserResgistration(BaseTestCase):
             response = BaseTestCase().register_user(auth_token)
             data = json.loads(response.data.decode())
             self.assertTrue(data['status'] == 'fail')
-            self.assertTrue(data['message'] == 'User already exists.')
+            self.assertTrue(data['message'] == 'User cannot be created.')
             self.assertTrue(response.content_type == 'application/json')
             self.assertEqual(response.status_code, 409)
 

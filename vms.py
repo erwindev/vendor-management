@@ -12,10 +12,10 @@ cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 print("Environment: {}".format(environment))
 
 
-@app.before_request
-def before_request_func():
-    print("before_request is running!")
-    # add code here to inspect headers
+# @app.before_request
+# def before_request_func():
+#     # print("before_request is running!")
+#     # add code here to inspect headers
 
 
 @app.cli.command()

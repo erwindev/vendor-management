@@ -109,7 +109,7 @@ class BaseTestCase(TestCase):
             data=json.dumps(dict(
                 id=id,
                 password=password,
-                new_password=new_password
+                newpassword=new_password
             )),
             content_type='application/json'
         )                

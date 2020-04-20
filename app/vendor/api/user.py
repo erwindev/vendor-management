@@ -23,8 +23,12 @@ class UserDto:
     changepassword = api.model('changepassword', {
         'id': fields.String(required=True),
         'password': fields.String(required=True),
-        'new_password': fields.String(required=True)        
+        'newpassword': fields.String(required=True)        
     })         
+    message = api.model('message', {
+        'status': fields.String(required=True),
+        'message': fields.String(required=True),
+    })    
 
 api = UserDto.api
 
@@ -51,8 +55,8 @@ class UserList(Resource):
                 'message': 'Internal Server Error'
             }, 500    
 
-    @api.response(201, 'User successfully created.')
-    @api.response(409, 'User already exists.')
+    @api.response(code=201, description='User successfully created.') 
+    @api.response(code=409, description='User cannot be created.') 
     @api.doc('create a new user')
     @api.expect(UserDto.user, validate=True)
     def post(self):
@@ -63,14 +67,14 @@ class UserList(Resource):
             if UserDao.get_by_email(user_data['email']) is not None:
                 response_object = {
                     'status': 'fail',
-                    'message': 'User already exists.'
+                    'message': 'User cannot be created.'
                 }
                 return response_object, 409
 
             if UserDao.get_by_email(user_data['email']) is not None:
                 response_object = {
                     'status': 'fail',
-                    'message': 'User already exists.'
+                    'message': 'User cannot be created.'
                 }
                 return response_object, 409
 
@@ -82,7 +86,7 @@ class UserList(Resource):
             new_user = UserDao.save_user(new_user)
             response_object = {
                 'status': 'success',
-                'message': 'Successfully registered.'
+                'message': 'User successfully created.'
             }
             return response_object, 201
         except Exception as e:
@@ -92,9 +96,9 @@ class UserList(Resource):
             }, 500
 
 
-    @api.response(201, 'User successfully updated.')
     @api.doc('update a user')
     @api.expect(UserDto.user, validate=False)
+    @api.response(code=201, description='User successfully updated.')
     @token_required
     def put(self):
         """Update a user"""
@@ -117,7 +121,7 @@ class UserList(Resource):
             existing_user = UserDao.update_user(existing_user)
             response_object = {
                 'status': 'success',
-                'message': 'Successfully updated.'
+                'message': 'User successfully updated.'
             }
             return response_object, 201
         except Exception as e:
@@ -129,12 +133,12 @@ class UserList(Resource):
 
 @api.route('/<id>')
 @api.param('id', 'The User identifier')
-@api.response(404, 'User not found.')
 @api.expect(api.parser().add_argument('Authorization', location='headers'))
 class User(Resource):
 
     @api.doc('get a user')
     @api.marshal_with(UserDto.user)
+    @api.response(code=404, description='User not found.')
     @token_required
     def get(self, id):
         """Get a user given its identifier"""
@@ -153,9 +157,10 @@ class User(Resource):
 @api.expect(api.parser().add_argument('Authorization', location='headers'))
 class UserChangePassword(Resource):
 
-    @api.response(201, 'Password successfully changed.')
     @api.doc('change passwqord')
     @api.expect(UserDto.changepassword, validate=True)
+    @api.response(code=201, description='Password changed.')
+    @api.response(code=401, description='Password cannot be changed.')
     def post(self):
         """Change password"""
         try:
@@ -164,15 +169,15 @@ class UserChangePassword(Resource):
             user = UserDao.get_by_id(user_data['id'])
 
             if user is not None and user.check_password(user_data['password']):
-                new_user = UserDao.change_password(user.id, user_data['new_password'])
+                new_user = UserDao.change_password(user.id, user_data['newpassword'])
                 response_object = {
                     'status': 'success',
-                    'message': 'password change'
+                    'message': 'Password changed.'
                 }
             else:
                 response_object = {
                     'status': 'fail',
-                    'message': 'user not found'
+                    'message': 'Password cannot be changed.'
                 }                
                 return response_object, 401                
 
