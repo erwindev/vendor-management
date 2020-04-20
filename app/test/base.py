@@ -34,19 +34,19 @@ class BaseTestCase(TestCase):
     #
     ######################
     @staticmethod
-    def login_user():
+    def login_user(email, password):
         return app.test_client().post(
             '/api/v1/auth/login',
             data=json.dumps(dict(
-                email='joetester@se.com',
-                password='test'
+                email=email,
+                password=password
             )),
             content_type='application/json'
         )
 
     @staticmethod
-    def get_token_and_loggedin_user():
-        response = BaseTestCase.login_user()
+    def get_token_and_loggedin_user(email, password):
+        response = BaseTestCase.login_user(email, password)
         data = json.loads(response.data.decode())
         user_loggedin_data = json.loads(response.data.decode())                  
         auth_token = user_loggedin_data['token']      
@@ -97,7 +97,22 @@ class BaseTestCase(TestCase):
                 status=status
             )),
             content_type='application/json'
-        )        
+        )
+
+    @staticmethod
+    def change_password(auth_token, id, password, new_password):
+        return app.test_client().post(
+            '/api/v1/user/changepassword',
+            headers=dict(
+                Authorization='Bearer {}'.format(auth_token) 
+            ),        
+            data=json.dumps(dict(
+                id=id,
+                password=password,
+                new_password=new_password
+            )),
+            content_type='application/json'
+        )                
 
     @staticmethod
     def get_user(auth_token, id):

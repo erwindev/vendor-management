@@ -9,7 +9,7 @@ from app.test.base import BaseTestCase
 class TestNotesApi(BaseTestCase):
     def test_notes(self):
         """ Test for add notes """
-        auth_token, user_loggedin_data = BaseTestCase.get_token_and_loggedin_user()
+        auth_token, user_loggedin_data = BaseTestCase.get_token_and_loggedin_user('joetester@se.com', 'test')
         with self.client:
 
             notes_type_id = '1000' 

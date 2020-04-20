@@ -20,6 +20,11 @@ class UserDto:
         'updated_date' :fields.Date(),
         'status': fields.String()
     })         
+    changepassword = api.model('changepassword', {
+        'id': fields.String(required=True),
+        'password': fields.String(required=True),
+        'new_password': fields.String(required=True)        
+    })         
 
 api = UserDto.api
 
@@ -142,6 +147,41 @@ class User(Resource):
             return response_object, 404
         else:
             return user
+
+
+@api.route("/changepassword")
+@api.expect(api.parser().add_argument('Authorization', location='headers'))
+class UserChangePassword(Resource):
+
+    @api.response(201, 'Password successfully changed.')
+    @api.doc('change passwqord')
+    @api.expect(UserDto.changepassword, validate=True)
+    def post(self):
+        """Change password"""
+        try:
+            user_data = request.json
+
+            user = UserDao.get_by_id(user_data['id'])
+
+            if user is not None and user.check_password(user_data['password']):
+                new_user = UserDao.change_password(user.id, user_data['new_password'])
+                response_object = {
+                    'status': 'success',
+                    'message': 'password change'
+                }
+            else:
+                response_object = {
+                    'status': 'fail',
+                    'message': 'user not found'
+                }                
+                return response_object, 401                
+
+            return response_object, 201
+        except Exception as e:
+            return {
+                'status': 'error',
+                'message': 'Internal Server Error'
+            }, 500    
 
 
 @api.errorhandler(Exception)

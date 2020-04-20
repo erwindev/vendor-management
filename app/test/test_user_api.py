@@ -8,7 +8,7 @@ from app.test.base import BaseTestCase
 class TestUserResgistration(BaseTestCase):
     def test_registration(self):
         """ Test for user registration """
-        auth_token, user_loggedin_data = BaseTestCase.get_token_and_loggedin_user()
+        auth_token, user_loggedin_data = BaseTestCase.get_token_and_loggedin_user('joetester@se.com', 'test')
         with self.client:
             response = BaseTestCase().register_user(auth_token)
             data = json.loads(response.data.decode())
@@ -19,7 +19,7 @@ class TestUserResgistration(BaseTestCase):
 
     def test_registered_with_already_registered_user(self):
         """ Test registration with already registered username"""
-        auth_token, user_loggedin_data = BaseTestCase.get_token_and_loggedin_user()
+        auth_token, user_loggedin_data = BaseTestCase.get_token_and_loggedin_user('joetester@se.com', 'test')
 
         # register user
         BaseTestCase.register_user(auth_token)
@@ -36,7 +36,7 @@ class TestUserResgistration(BaseTestCase):
 class TestUser(BaseTestCase):
     def test_get_user(self):
         """ Test for getting user """
-        auth_token, user_loggedin_data = BaseTestCase.get_token_and_loggedin_user()
+        auth_token, user_loggedin_data = BaseTestCase.get_token_and_loggedin_user('joetester@se.com', 'test')
         with self.client:
             id = user_loggedin_data['id']
             response = BaseTestCase().get_user(auth_token, id)
@@ -47,7 +47,7 @@ class TestUser(BaseTestCase):
 
     def test_get_all_user(self):
         """ Test for getting all users """
-        auth_token, user_loggedin_data = BaseTestCase.get_token_and_loggedin_user()
+        auth_token, user_loggedin_data = BaseTestCase.get_token_and_loggedin_user('joetester@se.com', 'test')
         with self.client:
             response = BaseTestCase().get_all_user(auth_token)
             data = json.loads(response.data.decode())
@@ -57,7 +57,7 @@ class TestUser(BaseTestCase):
 
     def test_update_user(self):
         """ Test for getting user """
-        auth_token, user_loggedin_data = BaseTestCase.get_token_and_loggedin_user()
+        auth_token, user_loggedin_data = BaseTestCase.get_token_and_loggedin_user('joetester@se.com', 'test')
         with self.client:
             id = user_loggedin_data['id']
             # get logged in user
@@ -82,14 +82,34 @@ class TestUser(BaseTestCase):
             self.assertTrue(data['lastname'] == 'testerx')
             self.assertTrue(data['status'] == 'act')
             self.assertTrue(response.content_type == 'application/json')
-            self.assertEqual(response.status_code, 200)                           
+            self.assertEqual(response.status_code, 200)  
+
+    def test_changepassword(self):                         
+        """ Test for changing password """
+        auth_token, user_loggedin_data = BaseTestCase.get_token_and_loggedin_user('joetester@se.com', 'test')
+        with self.client:
+            id = user_loggedin_data['id']
+            # get logged in user
+            response = BaseTestCase().get_user(auth_token, id)
+            data = json.loads(response.data.decode())
+            self.assertTrue(data['email'] == 'joetester@se.com')
+            self.assertTrue(data['firstname'] == 'joe')
+            self.assertTrue(data['lastname'] == 'tester')
+            self.assertTrue(response.content_type == 'application/json')
+            self.assertEqual(response.status_code, 200)   
+
+            # change password
+            response = BaseTestCase().change_password(auth_token, id, 'test', 'my-new-password')  
+            data = json.loads(response.data.decode())     
+            self.assertTrue(response.content_type == 'application/json')
+            self.assertEqual(response.status_code, 201)                   
 
 
 class TestLogout(BaseTestCase):
 
     def test_successful_logout(self):
         """ Test for logging out user """
-        auth_token, user_loggedin_data = BaseTestCase.get_token_and_loggedin_user()
+        auth_token, user_loggedin_data = BaseTestCase.get_token_and_loggedin_user('joetester@se.com', 'test')
         with self.client:
             # logout user using a valid token
             response = BaseTestCase.logged_out(auth_token)

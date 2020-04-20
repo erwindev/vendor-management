@@ -9,7 +9,7 @@ from app.test.base import BaseTestCase
 class TestProductApi(BaseTestCase):
     def test_add_product(self):
         """ Test for add product """
-        auth_token, user_loggedin_data = BaseTestCase.get_token_and_loggedin_user()
+        auth_token, user_loggedin_data = BaseTestCase.get_token_and_loggedin_user('joetester@se.com', 'test')
         with self.client:
             # add vendor
             response = BaseTestCase.add_vendor(auth_token, 'Vendor 1', 'www.vendor1.com')
@@ -60,7 +60,7 @@ class TestProductApi(BaseTestCase):
 
     def test_update_product(self):
         """ Test for update product """
-        auth_token, user_loggedin_data = BaseTestCase.get_token_and_loggedin_user()
+        auth_token, user_loggedin_data = BaseTestCase.get_token_and_loggedin_user('joetester@se.com', 'test')
         with self.client:        
             # add vendor
             response = BaseTestCase.add_vendor(auth_token, 'Vendor 1', 'www.vendor1.com')

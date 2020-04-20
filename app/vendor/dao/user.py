@@ -32,6 +32,15 @@ class UserDao:
         return existing_user   
 
     @staticmethod
+    def change_password(id, new_password):
+        user = UserDao.get_by_id(id)
+        user.set_password(new_password)
+        user.updated_date = datetime.datetime.now()
+        db.session.commit()
+        db.session.refresh(user)
+        return user
+
+    @staticmethod
     def set_last_login_date(id):
         existing_user = User.query.filter_by(id=id).first()
         existing_user.last_login_date = datetime.datetime.now()

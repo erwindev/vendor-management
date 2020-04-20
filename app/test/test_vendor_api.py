@@ -8,7 +8,7 @@ from app.test.base import BaseTestCase
 class TestVendorApi(BaseTestCase):
     def test_add_vendor(self):
         """ Test for add vendor """
-        auth_token, user_loggedin_data = BaseTestCase.get_token_and_loggedin_user()
+        auth_token, user_loggedin_data = BaseTestCase.get_token_and_loggedin_user('joetester@se.com', 'test')
         with self.client:
             # add vendor
             response = BaseTestCase().add_vendor(auth_token, 'Vendor 1', 'www.vendor1.com')
@@ -20,7 +20,7 @@ class TestVendorApi(BaseTestCase):
 
     def test_get_all_vendor(self):
         """ Test get all vendor"""
-        auth_token, user_loggedin_data = BaseTestCase.get_token_and_loggedin_user()
+        auth_token, user_loggedin_data = BaseTestCase.get_token_and_loggedin_user('joetester@se.com', 'test')
         with self.client:
             # add vendor
             response = BaseTestCase().add_vendor(auth_token, 'Vendor 1', 'www.vendor1.com')
@@ -39,7 +39,7 @@ class TestVendorApi(BaseTestCase):
 
     def test_get_vendor(self):
         """ Test get vendor"""
-        auth_token, user_loggedin_data = BaseTestCase.get_token_and_loggedin_user()
+        auth_token, user_loggedin_data = BaseTestCase.get_token_and_loggedin_user('joetester@se.com', 'test')
         with self.client:
             # add vendor
             response = BaseTestCase().add_vendor(auth_token, 'Vendor X', 'www.vendorx.com')
@@ -59,7 +59,7 @@ class TestVendorApi(BaseTestCase):
 
     def test_update_vendor(self):
         """ Test update vendor"""
-        auth_token, user_loggedin_data = BaseTestCase.get_token_and_loggedin_user()
+        auth_token, user_loggedin_data = BaseTestCase.get_token_and_loggedin_user('joetester@se.com', 'test')
         with self.client:
             # add vendor
             response = BaseTestCase().add_vendor(auth_token, 'Vendor X', 'www.vendorx.com')

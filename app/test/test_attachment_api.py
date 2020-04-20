@@ -9,7 +9,7 @@ from app.test.base import BaseTestCase
 class TestAttachmentApi(BaseTestCase):
     def test_attachment(self):
         """ Test for add attachment """
-        auth_token, user_loggedin_data = BaseTestCase.get_token_and_loggedin_user()
+        auth_token, user_loggedin_data = BaseTestCase.get_token_and_loggedin_user('joetester@se.com', 'test')
         with self.client:
 
             attachment_type_id = '1000' 

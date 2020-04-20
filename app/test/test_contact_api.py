@@ -9,7 +9,7 @@ from app.test.base import BaseTestCase
 class TestContactApi(BaseTestCase):
     def test_contact(self):
         """ Test for add contact """
-        auth_token, user_loggedin_data = BaseTestCase.get_token_and_loggedin_user()
+        auth_token, user_loggedin_data = BaseTestCase.get_token_and_loggedin_user('joetester@se.com', 'test')
         with self.client:
 
             contact_type_id = '1000' 
