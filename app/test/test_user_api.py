@@ -102,7 +102,14 @@ class TestUser(BaseTestCase):
             response = BaseTestCase().change_password(auth_token, id, 'test', 'my-new-password')  
             data = json.loads(response.data.decode())     
             self.assertTrue(response.content_type == 'application/json')
-            self.assertEqual(response.status_code, 201)                   
+            self.assertEqual(response.status_code, 201) 
+
+            # login
+            response = BaseTestCase.login_user('joetester@se.com', 'my-new-password')       
+            data = json.loads(response.data.decode())  
+            self.assertTrue(data['email'] == 'joetester@se.com')   
+            self.assertTrue(response.content_type == 'application/json')
+            self.assertEqual(response.status_code, 200)                        
 
 
 class TestLogout(BaseTestCase):
