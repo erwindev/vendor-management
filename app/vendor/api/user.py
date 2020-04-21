@@ -29,6 +29,14 @@ class UserDto:
         'status': fields.String(required=True),
         'message': fields.String(required=True),
     })    
+    result =  api.model('result', {
+        'user': fields.Nested(user),
+        'result': fields.Nested(message)
+    })    
+    resultlist =  api.model('resultlist', {
+        'userlist': fields.List(fields.Nested(user)),
+        'result': fields.Nested(message)
+    })     
 
 api = UserDto.api
 
@@ -38,7 +46,7 @@ api = UserDto.api
 class UserList(Resource):
 
     @api.doc('list_of_registered_users')
-    @api.marshal_list_with(UserDto.user, envelope='userlist')
+    @api.marshal_with(UserDto.resultlist, code=200, description='Successful')
     @token_required
     def get(self):
         """Get all users"""
@@ -48,14 +56,28 @@ class UserList(Resource):
             for user in users:
                 user.password = None
                 user_ret_list.append(user.to_json())
-            return user_ret_list
+
+            result = {
+                'status': 'success',
+                'message': 'User list returned.'
+            }             
+            response_object = {
+                'userlist': user_ret_list,
+                'result': result
+            }                
+            return response_object, 200
         except Exception as e:
-            return {
+            result = {
                 'status': 'error',
                 'message': 'Internal Server Error'
-            }, 500    
+            }             
+            response_object = {
+                'userlist': None,
+                'result': result
+            }
+            return response_object, 500    
 
-    @api.response(code=201, description='User successfully created.') 
+    @api.marshal_with(UserDto.message, code=201, description='User successfully created.')
     @api.response(code=409, description='User cannot be created.') 
     @api.doc('create a new user')
     @api.expect(UserDto.user, validate=True)
@@ -90,15 +112,16 @@ class UserList(Resource):
             }
             return response_object, 201
         except Exception as e:
-            return {
+            response_object = {
                 'status': 'error',
                 'message': 'Internal Server Error'
-            }, 500
+            }
+            return response_object, 500            
 
 
     @api.doc('update a user')
     @api.expect(UserDto.user, validate=False)
-    @api.response(code=201, description='User successfully updated.')
+    @api.marshal_with(UserDto.result, code=201, description='User successfully updated.')
     @token_required
     def put(self):
         """Update a user"""
@@ -119,16 +142,25 @@ class UserList(Resource):
                 existing_user.status = user_data['status']
                 
             existing_user = UserDao.update_user(existing_user)
-            response_object = {
+            result = {
                 'status': 'success',
                 'message': 'User successfully updated.'
-            }
+            } 
+            response_object = {
+                'user': existing_user,
+                'result': result,
+            }                     
             return response_object, 201
         except Exception as e:
-            return {
+            result = {
                 'status': 'error',
                 'message': 'Internal Server Error'
-            }, 500            
+            }
+            response_object = {
+                'user': None,
+                'result': result,
+            }                
+            return response_object, 500             
 
 
 @api.route('/<id>')
@@ -137,20 +169,32 @@ class UserList(Resource):
 class User(Resource):
 
     @api.doc('get a user')
-    @api.marshal_with(UserDto.user)
+    @api.marshal_with(UserDto.result, code=200, description='User found.')
     @api.response(code=404, description='User not found.')
     @token_required
     def get(self, id):
         """Get a user given its identifier"""
         user = UserDao.get_by_id(id)
         if not user:
-            response_object = {
+            result = {
                 'status': 'fail',
                 'message': 'User not found.'
-            }
+            } 
+            response_object = {
+                'user': None,
+                'result': result,
+            }               
             return response_object, 404
         else:
-            return user
+            result = {
+                'status': 'success',
+                'message': 'User found.'
+            } 
+            response_object = {
+                'user': user,
+                'result': result,
+            }                    
+            return response_object, 200
 
 
 @api.route("/changepassword")
@@ -159,7 +203,7 @@ class UserChangePassword(Resource):
 
     @api.doc('change passwqord')
     @api.expect(UserDto.changepassword, validate=True)
-    @api.response(code=201, description='Password changed.')
+    @api.marshal_with(UserDto.message, code=201, description='Password changed.')
     @api.response(code=401, description='Password cannot be changed.')
     def post(self):
         """Change password"""

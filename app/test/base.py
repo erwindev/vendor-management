@@ -49,8 +49,8 @@ class BaseTestCase(TestCase):
         response = BaseTestCase.login_user(email, password)
         data = json.loads(response.data.decode())
         user_loggedin_data = json.loads(response.data.decode())                  
-        auth_token = user_loggedin_data['token']      
-        return auth_token, user_loggedin_data  
+        auth_token = user_loggedin_data['authdata']['token']     
+        return auth_token, user_loggedin_data['authdata']  
 
     @staticmethod
     def logged_out(auth_token):

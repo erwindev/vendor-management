@@ -27,6 +27,10 @@ class AuthDto:
         'status': fields.String(required=True),
         'message': fields.String(required=True),
     })
+    result =  api.model('result', {
+        'authdata': fields.Nested(authdata),
+        'result': fields.Nested(message)
+    })
 
 api = AuthDto.api
 
@@ -38,7 +42,7 @@ class UserLogin(Resource):
     """
     @api.doc('user login')
     @api.expect(AuthDto.logindata, validate=True)
-    @api.marshal_with(AuthDto.authdata, code=200)
+    @api.marshal_with(AuthDto.result, code=200, description='Successful user login.')
     @api.response(code=401, description='Email or password does not match.')
     def post(self):
         # get the post data
@@ -48,7 +52,7 @@ class UserLogin(Resource):
             if user and user.check_password(post_data['password']):
                 auth_token = TokenUtil.encode_token(user.id)
                 if auth_token:
-                    response_object = {
+                    authdata = {
                         'firstname': user.firstname,
                         'lastname': user.lastname,
                         'email': user.email,
@@ -59,18 +63,34 @@ class UserLogin(Resource):
                         'last_login_date': user.last_login_date,
                         'token': auth_token.decode()
                     }
+                    result = {
+                        'status': 'success',
+                        'message': 'Successful user login.'
+                    } 
+                    response_object = {
+                        'authdata': authdata,
+                        'result': result,
+                    }                  
                     UserDao.set_last_login_date(user.id)
                     return response_object, 200
             else:
-                response_object = {
+                result = {
                     'status': 'fail',
                     'message': 'Email or password does not match.'
                 }
+                response_object = {
+                    'authdata': None,
+                    'result': result
+                }
                 return response_object, 401   
         except ApplicationException as e:
-            response_object = {
+            result = {
                 'status': 'fail',
-                'message': 'Try again'
+                'message': 'Internal Server Error'
+            }
+            response_object = {
+                'authdata': None,
+                'result': result
             }
             return response_object, 500       
 
@@ -79,9 +99,9 @@ class UserLogin(Resource):
 @api.header('Authorization: Bearer', 'JWT TOKEN', required=True)
 class LogoutApi(Resource):     
 
-    @api.response(code=200, description='Successfully logged out.')
+    @api.marshal_with(AuthDto.message, code=200, description='Successfully logged out.')    
     @api.response(code=403, description='Provide a valid auth token.')
-    @api.response(code=401, description='Token is blacklisted.or')    
+    @api.response(code=401, description='Token is blacklisted.')    
     def post(self):
         auth_header = request.headers.get('Authorization')
 
