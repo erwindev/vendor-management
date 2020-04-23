@@ -20,6 +20,8 @@ class Vendor(db.Model):
             'name': self.name,
             'website': self.website,
             'create_date': self.create_date,
+            'status': self.status,            
+            'updated_date': self.updated_date,            
             'user_by': self.user_by
         }
         return json_result                
