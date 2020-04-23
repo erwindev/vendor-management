@@ -13,8 +13,8 @@ class VendorDto:
         'name': fields.String(required=True),
         'website': fields.String(required=True),
         'status': fields.String(required=True),
-        'create_date': fields.DateTime(),
-        'updated_date': fields.DateTime(),
+        'create_date': fields.Date(),
+        'updated_date': fields.Date(),
         'user_by': fields.String(required=True)        
     })      
 
