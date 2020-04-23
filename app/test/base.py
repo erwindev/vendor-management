@@ -151,7 +151,7 @@ class BaseTestCase(TestCase):
                 name=vendor_name,
                 website=website_name,
                 status="active",
-                user_by = 'ealberto' 
+                user_by = '1' 
             )),
             content_type='application/json'
         )
