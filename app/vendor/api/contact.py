@@ -85,6 +85,7 @@ class AddContact(Resource):
             new_contact.country = contact_data['country']
             new_contact.zipcode = contact_data['zipcode']
             new_contact.user_by = contact_data['user_by']
+            new_contact.status = contact_data['status']
 
             new_contact = ContactDao.save_contact(new_contact)
             response_object = {
@@ -152,6 +153,9 @@ class Contact(Resource):
 
             if 'user_by' in contact_data:
                 existing_contact.user_by = contact_data['user_by']                
+
+            if 'user_by' in contact_data:
+                existing_contact.status = contact_data['status']                      
 
             existing_contact = ContactDao.update_contact(existing_contact)
             response_object = {
