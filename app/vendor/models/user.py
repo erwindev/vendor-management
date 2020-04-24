@@ -13,7 +13,7 @@ class User(UserMixin, db.Model):
     create_date = db.Column(db.DateTime, default=datetime.utcnow)
     last_login_date = db.Column(db.DateTime)
     updated_date = db.Column(db.DateTime)
-    status = db.Column(db.String(3))
+    status = db.Column(db.String(10))
 
     def __repr__(self):
         return '<User {}>'.format(self.username)

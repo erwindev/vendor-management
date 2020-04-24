@@ -14,7 +14,7 @@ class Product(db.Model):
     product_type = db.Column(db.String(100))
     create_date = db.Column(db.DateTime, default=datetime.utcnow)
     updated_date = db.Column(db.DateTime)
-    status = db.Column(db.String(3))
+    status = db.Column(db.String(10))
     user_by = db.Column(db.String(100))
 
     def __repr__(self):
