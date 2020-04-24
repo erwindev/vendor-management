@@ -22,10 +22,10 @@ class TestProductApi(BaseTestCase):
             # get vendor
             response = BaseTestCase.get_vendor(auth_token, 1)
             data = json.loads(response.data.decode())
-            self.assertTrue(data['name'] == 'Vendor 1')
+            self.assertTrue(data['vendor']['name'] == 'Vendor 1')
             self.assertTrue(response.content_type == 'application/json')
             self.assertEqual(response.status_code, 200)     
-            vendor_id = data['id']          
+            vendor_id = data['vendor']['id']          
 
             # add product
             temp_product = Object()
@@ -73,10 +73,10 @@ class TestProductApi(BaseTestCase):
             # get vendor
             response = BaseTestCase.get_vendor(auth_token, 1)
             data = json.loads(response.data.decode())
-            self.assertTrue(data['name'] == 'Vendor 1')
+            self.assertTrue(data['vendor']['name'] == 'Vendor 1')
             self.assertTrue(response.content_type == 'application/json')
             self.assertEqual(response.status_code, 200)     
-            vendor_id = data['id']      
+            vendor_id = data['vendor']['id']      
 
             # add product 1
             temp_product = Object()

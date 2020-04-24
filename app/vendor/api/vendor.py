@@ -2,8 +2,12 @@ import sys
 from flask import jsonify, request
 from flask_restplus import Api, Resource, Namespace, fields
 from app.vendor.dao.vendor import VendorDao
+from app.vendor.dao.contact import ContactDao
+from app.vendor.dao.product import ProductDao
 from app.vendor.models.vendor import Vendor as VendorModel
 from app.vendor.util.decorator import token_required
+from app.vendor.api.product import ProductDto
+from app.vendor.api.contact import ContactDto
 
 
 class VendorDto:
@@ -16,6 +20,16 @@ class VendorDto:
         'create_date': fields.Date(),
         'updated_date': fields.Date(),
         'user_by': fields.String(required=True)        
+    })      
+    message = api.model('message', {
+        'status': fields.String(required=True),
+        'message': fields.String(required=True),
+    })      
+    resultlist =  api.model('resultlist', {
+        'vendor': fields.Nested(vendor),
+        'contacts': fields.List(fields.Nested(ContactDto.contact)),
+        'products': fields.List(fields.Nested(ProductDto.product)),
+        'result': fields.Nested(message)
     })      
 
 
@@ -114,7 +128,7 @@ class VendorList(Resource):
 class Vendor(Resource):
 
     @api.doc('get a vendor')
-    @api.marshal_with(VendorDto.vendor)
+    @api.marshal_with(VendorDto.resultlist, code=200, description='Successful')
     @token_required
     def get(self, id):
         """Get a vendor given its identifier"""
@@ -126,7 +140,22 @@ class Vendor(Resource):
             }
             return response_object, 404
         else:
-            return vendor
+            'Get Contacts'
+            vendor_contact_type_id = 1000
+            contacts = ContactDao.get_contacts(vendor.id, vendor_contact_type_id)
+            'Get Products'
+            products = ProductDao.get_all_by_vendor(vendor.id)
+            result = {
+                'status': 'success',
+                'message': 'Vendor found.'
+            }            
+            response_object = {
+                'vendor': vendor,
+                'contacts': contacts,
+                'products': products,
+                'result': result
+            }
+            return response_object, 200
 
 
 @api.errorhandler(Exception)

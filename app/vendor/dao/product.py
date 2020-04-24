@@ -52,7 +52,7 @@ class ProductDao:
 
     @staticmethod
     def get_all_by_vendor(vendor_id):
-        return Product.query.filter_by(id=vendor_id).order_by(Product.product_name).all()
+        return Product.query.filter_by(vendor_id=vendor_id).order_by(Product.product_name).all()
 
     @staticmethod
     def delete(id):

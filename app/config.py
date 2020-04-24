@@ -20,6 +20,7 @@ class DevelopmentConfig(Config):
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or 'sqlite:///' + os.path.join(basedir, 'app.db')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     PRESERVE_CONTEXT_ON_EXCEPTION = False
+    SQLALCHEMY_POOL_SIZE = None
 
 
 class TestingConfig(Config):
@@ -28,6 +29,7 @@ class TestingConfig(Config):
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or 'sqlite:///' + os.path.join(basedir, 'app-test.db')
     SQLALCHEMY_TRACK_MODIFICATIONS = False    
     PRESERVE_CONTEXT_ON_EXCEPTION = False
+    SQLALCHEMY_POOL_SIZE = None
 
 
 class ProductionConfig(Config):
