@@ -154,7 +154,7 @@ class Contact(Resource):
             if 'user_by' in contact_data:
                 existing_contact.user_by = contact_data['user_by']                
 
-            if 'user_by' in contact_data:
+            if 'status' in contact_data:
                 existing_contact.status = contact_data['status']                      
 
             existing_contact = ContactDao.update_contact(existing_contact)
