@@ -309,13 +309,14 @@ class BaseTestCase(TestCase):
         )            
 
     @staticmethod
-    def update_contact(auth_token, id, contact):
+    def update_contact(auth_token, contact):
         return app.test_client().put(
-            '/api/v1/contact/{}'.format(id),
+            '/api/v1/contact/',
             headers=dict(
                 Authorization='Bearer {}'.format(auth_token) 
             ),        
             data=json.dumps(dict(
+                id = contact.id,
                 name = contact.name,
                 user_by = 'jalberto'          
             )),

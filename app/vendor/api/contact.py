@@ -98,22 +98,17 @@ class AddContact(Resource):
                 'status': 'error',
                 'message': 'Internal Server Error'
             }, 500
-
-
-@api.route('/<id>')
-@api.param('id', 'The Contact identifier')
-@api.expect(api.parser().add_argument('Authorization', location='headers'))
-class Contact(Resource):
+            
 
     @api.response(201, 'Contact successfully updated.')
     @api.doc('update a contact')
     @api.expect(ContactDto.contact, validate=False)
     @token_required
-    def put(self, id):
+    def put(self):
         """Update a contact"""
         try:
             contact_data = request.json
-            existing_contact = ContactDao.get_by_id(id)            
+            existing_contact = ContactDao.get_by_id(contact_data['id'])            
 
             if 'contact_id' in contact_data:
                 existing_contact.contact_id = contact_data['contact_id']
@@ -170,6 +165,9 @@ class Contact(Resource):
                 'message': 'Internal Server Error'
             }, 500
 
+@api.route('/<id>')
+@api.expect(api.parser().add_argument('Authorization', location='headers'))
+class Contact(Resource):
 
     @api.doc('get a contact')
     @api.marshal_with(ContactDto.contact)
