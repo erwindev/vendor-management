@@ -3,7 +3,7 @@ from flask_restplus import Api, Resource, Namespace, fields
 from app.vendor.dao.user import UserDao, BlackListTokenDao
 from app.vendor.models.user import User, BlackListToken
 from app.vendor.exception import ApplicationException
-from app.vendor.util.token_util import TokenUtil
+from app.vendor.util import TokenUtil
 
 
 class AuthDto:

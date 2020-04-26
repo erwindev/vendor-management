@@ -4,6 +4,7 @@ from flask_restplus import Api, Resource, Namespace, fields
 from app.vendor.dao.contact import ContactDao
 from app.vendor.models.contact import Contact as ContactModel
 from app.vendor.util.decorator import token_required
+from app.vendor.util import NullableString
 
 
 class ContactDto:
@@ -15,9 +16,9 @@ class ContactDto:
         'name': fields.String(required=True),
         'email': fields.String(required=True),        
         'phone1': fields.String(required=True),       
-        'phone2': fields.String(required=True),         
+        'phone2': NullableString(),         
         'street1': fields.String(required=True),                        
-        'street2': fields.String(),  
+        'street2': NullableString(),  
         'city': fields.String(required=True),  
         'state': fields.String(required=True),  
         'country': fields.String(required=True),  

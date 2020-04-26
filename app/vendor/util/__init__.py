@@ -1,6 +1,7 @@
 import datetime
 import jwt
 from app.config import Config
+from flask_restplus import fields
 
 
 class TokenUtil:
@@ -37,3 +38,6 @@ class TokenUtil:
         except jwt.InvalidTokenError:
             return 'Invalid token.'
 
+class NullableString(fields.String):
+    __schema_type__ = ['string', 'null']
+    __schema_example__ = 'nullable string'

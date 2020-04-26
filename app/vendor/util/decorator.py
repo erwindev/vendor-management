@@ -1,7 +1,7 @@
 from functools import wraps
 from flask import request
-from .token_util import TokenUtil
 from app.vendor.dao.user import UserDao
+from app.vendor.util import TokenUtil
 
 
 def token_required(f):
