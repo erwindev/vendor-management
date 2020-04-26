@@ -150,7 +150,7 @@ class BaseTestCase(TestCase):
             data=json.dumps(dict(
                 name=vendor_name,
                 website=website_name,
-                status="active",
+                status="Active",
                 user_by = '1' 
             )),
             content_type='application/json'
@@ -208,12 +208,6 @@ class BaseTestCase(TestCase):
             ),        
             data=json.dumps(dict(
                 product_name = product.product_name,
-                department = product.department,
-                budget_owner = product.budget_owner,
-                product_owner = product.product_owner,
-                expiration_date = str(product.expiration_date),
-                payment_method = product.payment_method,
-                product_type = product.product_type,
                 status = product.status,
                 user_by = 'ealberto'            
             )),

@@ -18,24 +18,6 @@ class ProductDao:
         if product.product_name:
             existing_product.product_name = product.product_name
 
-        if product.department:
-            existing_product.deparment = product.department
-        
-        if product.budget_owner:
-            existing_product.budget_owner = product.budget_owner
-
-        if product.product_owner:
-            existing_product.product_owner = product.product_owner
-
-        if product.expiration_date:            
-            existing_product.expiration_date = product.expiration_date
-
-        if product.payment_method:
-            existing_product.payment_method = product.payment_method
-
-        if product.product_type:
-            existing_product.product_type = product.product_type
-
         if product.status:
             existing_product.status = product.status
 

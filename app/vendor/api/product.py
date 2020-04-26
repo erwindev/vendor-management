@@ -13,11 +13,6 @@ class ProductDto:
         'id': fields.String(),
         'vendor_id': fields.String(),
         'product_name': fields.String(required=True),
-        'department': fields.String(required=True),
-        'budget_owner': fields.String(required=True),
-        'expiration_date': fields.String(required=True),
-        'payment_method': fields.String(required=True),
-        'product_type': fields.String(required=True),
         'status': fields.String(),
         'create_date': fields.DateTime(),
         'updated_date': fields.DateTime(),
@@ -62,12 +57,6 @@ class ProductList(Resource):
             new_product = ProductModel()
             new_product.vendor_id = vendor_id
             new_product.product_name = product_data['product_name']
-            new_product.department = product_data['department']
-            new_product.budget_owner = product_data['budget_owner']
-            new_product.product_owner = product_data['product_owner']
-            new_product.expiration_date = datetime.strptime(product_data['expiration_date'],"%Y-%m-%d").date()
-            new_product.payment_method = product_data['payment_method']
-            new_product.product_type = product_data['product_type']
             new_product.status = product_data['status']
             new_product.user_by = product_data['user_by']
             new_product = ProductDao.save_product(new_product)
@@ -97,24 +86,6 @@ class ProductList(Resource):
             if 'product_name' in product_data:
                 existing_product.product_name = product_data['product_name']
             
-            if 'department' in product_data:
-                existing_product.department = product_data['department']
-
-            if 'budget_owner' in product_data:
-                existing_product.budget_owner = product_data['budget_owner']
-
-            if 'product_owner' in product_data:
-                existing_product.product_owner = product_data['product_owner']
-            
-            if 'expiration_date' in product_data:
-                new_product.expiration_date = datetime.strptime(product_data['expiration_date'],"%Y-%m-%d").date()
-
-            if 'payment_method' in product_data:
-                existing_product.payment_method = product_data['payment_method']
-            
-            if 'product_type' in product_data:
-                existing_product.product_type = product_data['product_type']
-
             if 'status' in product_data:
                 existing_product.status = product_data['status']     
 

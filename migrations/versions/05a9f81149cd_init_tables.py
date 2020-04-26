@@ -1,8 +1,8 @@
-"""initial
+"""init tables
 
-Revision ID: f2afe688bbc9
+Revision ID: 05a9f81149cd
 Revises: 
-Create Date: 2020-04-14 22:08:54.222651
+Create Date: 2020-04-26 12:00:57.092630
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'f2afe688bbc9'
+revision = '05a9f81149cd'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -53,7 +53,7 @@ def upgrade():
     sa.Column('zipcode', sa.String(length=15), nullable=True),
     sa.Column('create_date', sa.DateTime(), nullable=True),
     sa.Column('updated_date', sa.DateTime(), nullable=True),
-    sa.Column('status', sa.String(length=3), nullable=True),
+    sa.Column('status', sa.String(length=10), nullable=True),
     sa.Column('user_by', sa.String(length=100), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
@@ -95,17 +95,16 @@ def upgrade():
     sa.Column('create_date', sa.DateTime(), nullable=True),
     sa.Column('last_login_date', sa.DateTime(), nullable=True),
     sa.Column('updated_date', sa.DateTime(), nullable=True),
-    sa.Column('status', sa.String(length=3), nullable=True),
+    sa.Column('status', sa.String(length=10), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_index(op.f('ix_user_email'), 'user', ['email'], unique=True)
     op.create_table('vendor',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name', sa.String(length=100), nullable=True),
-    sa.Column('website', sa.String(length=100), nullable=True),
     sa.Column('create_date', sa.DateTime(), nullable=True),
     sa.Column('updated_date', sa.DateTime(), nullable=True),
-    sa.Column('status', sa.String(length=3), nullable=True),
+    sa.Column('status', sa.String(length=10), nullable=True),
     sa.Column('user_by', sa.String(length=100), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
@@ -121,7 +120,7 @@ def upgrade():
     sa.Column('product_type', sa.String(length=100), nullable=True),
     sa.Column('create_date', sa.DateTime(), nullable=True),
     sa.Column('updated_date', sa.DateTime(), nullable=True),
-    sa.Column('status', sa.String(length=3), nullable=True),
+    sa.Column('status', sa.String(length=10), nullable=True),
     sa.Column('user_by', sa.String(length=100), nullable=True),
     sa.ForeignKeyConstraint(['vendor_id'], ['vendor.id'], ),
     sa.PrimaryKeyConstraint('id')

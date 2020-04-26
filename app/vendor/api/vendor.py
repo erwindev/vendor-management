@@ -15,7 +15,6 @@ class VendorDto:
     vendor = api.model('vendor', {
         'id': fields.String(),
         'name': fields.String(required=True),
-        'website': fields.String(required=True),
         'status': fields.String(required=True),
         'create_date': fields.Date(),
         'updated_date': fields.Date(),
@@ -68,7 +67,6 @@ class VendorList(Resource):
 
             new_vendor = VendorModel()
             new_vendor.name = vendor_data['name']
-            new_vendor.website = vendor_data['website']
             new_vendor.status = vendor_data['status']
             new_vendor.user_by = vendor_data['user_by']
             new_vendor = VendorDao.save_vendor(new_vendor)
@@ -97,9 +95,6 @@ class VendorList(Resource):
             
             if 'name' in vendor_data:
                 existing_vendor.name = vendor_data['name']
-
-            if 'website' in vendor_data:    
-                existing_vendor.website = vendor_data['website']
 
             if 'status' in vendor_data:
                 existing_vendor.status = vendor_data['status']

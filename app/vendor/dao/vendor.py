@@ -19,9 +19,6 @@ class VendorDao:
         if vendor.name:
             existing_vendor.name = vendor.name
 
-        if vendor.website:
-            existing_vendor.website = vendor.website
-
         if vendor.status:
             existing_vendor.status = vendor.status
 
