@@ -35,9 +35,9 @@ class VendorDao:
         return Vendor.query.filter_by(id=id).first()
 
     @staticmethod
-    def get_by_name(name):
-        return User.query.filter_by(name=name).first()
-
-    @staticmethod
     def get_all():
         return Vendor.query.order_by(Vendor.name).all()
+
+    @staticmethod
+    def get_by_status(status):
+        return Vendor.query.filter_by(status=status).all()        

@@ -191,7 +191,17 @@ class BaseTestCase(TestCase):
                 Authorization='Bearer {}'.format(auth_token) 
             ),        
             content_type='application/json'
-        )          
+        )       
+
+    @staticmethod
+    def get_all_active_vendor(auth_token):
+        return app.test_client().get(
+            '/api/v1/vendor/active',
+            headers=dict(
+                Authorization='Bearer {}'.format(auth_token) 
+            ),        
+            content_type='application/json'
+        )               
 
 
     ######################

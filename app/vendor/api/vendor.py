@@ -55,7 +55,6 @@ class VendorList(Resource):
                 'message': 'Internal Server Error'
             }, 500
 
-
     @api.response(201, 'Vendor successfully created.')
     @api.doc('create a new vendor')
     @api.expect(VendorDto.vendor, validate=True)
@@ -114,6 +113,27 @@ class VendorList(Resource):
                 'message': 'Internal Server Error'
             }, 500
 
+
+@api.route("/active")
+@api.expect(api.parser().add_argument('Authorization', location='headers'))
+class VendorActiveList(Resource):
+
+    @api.doc('list_of_active_vendor')
+    @api.marshal_list_with(VendorDto.vendor, envelope='vendorlist')
+    @token_required
+    def get(self):
+        """ Get all active vendors """
+        try:
+            vendorlist = VendorDao.get_by_status('Active')
+            vendor_ret_list = []
+            for vendor in vendorlist:
+                vendor_ret_list.append(vendor.to_json())
+            return vendor_ret_list
+        except Exception as e:
+            return {
+                'status': 'error',
+                'message': 'Internal Server Error'
+            }, 500
 
 
 @api.route('/<id>')

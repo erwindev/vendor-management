@@ -19,6 +19,25 @@ class TestVendorApi(BaseTestCase):
             self.assertTrue(response.content_type == 'application/json')
             self.assertEqual(response.status_code, 201)
 
+    def test_get_all_active_vendor(self):
+        """ Test get all vendor"""
+        auth_token, user_loggedin_data = BaseTestCase.get_token_and_loggedin_user('joetester@se.com', 'test')
+        with self.client:
+            # add vendor
+            response = BaseTestCase().add_vendor(auth_token, 'Vendor 1', 'www.vendor1.com')
+            data = json.loads(response.data.decode())
+            self.assertTrue(data['status'] == 'success')
+            self.assertTrue(data['message'] == 'Vendor successfully added.')
+            self.assertTrue(response.content_type == 'application/json')
+            self.assertEqual(response.status_code, 201)
+
+            # get all vendor
+            response = BaseTestCase().get_all_active_vendor(auth_token)
+            data = json.loads(response.data.decode())
+            self.assertTrue(len(data['vendorlist']) == 1)
+            self.assertTrue(response.content_type == 'application/json')
+            self.assertEqual(response.status_code, 200)            
+
     def test_get_all_vendor(self):
         """ Test get all vendor"""
         auth_token, user_loggedin_data = BaseTestCase.get_token_and_loggedin_user('joetester@se.com', 'test')
