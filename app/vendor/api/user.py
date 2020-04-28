@@ -41,7 +41,7 @@ class UserDto:
 api = UserDto.api
 
 
-@api.route("/")
+@api.route('')
 @api.expect(api.parser().add_argument('Authorization', location='headers'))
 class UserList(Resource):
 

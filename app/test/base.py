@@ -70,7 +70,7 @@ class BaseTestCase(TestCase):
     @staticmethod
     def register_user(auth_token):
         return app.test_client().post(
-            '/api/v1/user/',
+            '/api/v1/user',
             headers=dict(
                 Authorization='Bearer {}'.format(auth_token) 
             ),        
@@ -86,7 +86,7 @@ class BaseTestCase(TestCase):
     @staticmethod
     def update_user(auth_token, id, firstname, lastname, status):
         return app.test_client().put(
-            '/api/v1/user/',
+            '/api/v1/user',
             headers=dict(
                 Authorization='Bearer {}'.format(auth_token) 
             ),        
@@ -127,7 +127,7 @@ class BaseTestCase(TestCase):
     @staticmethod
     def get_all_user(auth_token):
         return app.test_client().get(
-            '/api/v1/user/',
+            '/api/v1/user',
             headers=dict(
                 Authorization='Bearer {}'.format(auth_token) 
             ),        
@@ -143,7 +143,7 @@ class BaseTestCase(TestCase):
     @staticmethod
     def add_vendor(auth_token, vendor_name, website_name):
         return app.test_client().post(
-            '/api/v1/vendor/',
+            '/api/v1/vendor',
             headers=dict(
                 Authorization='Bearer {}'.format(auth_token) 
             ),        
@@ -169,7 +169,7 @@ class BaseTestCase(TestCase):
     @staticmethod
     def update_vendor(auth_token, vendor_id, vendor_name, website_name, status):
         return app.test_client().put(
-            '/api/v1/vendor/',
+            '/api/v1/vendor',
             headers=dict(
                 Authorization='Bearer {}'.format(auth_token) 
             ),        
@@ -186,7 +186,7 @@ class BaseTestCase(TestCase):
     @staticmethod
     def get_all_vendor(auth_token):
         return app.test_client().get(
-            '/api/v1/vendor/',
+            '/api/v1/vendor',
             headers=dict(
                 Authorization='Bearer {}'.format(auth_token) 
             ),        
@@ -212,12 +212,13 @@ class BaseTestCase(TestCase):
     @staticmethod
     def add_product(auth_token, vendor_id, product):
         return app.test_client().post(
-            '/api/v1/product/vendor/{}'.format(vendor_id),
+            '/api/v1/product',
             headers=dict(
                 Authorization='Bearer {}'.format(auth_token) 
             ),        
             data=json.dumps(dict(
                 product_name = product.product_name,
+                vendor_id = vendor_id,
                 status = product.status,
                 user_by = 'ealberto'            
             )),
@@ -227,12 +228,13 @@ class BaseTestCase(TestCase):
     @staticmethod
     def update_product(auth_token, vendor_id, product):
         return app.test_client().put(
-            '/api/v1/product/vendor/{}'.format(vendor_id),
+            '/api/v1/product',
             headers=dict(
                 Authorization='Bearer {}'.format(auth_token) 
             ),        
             data=json.dumps(dict(
                 id = product.id,
+                vendor_id = vendor_id,
                 product_name = product.product_name,
                 user_by = 'jalberto'           
             )),
@@ -270,7 +272,7 @@ class BaseTestCase(TestCase):
     @staticmethod
     def add_contact(auth_token, contact):
         return app.test_client().post(
-            '/api/v1/contact/',
+            '/api/v1/contact',
             headers=dict(
                 Authorization='Bearer {}'.format(auth_token) 
             ),        
@@ -315,7 +317,7 @@ class BaseTestCase(TestCase):
     @staticmethod
     def update_contact(auth_token, contact):
         return app.test_client().put(
-            '/api/v1/contact/',
+            '/api/v1/contact',
             headers=dict(
                 Authorization='Bearer {}'.format(auth_token) 
             ),        
@@ -335,7 +337,7 @@ class BaseTestCase(TestCase):
     @staticmethod
     def add_notes(auth_token, notes):
         return app.test_client().post(
-            '/api/v1/notes/',
+            '/api/v1/notes',
             headers=dict(
                 Authorization='Bearer {}'.format(auth_token) 
             ),        
@@ -390,7 +392,7 @@ class BaseTestCase(TestCase):
     @staticmethod
     def add_attachment(auth_token, attachment):
         return app.test_client().post(
-            '/api/v1/attachment/',
+            '/api/v1/attachment',
             headers=dict(
                 Authorization='Bearer {}'.format(auth_token) 
             ),        

@@ -47,7 +47,7 @@ class NotesList(Resource):
             return attachment_ret_list
 
 
-@api.route('/')
+@api.route('')
 @api.expect(api.parser().add_argument('Authorization', location='headers'))
 class AddNotes(Resource):
 

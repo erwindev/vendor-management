@@ -30,11 +30,15 @@ class VendorDto:
         'products': fields.List(fields.Nested(ProductDto.product)),
         'result': fields.Nested(message)
     })      
+    active_vendor = api.model('active_vendor', {
+        'id': fields.String(),
+        'name': fields.String(required=True)
+    })       
 
 
 api = VendorDto.api
 
-@api.route("/")
+@api.route('')
 @api.expect(api.parser().add_argument('Authorization', location='headers'))
 class VendorList(Resource):
 
@@ -119,7 +123,7 @@ class VendorList(Resource):
 class VendorActiveList(Resource):
 
     @api.doc('list_of_active_vendor')
-    @api.marshal_list_with(VendorDto.vendor, envelope='vendorlist')
+    @api.marshal_list_with(VendorDto.active_vendor, envelope='active_vendors')
     @token_required
     def get(self):
         """ Get all active vendors """

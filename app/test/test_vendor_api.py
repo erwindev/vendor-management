@@ -34,7 +34,7 @@ class TestVendorApi(BaseTestCase):
             # get all vendor
             response = BaseTestCase().get_all_active_vendor(auth_token)
             data = json.loads(response.data.decode())
-            self.assertTrue(len(data['vendorlist']) == 1)
+            self.assertTrue(len(data['active_vendors']) == 1)
             self.assertTrue(response.content_type == 'application/json')
             self.assertEqual(response.status_code, 200)            
 

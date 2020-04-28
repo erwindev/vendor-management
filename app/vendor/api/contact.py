@@ -56,7 +56,7 @@ class ContactList(Resource):
             return contact_ret_list
 
 
-@api.route('/')
+@api.route('')
 @api.expect(api.parser().add_argument('Authorization', location='headers'))
 class AddContact(Resource):
 

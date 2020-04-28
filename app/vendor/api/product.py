@@ -11,7 +11,7 @@ class ProductDto:
     api = Namespace('product', description='product related operations')
     product = api.model('product', {
         'id': fields.String(),
-        'vendor_id': fields.String(),
+        'vendor_id': fields.String(required=True),
         'product_name': fields.String(required=True),
         'status': fields.String(),
         'create_date': fields.DateTime(),
@@ -27,11 +27,11 @@ api = ProductDto.api
 @api.expect(api.parser().add_argument('Authorization', location='headers'))
 class ProductList(Resource):
 
-    @api.doc('list_of_product')
+    @api.doc('list_of_product_by_vendor')
     @api.marshal_list_with(ProductDto.product, envelope='productlist')
     @token_required
     def get(self, vendor_id):
-        """ Get all products """
+        """ Get all products by vendor"""
         try:
             productlist = ProductDao.get_all_by_vendor(vendor_id)
             product_ret_list = []
@@ -45,17 +45,20 @@ class ProductList(Resource):
             }, 500
 
 
+@api.route('')
+@api.expect(api.parser().add_argument('Authorization', location='headers'))
+class Product(Resource):
     @api.response(201, 'Product successfully created.')
     @api.doc('create a new product')
     @api.expect(ProductDto.product, validate=True)
     @token_required
-    def post(self, vendor_id):
+    def post(self):
         """Insert a product"""
         try:
             product_data = request.json
 
             new_product = ProductModel()
-            new_product.vendor_id = vendor_id
+            new_product.vendor_id = product_data['vendor_id']
             new_product.product_name = product_data['product_name']
             new_product.status = product_data['status']
             new_product.user_by = product_data['user_by']
@@ -75,14 +78,16 @@ class ProductList(Resource):
     @api.doc('update a new product')
     @api.expect(ProductDto.product, validate=False)
     @token_required
-    def put(self, vendor_id):
+    def put(self):
         """Update a product"""
         try:
             product_data = request.json
 
             existing_product = ProductModel()
             existing_product.id = product_data['id']
-            existing_product.vendor_id = vendor_id
+            if 'vendor_id' in product_data:
+                existing_product.vendor_id = product_data['vendor_id']
+
             if 'product_name' in product_data:
                 existing_product.product_name = product_data['product_name']
             
@@ -110,7 +115,7 @@ class ProductList(Resource):
 @api.param('product_id', 'The Product identifier')
 @api.response(404, 'Product not found.')
 @api.expect(api.parser().add_argument('Authorization', location='headers'))
-class Product(Resource):
+class ProductDetail(Resource):
 
     @api.doc('get a product')
     @api.marshal_with(ProductDto.product)
