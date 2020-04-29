@@ -14,8 +14,8 @@ class ProductDto:
         'vendor_id': fields.String(required=True),
         'product_name': fields.String(required=True),
         'status': fields.String(),
-        'create_date': fields.DateTime(),
-        'updated_date': fields.DateTime(),
+        'create_date': fields.Date(),
+        'updated_date': fields.Date(),
         'user_by': fields.String(required=True)        
     })      
 
