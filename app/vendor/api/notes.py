@@ -108,7 +108,6 @@ class Notes(Resource):
                 'status': 'success',
                 'message': 'Notes successfully updated.'
             }
-
             return response_object, 201
         except Exception as e:
             return {
@@ -118,7 +117,6 @@ class Notes(Resource):
 
 
     @api.doc('get a notes')
-    @api.marshal_with(NotesDto.notes)
     @token_required
     def get(self, id):
         """Get a notes given its identifier"""
@@ -131,6 +129,17 @@ class Notes(Resource):
             return response_object, 404
         else:
             return notes
+
+    @api.doc('delete a notes')
+    @token_required
+    def delete(self, id):
+        """Delete a notes given its identifier"""
+        NotesDao.delete(id)  
+        response_object = {
+            'status': 'success',
+            'message': 'Notes deleted.'
+        }
+        return response_object, 202
 
 @api.errorhandler(Exception)
 def generic_exception_handler(e: Exception):

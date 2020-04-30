@@ -35,3 +35,9 @@ class NotesDao:
     @staticmethod
     def get_by_id(id):
         return Notes.query.filter_by(id=id).first()
+
+    @staticmethod
+    def delete(id):
+        notes = Notes.query.filter_by(id=id).first()
+        db.session.delete(notes)
+        db.session.commit()        
