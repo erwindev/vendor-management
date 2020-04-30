@@ -4,10 +4,12 @@ from flask_restplus import Api, Resource, Namespace, fields
 from app.vendor.dao.vendor import VendorDao
 from app.vendor.dao.contact import ContactDao
 from app.vendor.dao.product import ProductDao
+from app.vendor.dao.notes import NotesDao
 from app.vendor.models.vendor import Vendor as VendorModel
 from app.vendor.util.decorator import token_required
 from app.vendor.api.product import ProductDto
 from app.vendor.api.contact import ContactDto
+from app.vendor.api.notes import NotesDto
 
 
 class VendorDto:
@@ -28,6 +30,7 @@ class VendorDto:
         'vendor': fields.Nested(vendor),
         'contacts': fields.List(fields.Nested(ContactDto.contact)),
         'products': fields.List(fields.Nested(ProductDto.product)),
+        'notes': fields.List(fields.Nested(NotesDto.notes)),
         'result': fields.Nested(message)
     })      
     active_vendor = api.model('active_vendor', {
@@ -164,6 +167,9 @@ class Vendor(Resource):
             contacts = ContactDao.get_contacts(vendor.id, vendor_contact_type_id)
             'Get Products'
             products = ProductDao.get_all_by_vendor(vendor.id)
+            'Get Notes'
+            vendor_notes_type_id = 1000
+            notes = NotesDao.get_notes(vendor.id, vendor_notes_type_id)
             result = {
                 'status': 'success',
                 'message': 'Vendor found.'
@@ -172,6 +178,7 @@ class Vendor(Resource):
                 'vendor': vendor,
                 'contacts': contacts,
                 'products': products,
+                'notes': notes,
                 'result': result
             }
             return response_object, 200
