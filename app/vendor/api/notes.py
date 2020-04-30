@@ -117,6 +117,7 @@ class Notes(Resource):
 
 
     @api.doc('get a notes')
+    @api.marshal_with(NotesDto.notes)
     @token_required
     def get(self, id):
         """Get a notes given its identifier"""
