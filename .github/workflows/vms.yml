@@ -25,6 +25,7 @@ jobs:
       run: |
         flask db upgrade
         python -m unittest discover app/test "test_*.py"
+        coverage run -m unittest app/test/test*.py
         coverage report --fail-under=75 app/vendor/*/*.py
     - name: Login to Dockerhub Registry
       run: echo ${{ secrets.DOCKERHUB_PASSWORD }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
