@@ -15,7 +15,7 @@ class AttachmentDto:
         'name': fields.String(required=True),
         'description': fields.String(required=True),
         'link': fields.String(required=True),
-        'create_date': fields.DateTime(),   
+        'create_date': fields.Date(),   
         'update_date': fields.DateTime(),
         'user_by': fields.String(required=True)
     })            
