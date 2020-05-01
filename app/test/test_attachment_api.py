@@ -65,7 +65,7 @@ class TestAttachmentApi(BaseTestCase):
             response = BaseTestCase.update_attachment(auth_token, attachment_id, another_temp_attachment)
             data = json.loads(response.data.decode())
             self.assertTrue(response.content_type == 'application/json')
-            self.assertEqual(response.status_code, 201)           
+            self.assertEqual(response.status_code, 200)           
 
             # get updated attachment
             response = BaseTestCase.get_attachment(auth_token, attachment_id)

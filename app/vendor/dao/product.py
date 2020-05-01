@@ -1,6 +1,7 @@
 import datetime
 from app import db
 from app.vendor.models.product import Product
+from app.vendor.models.vendor import Vendor
 
 
 class ProductDao:
@@ -40,3 +41,7 @@ class ProductDao:
     def delete(id):
         db.session.delete(ProductDao.get_by_id(id))
         db.session.commit()
+
+    @staticmethod
+    def get_all():
+        return Product.query.order_by(Product.product_name).all()

@@ -263,6 +263,16 @@ class BaseTestCase(TestCase):
             content_type='application/json'
         )  
 
+    @staticmethod
+    def get_all_product(auth_token):
+        return app.test_client().get(
+            '/api/v1/product',
+            headers=dict(
+                Authorization='Bearer {}'.format(auth_token) 
+            ),        
+            content_type='application/json'
+        )          
+
 
     ######################
     #

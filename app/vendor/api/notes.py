@@ -42,7 +42,7 @@ class NotesList(Resource):
             note_ret_list = []
             for note in notes:
                 note_ret_list.append(note.to_json())
-            return note_ret_list
+            return note_ret_list, 200
 
 
 @api.route('')
@@ -81,7 +81,7 @@ class AddNotes(Resource):
 @api.expect(api.parser().add_argument('Authorization', location='headers'))
 class Notes(Resource):
 
-    @api.response(201, 'Notes successfully updated.')
+    @api.response(200, 'Notes successfully updated.')
     @api.doc('update a notes')
     @api.expect(NotesDto.notes, validate=False)
     @token_required
@@ -108,7 +108,7 @@ class Notes(Resource):
                 'status': 'success',
                 'message': 'Notes successfully updated.'
             }
-            return response_object, 201
+            return response_object, 200
         except Exception as e:
             return {
                 'status': 'error',
@@ -129,7 +129,7 @@ class Notes(Resource):
             }
             return response_object, 404
         else:
-            return notes
+            return notes, 200
 
     @api.doc('delete a notes')
     @token_required

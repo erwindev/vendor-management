@@ -53,7 +53,7 @@ class ContactList(Resource):
             contact_ret_list = []
             for contact in contacts:
                 contact_ret_list.append(contact.to_json())
-            return contact_ret_list
+            return contact_ret_list, 200
 
 
 @api.route('')
@@ -101,7 +101,7 @@ class AddContact(Resource):
             }, 500
             
 
-    @api.response(201, 'Contact successfully updated.')
+    @api.response(200, 'Contact successfully updated.')
     @api.doc('update a contact')
     @api.expect(ContactDto.contact, validate=False)
     @token_required
@@ -159,7 +159,7 @@ class AddContact(Resource):
                 'message': 'Contact successfully updated.'
             }
 
-            return response_object, 201
+            return response_object, 200
         except Exception as e:
             return {
                 'status': 'error',
@@ -183,7 +183,7 @@ class Contact(Resource):
             }
             return response_object, 404
         else:
-            return contact
+            return contact, 200
 
 @api.errorhandler(Exception)
 def generic_exception_handler(e: Exception):

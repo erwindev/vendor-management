@@ -9,7 +9,7 @@ from app.vendor.util.decorator import token_required
 
 class ProductDto:
     api = Namespace('product', description='product related operations')
-    product = api.model('product', {
+    api_data_fields = {
         'id': fields.String(),
         'vendor_id': fields.String(required=True),
         'product_name': fields.String(required=True),
@@ -17,7 +17,10 @@ class ProductDto:
         'create_date': fields.Date(),
         'updated_date': fields.Date(),
         'user_by': fields.String(required=True)        
-    })      
+    }
+    product = api.model('product', api_data_fields)
+    api_data_fields.update({'vendor_name': fields.String()})
+    product_with_vendor_name = api.model('product_vendor', api_data_fields)      
 
 
 api = ProductDto.api
@@ -25,7 +28,7 @@ api = ProductDto.api
 @api.route("/vendor/<vendor_id>")
 @api.param('vendor_id', 'The Vendor identifier')
 @api.expect(api.parser().add_argument('Authorization', location='headers'))
-class ProductList(Resource):
+class ProducListtByVendor(Resource):
 
     @api.doc('list_of_product_by_vendor')
     @api.marshal_list_with(ProductDto.product, envelope='productlist')
@@ -74,7 +77,7 @@ class Product(Resource):
                 'message': 'Internal Server Error'
             }, 500
 
-    @api.response(201, 'Product successfully updated.')
+    @api.response(200, 'Product successfully updated.')
     @api.doc('update a new product')
     @api.expect(ProductDto.product, validate=False)
     @token_required
@@ -102,7 +105,26 @@ class Product(Resource):
                 'status': 'success',
                 'message': 'Product successfully updated.'
             }
-            return response_object, 201
+            return response_object, 200
+        except Exception as e:
+            return {
+                'status': 'error',
+                'message': 'Internal Server Error'
+            }, 500
+
+    @api.doc('list_of_products')
+    @api.marshal_list_with(ProductDto.product_with_vendor_name, envelope='productlist')
+    @token_required
+    def get(self):
+        """ Get all products by vendor"""
+        try:
+            productlist = ProductDao.get_all()
+            product_ret_list = []
+            for product in productlist:
+                _product = product.to_json()
+                _product['vendor_name'] =  product.vendor.name
+                product_ret_list.append(_product)
+            return product_ret_list, 200
         except Exception as e:
             return {
                 'status': 'error',

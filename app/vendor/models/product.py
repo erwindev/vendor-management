@@ -10,6 +10,7 @@ class Product(db.Model):
     updated_date = db.Column(db.DateTime)
     status = db.Column(db.String(10))
     user_by = db.Column(db.String(100))
+    vendor = db.relationship("Vendor")
 
     def __repr__(self):
         return '<Product {}>'.format(self.product_name)

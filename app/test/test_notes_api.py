@@ -61,7 +61,7 @@ class TestNotesApi(BaseTestCase):
             response = BaseTestCase.update_notes(auth_token, notes_id, another_temp_notes)
             data = json.loads(response.data.decode())
             self.assertTrue(response.content_type == 'application/json')
-            self.assertEqual(response.status_code, 201)           
+            self.assertEqual(response.status_code, 200)           
 
             # get updated notes
             response = BaseTestCase.get_notes(auth_token, notes_id)

@@ -58,7 +58,7 @@ class VendorList(Resource):
             vendor_ret_list = []
             for vendor in vendorlist:
                 vendor_ret_list.append(vendor.to_json())
-            return vendor_ret_list
+            return vendor_ret_list, 200
         except Exception as e:
             return {
                 'status': 'error',
@@ -90,7 +90,7 @@ class VendorList(Resource):
                 'message': 'Internal Server Error'
             }, 500
 
-    @api.response(201, 'Vendor successfully updated.')
+    @api.response(200, 'Vendor successfully updated.')
     @api.doc('update a new vendor')
     @api.expect(VendorDto.vendor, validate=False)
     @token_required
@@ -116,7 +116,7 @@ class VendorList(Resource):
                 'status': 'success',
                 'message': 'Vendor successfully updated.'
             }
-            return response_object, 201
+            return response_object, 200
         except Exception as e:
             return {
                 'status': 'error',
@@ -138,7 +138,7 @@ class VendorActiveList(Resource):
             vendor_ret_list = []
             for vendor in vendorlist:
                 vendor_ret_list.append(vendor.to_json())
-            return vendor_ret_list
+            return vendor_ret_list, 200
         except Exception as e:
             return {
                 'status': 'error',

@@ -150,7 +150,7 @@ class UserList(Resource):
                 'user': existing_user,
                 'result': result,
             }                     
-            return response_object, 201
+            return response_object, 200
         except Exception as e:
             result = {
                 'status': 'error',
@@ -225,7 +225,7 @@ class UserChangePassword(Resource):
                 }                
                 return response_object, 401                
 
-            return response_object, 201
+            return response_object, 200
         except Exception as e:
             return {
                 'status': 'error',

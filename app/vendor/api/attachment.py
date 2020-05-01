@@ -44,7 +44,7 @@ class AttachmentList(Resource):
             attachment_ret_list = []
             for attachment in attachment:
                 attachment_ret_list.append(attachment.to_json())
-            return attachment_ret_list
+            return attachment_ret_list, 200
 
 
 @api.route('')
@@ -86,7 +86,7 @@ class AddNotes(Resource):
 @api.expect(api.parser().add_argument('Authorization', location='headers'))
 class Attachment(Resource):
 
-    @api.response(201, 'Attachment successfully updated.')
+    @api.response(200, 'Attachment successfully updated.')
     @api.doc('update a attachment')
     @api.expect(AttachmentDto.attachment, validate=False)
     @token_required
@@ -120,7 +120,7 @@ class Attachment(Resource):
                 'message': 'Attachment successfully updated.'
             }
 
-            return response_object, 201
+            return response_object, 200
         except Exception as e:
             return {
                 'status': 'error',
@@ -152,7 +152,7 @@ class Attachment(Resource):
             'status': 'success',
             'message': 'Attachment deleted.'
         }
-        return response_object, 202            
+        return response_object, 202           
 
 @api.errorhandler(Exception)
 def generic_exception_handler(e: Exception):

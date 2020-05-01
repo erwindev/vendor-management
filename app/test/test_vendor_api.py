@@ -162,7 +162,7 @@ class TestVendorApi(BaseTestCase):
             response = BaseTestCase().update_vendor(auth_token, 1, 'Vendor Y', 'www.vendory.com', 'act')
             data = json.loads(response.data.decode())
             self.assertTrue(response.content_type == 'application/json')
-            self.assertEqual(response.status_code, 201)    
+            self.assertEqual(response.status_code, 200)    
 
             # get vendor
             response = BaseTestCase().get_vendor(auth_token, 1)

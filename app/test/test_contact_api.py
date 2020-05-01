@@ -71,7 +71,7 @@ class TestContactApi(BaseTestCase):
             response = BaseTestCase.update_contact(auth_token, another_temp_contact)
             data = json.loads(response.data.decode())
             self.assertTrue(response.content_type == 'application/json')
-            self.assertEqual(response.status_code, 201)           
+            self.assertEqual(response.status_code, 200)           
 
             # get updated contact
             response = BaseTestCase.get_contact(auth_token, contact_id)
