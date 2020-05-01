@@ -73,7 +73,13 @@ class TestAttachmentApi(BaseTestCase):
             self.assertTrue(data['name'] == 'Contract linkxxxxx')
             self.assertTrue(data['user_by'] == 'jalberto')
             self.assertTrue(response.content_type == 'application/json')
-            self.assertEqual(response.status_code, 200)                       
+            self.assertEqual(response.status_code, 200)            
+
+            # delete attachment
+            response = BaseTestCase.delete_attachment(auth_token, attachment_id)
+            data = json.loads(response.data.decode())
+            self.assertTrue(response.content_type == 'application/json')
+            self.assertEqual(response.status_code, 202)                           
 
 
 class Object(object):

@@ -69,7 +69,13 @@ class TestNotesApi(BaseTestCase):
             self.assertTrue(data['notes'] == 'I updated this note')
             self.assertTrue(data['user_by'] == 'jalberto')
             self.assertTrue(response.content_type == 'application/json')
-            self.assertEqual(response.status_code, 200)                       
+            self.assertEqual(response.status_code, 200)      
+
+            # delete notes
+            response = BaseTestCase.delete_notes(auth_token, notes_id)
+            data = json.loads(response.data.decode())
+            self.assertTrue(response.content_type == 'application/json')
+            self.assertEqual(response.status_code, 202)                                  
 
 
 class Object(object):

@@ -41,3 +41,9 @@ class AttachmentDao:
     @staticmethod
     def get_by_id(id):
         return Attachment.query.filter_by(id=id).first()   
+
+    @staticmethod
+    def delete(id):
+        attachment = AttachmentDao.get_by_id(id)
+        db.session.delete(attachment)
+        db.session.commit()                

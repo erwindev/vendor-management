@@ -2,11 +2,11 @@ import sys
 from flask import jsonify, request
 from flask_restplus import Api, Resource, Namespace, fields
 from app.vendor.dao.attachment import AttachmentDao
-from app.vendor.models.attachment import Attachment as NotesModel
+from app.vendor.models.attachment import Attachment as AttachmentModel
 from app.vendor.util.decorator import token_required
 
 
-class NotesDto:
+class AttachmentDto:
     api = Namespace('attachment', description='attachment related operations')
     attachment = api.model('attachment', {
         'id': fields.String(),
@@ -21,15 +21,15 @@ class NotesDto:
     })            
 
 
-api = NotesDto.api
+api = AttachmentDto.api
 
 @api.route('/<attachment_id>/<attachment_type_id>')
 @api.response(404, 'Attachment not found.')
 @api.expect(api.parser().add_argument('Authorization', location='headers'))
-class NotesList(Resource):
+class AttachmentList(Resource):
 
     @api.doc('get all attachment associated to an attachment_id')
-    @api.marshal_list_with(NotesDto.attachment, envelope='attachmentlist')
+    @api.marshal_list_with(AttachmentDto.attachment, envelope='attachmentlist')
     @token_required
     def get(self, attachment_id, attachment_type_id):
         """Get attachment based on the given identifier"""
@@ -53,14 +53,14 @@ class AddNotes(Resource):
 
     @api.response(201, 'Note successfully created.')
     @api.doc('create a new attachment')
-    @api.expect(NotesDto.attachment, validate=True)
+    @api.expect(AttachmentDto.attachment, validate=True)
     @token_required
     def post(self):
         """Insert a new attachment"""
         try:
             attachment_data = request.json
             
-            new_attachment = NotesModel()
+            new_attachment = AttachmentModel()
             new_attachment.attachment_id = attachment_data['attachment_id']
             new_attachment.attachment_type_id = attachment_data['attachment_type_id']
             new_attachment.name = attachment_data['name']
@@ -88,7 +88,7 @@ class Attachment(Resource):
 
     @api.response(201, 'Attachment successfully updated.')
     @api.doc('update a attachment')
-    @api.expect(NotesDto.attachment, validate=False)
+    @api.expect(AttachmentDto.attachment, validate=False)
     @token_required
     def put(self, id):
         """Update a attachment"""
@@ -109,7 +109,7 @@ class Attachment(Resource):
                 existing_attachment.description = attachment_data['description']
 
             if 'link' in attachment_data:
-                existing_attachment.link = attachment_data['attachment']
+                existing_attachment.link = attachment_data['link']
 
             if 'user_by' in attachment_data:
                 existing_attachment.user_by = attachment_data['user_by']                    
@@ -129,7 +129,7 @@ class Attachment(Resource):
 
 
     @api.doc('get an attachment')
-    @api.marshal_with(NotesDto.attachment)
+    @api.marshal_with(AttachmentDto.attachment)
     @token_required
     def get(self, id):
         """Get an attachment given its identifier"""
@@ -142,6 +142,17 @@ class Attachment(Resource):
             return response_object, 404
         else:
             return attachment
+
+    @api.doc('delete an attachment')
+    @token_required
+    def delete(self, id):
+        """Delete an attachment given its identifier"""
+        AttachmentDao.delete(id)  
+        response_object = {
+            'status': 'success',
+            'message': 'Attachment deleted.'
+        }
+        return response_object, 202            
 
 @api.errorhandler(Exception)
 def generic_exception_handler(e: Exception):

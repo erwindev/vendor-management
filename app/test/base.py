@@ -384,6 +384,16 @@ class BaseTestCase(TestCase):
             content_type='application/json'
         )            
 
+    @staticmethod
+    def delete_notes(auth_token, id):
+        return app.test_client().delete(
+            '/api/v1/notes/{}'.format(id),
+            headers=dict(
+                Authorization='Bearer {}'.format(auth_token) 
+            ),        
+            content_type='application/json' 
+        )         
+
     ######################
     #
     # attachment api
@@ -440,3 +450,14 @@ class BaseTestCase(TestCase):
             )),
             content_type='application/json'
         )                    
+
+    @staticmethod
+    def delete_attachment(auth_token, id):
+        return app.test_client().delete(
+            '/api/v1/attachment/{}'.format(id),
+            headers=dict(
+                Authorization='Bearer {}'.format(auth_token) 
+            ),        
+            content_type='application/json'   
+        )  
+   
