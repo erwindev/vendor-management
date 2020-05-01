@@ -22,6 +22,7 @@ class Product(db.Model):
             'product_name': self.product_name,
             'create_date': self.create_date,            
             'updated_date': self.updated_date,
+            'status': self.status,
             'user_by': self.user_by
         }
         return json_result                
