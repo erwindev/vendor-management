@@ -25,7 +25,7 @@ jobs:
       run: |
         flask db upgrade
         export FLASK_ENV=test
-        flast test
+        flask test
         coverage run vms_test_suite.py
         coverage report --fail-under=85 --omit="app/*/test/*.py" app/*/*/*.py
     - name: Login to Dockerhub Registry
