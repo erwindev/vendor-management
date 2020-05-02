@@ -25,9 +25,9 @@ jobs:
       run: |
         flask db upgrade
         export FLASK_ENV=test
-        python vms_test_suite.py
-        coverage run -m unittest app/test/test*.py
-        coverage report --fail-under=75 app/vendor/*/*.py
+        flast test
+        coverage run vms_test_suite.py
+        coverage report --fail-under=85 --omit="app/*/test/*.py" app/*/*/*.py
     - name: Login to Dockerhub Registry
       run: echo ${{ secrets.DOCKERHUB_PASSWORD }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
     - name: Get the version
