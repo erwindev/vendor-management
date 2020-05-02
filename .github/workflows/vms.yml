@@ -24,7 +24,8 @@ jobs:
     - name: Run tests
       run: |
         flask db upgrade
-        python -m unittest discover app/test "test_*.py"
+        export FLASK_ENV=test
+        python vms_test_suite.py
         coverage run -m unittest app/test/test*.py
         coverage report --fail-under=75 app/vendor/*/*.py
     - name: Login to Dockerhub Registry

@@ -61,13 +61,14 @@ Another way of interacting with this application is through a REST APIs.  To see
 ## Test the application
 Run unittest
 ```
+$ export FLASK_ENV=test
 $ flask test
 ```
 Run test coverage and show coverage reports
 ```
-$ coverage run -m unittest app/test/test*.py
-$ coverage report app/vendor/*/*.py
-$ coverage html app/vendor/*/*.py 
+$ coverage run vms_test_suite.py
+$ coverage report --omit="app/*/test/*.py" app/*/*/*.py
+$ coverage html --omit="app/*/test/*.py" app/*/*/*.py 
 ```
 
 The html coverage report will be generated under htmlcov folder.  Under that folder launch index.html in your favorite browser.

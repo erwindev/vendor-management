@@ -1,28 +1,16 @@
 from flask import Blueprint, jsonify, request
 from flask_restplus import Api
 from app.config import Config
-from app.vendor.api.user import api as user_ns
-from app.vendor.api.appinfo import api as app_info_ns
-from app.vendor.api.auth import api as auth_ns
 from app.vendor.api.vendor import api as vendor_ns
-from app.vendor.api.contact import api as contact_ns
-from app.vendor.api.product import api as product_ns
-from app.vendor.api.notes import api as notes_ns
-from app.vendor.api.attachment import api as attachment_ns
 
-apiv1 = Blueprint('api', __name__, url_prefix='/api/v1')
+vendor_apiv1 = Blueprint('vendor_api', __name__, url_prefix='/v/api/v1')
 
-api = Api(apiv1, version=Config.CURRENT_VERSION, title='{} API'.format(Config.SERVICE_NAME),
-          description='Application End Points',
+vendor_api = Api(vendor_apiv1, version=Config.CURRENT_VERSION, title='{} Vendor API'.format(Config.SERVICE_NAME),
+          description='Vendor End Points',
           default=Config.SERVICE_NAME,
           default_label="{} v{}".format(Config.SERVICE_NAME, Config.CURRENT_VERSION))
 
+vendor_api.add_namespace(vendor_ns, path="/vendor")
 
-api.add_namespace(auth_ns)
-api.add_namespace(user_ns, path="/user")
-api.add_namespace(vendor_ns, path="/vendor")
-api.add_namespace(product_ns, path="/product")
-api.add_namespace(contact_ns, path="/contact")
-api.add_namespace(notes_ns, path="/notes")
-api.add_namespace(attachment_ns, path="/attachment")
-api.add_namespace(app_info_ns)
+from app.appinfo import api as appinfo_ns
+vendor_api.add_namespace(appinfo_ns, path="/app")

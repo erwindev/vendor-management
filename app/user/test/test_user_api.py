@@ -1,0 +1,147 @@
+import unittest
+import json
+from app import db
+from app.user.test.base import UserBaseTestCase
+from app.util.test.base import BaseTestCase
+
+
+class TestUserResgistration(UserBaseTestCase):
+    def test_registration(self):
+        """ Test for user registration """
+        auth_token, user_loggedin_data = BaseTestCase.get_token_and_loggedin_user('joetester@se.com', 'test')
+        with self.client:
+            response = UserBaseTestCase.register_user(auth_token)
+            data = json.loads(response.data.decode())
+            self.assertTrue(data['status'] == 'success')
+            self.assertTrue(data['message'] == 'User successfully created.')
+            self.assertTrue(response.content_type == 'application/json')
+            self.assertEqual(response.status_code, 201)
+
+    def test_registered_with_already_registered_user(self):
+        """ Test registration with already registered username"""
+        auth_token, user_loggedin_data = BaseTestCase.get_token_and_loggedin_user('joetester@se.com', 'test')
+
+        # register user
+        UserBaseTestCase.register_user(auth_token)
+        with self.client:
+            # register user again
+            response = UserBaseTestCase.register_user(auth_token)
+            data = json.loads(response.data.decode())
+            self.assertTrue(data['status'] == 'fail')
+            self.assertTrue(data['message'] == 'User cannot be created.')
+            self.assertTrue(response.content_type == 'application/json')
+            self.assertEqual(response.status_code, 409)
+
+
+class TestUser(UserBaseTestCase):
+    def test_get_user(self):
+        """ Test for getting user """
+        auth_token, user_loggedin_data = BaseTestCase.get_token_and_loggedin_user('joetester@se.com', 'test')
+        with self.client:
+            id = user_loggedin_data['id']
+            response = UserBaseTestCase.get_user(auth_token, id)
+            data = json.loads(response.data.decode())
+            self.assertTrue(data['user']['email'] == 'joetester@se.com')
+            self.assertTrue(response.content_type == 'application/json')
+            self.assertEqual(response.status_code, 200)
+
+    def test_get_all_user(self):
+        """ Test for getting all users """
+        auth_token, user_loggedin_data = BaseTestCase.get_token_and_loggedin_user('joetester@se.com', 'test')
+        with self.client:
+            response = UserBaseTestCase.get_all_user(auth_token)
+            data = json.loads(response.data.decode())
+            self.assertTrue(len(data['userlist']) == 1)
+            self.assertTrue(response.content_type == 'application/json')
+            self.assertEqual(response.status_code, 200)      
+
+    def test_update_user(self):
+        """ Test for getting user """
+        auth_token, user_loggedin_data = BaseTestCase.get_token_and_loggedin_user('joetester@se.com', 'test')
+        with self.client:
+            id = user_loggedin_data['id']
+            # get logged in user
+            response = UserBaseTestCase.get_user(auth_token, id)
+            data = json.loads(response.data.decode())
+            self.assertTrue(data['user']['email'] == 'joetester@se.com')
+            self.assertTrue(data['user']['firstname'] == 'joe')
+            self.assertTrue(data['user']['lastname'] == 'tester')
+            self.assertTrue(response.content_type == 'application/json')
+            self.assertEqual(response.status_code, 200)          
+
+            # update logged in user
+            response = UserBaseTestCase.update_user(auth_token, id, 'joex', 'testerx', 'act')    
+            self.assertTrue(response.content_type == 'application/json')
+            self.assertEqual(response.status_code, 200)    
+
+            #get user
+            response = UserBaseTestCase.get_user(auth_token, id)
+            data = json.loads(response.data.decode())
+            self.assertTrue(data['user']['email'] == 'joetester@se.com')
+            self.assertTrue(data['user']['firstname'] == 'joex')
+            self.assertTrue(data['user']['lastname'] == 'testerx')
+            self.assertTrue(data['user']['status'] == 'act')
+            self.assertTrue(response.content_type == 'application/json')
+            self.assertEqual(response.status_code, 200)  
+
+    def test_changepassword(self):                         
+        """ Test for changing password """
+        auth_token, user_loggedin_data = BaseTestCase.get_token_and_loggedin_user('joetester@se.com', 'test')
+        with self.client:
+            id = user_loggedin_data['id']
+            # get logged in user
+            response = UserBaseTestCase.get_user(auth_token, id)
+            data = json.loads(response.data.decode())
+            self.assertTrue(data['user']['email'] == 'joetester@se.com')
+            self.assertTrue(data['user']['firstname'] == 'joe')
+            self.assertTrue(data['user']['lastname'] == 'tester')
+            self.assertTrue(response.content_type == 'application/json')
+            self.assertEqual(response.status_code, 200)   
+
+            # change password
+            response = UserBaseTestCase.change_password(auth_token, id, 'test', 'my-new-password')  
+            data = json.loads(response.data.decode())     
+            self.assertTrue(response.content_type == 'application/json')
+            self.assertEqual(response.status_code, 200) 
+
+            # login
+            response = UserBaseTestCase.login_user('joetester@se.com', 'my-new-password')       
+            data = json.loads(response.data.decode())  
+            self.assertTrue(data['authdata']['email'] == 'joetester@se.com')   
+            self.assertTrue(response.content_type == 'application/json')
+            self.assertEqual(response.status_code, 200)                        
+
+
+class TestLogout(UserBaseTestCase):
+
+    def test_successful_logout(self):
+        """ Test for logging out user """
+        auth_token, user_loggedin_data = BaseTestCase.get_token_and_loggedin_user('joetester@se.com', 'test')
+        with self.client:
+            # logout user using a valid token
+            response = UserBaseTestCase.logged_out(auth_token)
+            data = json.loads(response.data.decode())
+            self.assertTrue(data['status'] == 'success')
+            self.assertTrue(data['message'] == 'Successfully logged out.')
+            self.assertTrue(response.content_type == 'application/json')
+            self.assertEqual(response.status_code, 200)            
+
+            # logout user using a blacklisted token
+            response = UserBaseTestCase.logged_out(auth_token)
+            data = json.loads(response.data.decode())
+            self.assertTrue(data['status'] == 'fail')
+            self.assertTrue(data['message'] == 'Token is blacklisted.')
+            self.assertTrue(response.content_type == 'application/json')
+            self.assertEqual(response.status_code, 403)             
+
+            # logout user using an invalid token
+            response = UserBaseTestCase.logged_out('xxx')
+            data = json.loads(response.data.decode())
+            self.assertTrue(data['status'] == 'fail')
+            self.assertTrue(data['message'] == 'Invalid token.')
+            self.assertTrue(response.content_type == 'application/json')
+            self.assertEqual(response.status_code, 401)                          
+
+
+if __name__ == '__main__':
+    unittest.main()

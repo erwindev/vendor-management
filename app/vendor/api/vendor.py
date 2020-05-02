@@ -2,38 +2,39 @@ import sys
 from flask import jsonify, request
 from flask_restplus import Api, Resource, Namespace, fields
 from app.vendor.dao.vendor import VendorDao
-from app.vendor.dao.contact import ContactDao
-from app.vendor.dao.product import ProductDao
-from app.vendor.dao.notes import NotesDao
-from app.vendor.dao.attachment import AttachmentDao
 from app.vendor.models.vendor import Vendor as VendorModel
-from app.vendor.util.decorator import token_required
-from app.vendor.api.product import ProductDto
-from app.vendor.api.contact import ContactDto
-from app.vendor.api.notes import NotesDto
-from app.vendor.api.attachment import AttachmentDto
+from app.contact.dao.contact import ContactDao
+from app.product.dao.product import ProductDao
+from app.notes.dao.notes import NotesDao
+from app.attachment.dao.attachment import AttachmentDao
+from app.util.decorator import token_required
+from app.product.api.product import ProductDto
+from app.contact.api.contact import ContactDto
+from app.notes.api.notes import NotesDto
+from app.attachment.api.attachment import AttachmentDto
 
 
 class VendorDto:
     api = Namespace('vendor', description='vendor related operations')
-    vendor = api.model('vendor', {
+    vendor_api_fields = {
         'id': fields.String(),
         'name': fields.String(required=True),
         'status': fields.String(required=True),
         'create_date': fields.Date(),
         'updated_date': fields.Date(),
         'user_by': fields.String(required=True)        
-    })      
+    }
+    vendor = api.model('vendor', vendor_api_fields)      
     message = api.model('message', {
         'status': fields.String(required=True),
         'message': fields.String(required=True),
     })      
     resultlist =  api.model('resultlist', {
         'vendor': fields.Nested(vendor),
-        'contacts': fields.List(fields.Nested(ContactDto.contact)),
-        'products': fields.List(fields.Nested(ProductDto.product)),
-        'notes': fields.List(fields.Nested(NotesDto.notes)),
-        'attachments': fields.List(fields.Nested(AttachmentDto.attachment)),
+        'contacts': fields.List(fields.Nested(api.model('contact', ContactDto.contact_api_fields))),
+        'products': fields.List(fields.Nested(api.model('product', ProductDto.product_data_fields))),
+        'notes': fields.List(fields.Nested(api.model('notes', NotesDto.notes_api_fields))),
+        'attachments': fields.List(fields.Nested(api.model('attachment', AttachmentDto.attachment_api_fields))),
         'result': fields.Nested(message)
     })      
     active_vendor = api.model('active_vendor', {

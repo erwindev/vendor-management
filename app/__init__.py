@@ -1,24 +1,17 @@
-import os
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
-from flask_login import LoginManager
 from flask_bootstrap import Bootstrap
-from app.config import Config
 from app.config import config_by_name
 
 db = SQLAlchemy()
 migrate = Migrate()
-login = LoginManager()
 bootstrap = Bootstrap()
 
 
 def create_app(config_name):
 
-    APP_PATH = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    TEMPLATE_PATH = os.path.join(APP_PATH, 'app/vendor/web/templates')
-
-    app = Flask(__name__, template_folder=TEMPLATE_PATH)
+    app = Flask(__name__)
 
     bootstrap.init_app(app)
 
@@ -26,26 +19,30 @@ def create_app(config_name):
     app.config.from_object(config_by_name[config_name])
 
     # initialize the database and create tables
-    from app.vendor.models.user import User, BlackListToken
+    from app.user.models.user import User, BlackListToken
     from app.vendor.models.vendor import Vendor
-    from app.vendor.models.product import Product  
-    from app.vendor.models.contact import Contact
-    from app.vendor.models.notes import Notes
-    from app.vendor.models.attachment import Attachment
-    from app.vendor.models.software import Software, SoftwareAttachment, SoftwareNote    
+    from app.product.models.product import Product  
+    from app.contact.models.contact import Contact
+    from app.notes.models.notes import Notes
+    from app.attachment.models.attachment import Attachment
     
     db.init_app(app)
     migrate.init_app(app, db)
 
     # import blueprints
-    from app.vendor.web.controller import vendor_app
-    from app.vendor.api import apiv1
+    from app.vendor.api import vendor_apiv1 
+    from app.product.api import product_apiv1
+    from app.contact.api import contact_apiv1    
+    from app.attachment.api import attachment_apiv1
+    from app.notes.api import notes_apiv1   
+    from app.user.api import user_apiv1   
 
     # register the blueprints
-    app.register_blueprint(vendor_app)
-    app.register_blueprint(apiv1)
-
-    login.init_app(app)
-    login.login_view = 'vendor_app.login'
+    app.register_blueprint(vendor_apiv1)
+    app.register_blueprint(product_apiv1)
+    app.register_blueprint(contact_apiv1)
+    app.register_blueprint(attachment_apiv1)
+    app.register_blueprint(notes_apiv1)
+    app.register_blueprint(user_apiv1)
 
     return app

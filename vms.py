@@ -3,12 +3,13 @@ import unittest
 from flask_cors import CORS
 from dotenv import load_dotenv
 from app import create_app
+from vms_test_suite import TestApp
 
 
 environment = os.environ.get('FLASK_ENV') or 'development'
 
 app = create_app(environment)
-cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
+cors = CORS(app, resources={r"/*/api/*": {"origins": "*"}})
 print("Environment: {}".format(environment))
 
 
@@ -21,8 +22,7 @@ print("Environment: {}".format(environment))
 @app.cli.command()
 def test():
     """Runs the unit tests."""
-    tests = unittest.TestLoader().discover('app/test', pattern='test*.py')
-    result = unittest.TextTestRunner(verbosity=2).run(tests)
+    result = unittest.TextTestRunner(verbosity=2).run(TestApp().suite())
     if result.wasSuccessful():
         return 0
     return 1

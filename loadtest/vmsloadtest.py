@@ -5,7 +5,7 @@ def login(l):
     headers = {'content-type': 'application/json'}
     payload = {"username": "ealberto", "password": "test"}
     l.client.post(
-            '/api/v1/auth/login',
+            '/u/api/v1/auth/login',
             data=json.dumps(payload),
             headers=headers
         )
