@@ -12,6 +12,7 @@ class ProductDto:
     api_data_fields = {
         'id': fields.String(),
         'vendor_id': fields.String(required=True),
+        'vendor_name': fields.String(),
         'product_name': fields.String(required=True),
         'status': fields.String(),
         'create_date': fields.Date(),
@@ -19,8 +20,6 @@ class ProductDto:
         'user_by': fields.String(required=True)        
     }
     product = api.model('product', api_data_fields)
-    api_data_fields.update({'vendor_name': fields.String()})
-    product_with_vendor_name = api.model('product_vendor', api_data_fields)      
 
 
 api = ProductDto.api
@@ -113,7 +112,7 @@ class Product(Resource):
             }, 500
 
     @api.doc('list_of_products')
-    @api.marshal_list_with(ProductDto.product_with_vendor_name, envelope='productlist')
+    @api.marshal_list_with(ProductDto.product, envelope='productlist')
     @token_required
     def get(self):
         """ Get all products by vendor"""
@@ -121,9 +120,7 @@ class Product(Resource):
             productlist = ProductDao.get_all()
             product_ret_list = []
             for product in productlist:
-                _product = product.to_json()
-                _product['vendor_name'] =  product.vendor.name
-                product_ret_list.append(_product)
+                product_ret_list.append(product.to_json())
             return product_ret_list, 200
         except Exception as e:
             return {
@@ -152,7 +149,7 @@ class ProductDetail(Resource):
             }
             return response_object, 404
         else:
-            return product
+            return product.to_json()
 
 
 @api.errorhandler(Exception)

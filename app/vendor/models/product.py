@@ -19,6 +19,7 @@ class Product(db.Model):
         json_result = {
             'id': self.id,
             'vendor_id': self.vendor_id,
+            'vendor_name': self.vendor.name,
             'product_name': self.product_name,
             'create_date': self.create_date,            
             'updated_date': self.updated_date,
