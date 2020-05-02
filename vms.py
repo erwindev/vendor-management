@@ -9,7 +9,7 @@ from vms_test_suite import TestApp
 environment = os.environ.get('FLASK_ENV') or 'development'
 
 app = create_app(environment)
-cors = CORS(app, resources={r"/*/api/*": {"origins": "*"}})
+cors = CORS(app, resources={r"/*": {"origins": "*"}})
 print("Environment: {}".format(environment))
 
 
