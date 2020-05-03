@@ -3,7 +3,7 @@ from locust import HttpLocust, TaskSet, between
 
 def login(l):
     headers = {'content-type': 'application/json'}
-    payload = {"username": "ealberto", "password": "test"}
+    payload = {"email": "ealberto@me.com", "password": "test"}
     l.client.post(
             '/u/api/v1/auth/login',
             data=json.dumps(payload),

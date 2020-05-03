@@ -107,7 +107,7 @@ Access the application via this url - http://localhost
 Access the API via this url - http://localhost/api/v1
 
 ## Load test the application
-For load testing, we will use [Locust](http://locust.io).  The load testing script is located under the `loadtest` folder.  Curerntly, we are only load testing the `api/v1/auth/login` api.  To run the scrip,
+For load testing, we will use [Locust](http://locust.io).  The load testing script is located under the `loadtest` folder.  Curerntly, we are only load testing the `/u/api/v1/auth/login` api.  To run the script,
 ```
 $ cd loadtest
 $ locust -f vmsloadtest.py
@@ -117,5 +117,6 @@ Bring up the Locust dashboard by going to http://localhost:8089.  Enter the foll
 ```
 Number of total users to simulate: 100
 Hatch rate: 5
-Host: http://localhost
+Host: http://localhost:5000
 ```
+Note: Before we can load test, please start the application.  The URL will be what you will provide in the "Host" parameter.
