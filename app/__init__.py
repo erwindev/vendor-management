@@ -1,3 +1,4 @@
+import os
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
@@ -9,14 +10,17 @@ migrate = Migrate()
 bootstrap = Bootstrap()
 
 
-def create_app(config_name):
+def create_app():
+
+    environment = os.environ.get('FLASK_ENV') or 'development'
+    print('Environment: {}'.format(environment))
 
     app = Flask(__name__)
 
     bootstrap.init_app(app)
 
     # load the config
-    app.config.from_object(config_by_name[config_name])
+    app.config.from_object(config_by_name[environment])
 
     # initialize the database and create tables
     from app.user.models.user import User, BlackListToken

@@ -171,6 +171,9 @@ class Vendor(Resource):
             contacts = ContactDao.get_contacts(vendor.id, vendor_type_id)
             'Get Products'
             products = ProductDao.get_all_by_vendor(vendor.id)
+            product_ret_list = []
+            for product in products:
+                product_ret_list.append(product.to_json())            
             'Get Notes'
             notes = NotesDao.get_notes(vendor.id, vendor_type_id)
             'Get Attachments'
@@ -182,7 +185,7 @@ class Vendor(Resource):
             response_object = {
                 'vendor': vendor,
                 'contacts': contacts,
-                'products': products,
+                'products': product_ret_list,
                 'notes': notes,
                 'attachments': attachments,
                 'result': result

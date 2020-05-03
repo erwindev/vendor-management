@@ -1,12 +1,12 @@
+import os
 import unittest
 import json
 from flask_testing import TestCase
 
-from app import create_app
+from flask import current_app as app
 from app import db
 from app.user.models.user import User
 
-app = create_app('test')
 
 class BaseTestCase(TestCase):
     """ Base Tests """
