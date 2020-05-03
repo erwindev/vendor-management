@@ -1,4 +1,3 @@
-import os
 import unittest
 from app import create_app
 
@@ -23,7 +22,5 @@ class TestApp():
         return suite
 
 if __name__ == '__main__':
-    environment = os.environ.get('FLASK_ENV') or 'development'
-    app = create_app(environment)
-    print("Environment: {}".format(environment))    
+    app = create_app()
     unittest.TextTestRunner(verbosity=2).run(TestApp().suite())    

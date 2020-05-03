@@ -66,6 +66,7 @@ $ flask test
 ```
 Run test coverage and show coverage reports
 ```
+$ export FLASK_ENV=test
 $ coverage run vms_test_suite.py
 $ coverage report --omit="app/*/test/*.py" app/*/*/*.py
 $ coverage html --omit="app/*/test/*.py" app/*/*/*.py 
