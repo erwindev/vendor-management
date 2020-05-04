@@ -28,13 +28,35 @@ jobs:
         flask test
         coverage run vms_test_suite.py
         coverage report --fail-under=85 --omit="app/*/test/*.py" app/*/*/*.py
-    - name: Login to Dockerhub Registry
-      run: echo ${{ secrets.DOCKERHUB_PASSWORD }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
-    - name: Get the version
-      id: vars
-      run: echo ::set-output name=VERSION::$(echo ${GITHUB_REF/refs\/tags\//})
-    - name: Build the tagged Docker image
-      run: docker build --file Dockerfile --tag ealberto/vms-app:latest .     
-    - name: Push the latest Docker image
-      run: docker push ealberto/vms-app:latest
+    # - name: Login to Dockerhub Registry
+    #   run: echo ${{ secrets.DOCKERHUB_PASSWORD }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
+    # - name: Get the version
+    #   id: vars
+    #   run: echo ::set-output name=VERSION::$(echo ${GITHUB_REF/refs\/tags\//})
+    # - name: Build the tagged Docker image
+    #   run: docker build --file Dockerfile --tag ealberto/vms-app:latest .     
+    # - name: Push the latest Docker image
+    #   run: docker push ealberto/vms-app:latest
 
+    # Setup gcloud CLI
+    - name: Run docker builds
+        # Setup gcloud CLI
+        - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+        with:
+          version: '270.0.0'
+          service_account_key: ${{ secrets.GCLOUD_AUTH }}
+    # Configure docker to use the gcloud command-line tool as a credential helper
+    - run: |
+        # Set up docker to authenticate
+        # via gcloud command-line tool.
+        gcloud auth configure-docker     
+        
+    # Build the Docker image
+    - name: Build
+      run: |        
+        docker build --file Dockerfile --tag gcr.io/${{ secrets.GCLOUD_PROJECT }}/vms-app:latest .
+        
+    # Push the Docker image to Google Container Registry
+    - name: Publish
+      run: |
+        docker push gcr.io/${{ secrets.GCLOUD_PROJECT }}/vms-app:latest
