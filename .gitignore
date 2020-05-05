@@ -24,6 +24,8 @@ app*.db
 .env
 vms.env
 
+docker-compose-gcloud.yml
+
 .coverage
 
 htmlcov/

@@ -18,6 +18,7 @@ RUN \
 
 COPY app app
 COPY migrations migrations
+COPY vms_test_suite.py vms_test_suite.py
 COPY vms.py vms.py
 COPY run.sh run.sh
 COPY .flaskenv .flaskenv
