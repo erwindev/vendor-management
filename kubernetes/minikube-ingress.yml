@@ -1,0 +1,14 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: minikube-ingress
+  annotations:
+spec:
+  rules:
+  - host: erwindev.io
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: vms-app
+          servicePort: 5000
