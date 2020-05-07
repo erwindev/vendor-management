@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vms-app
+  labels:
+    name: vms-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: vms-app
+  template:
+    metadata:
+      labels:
+        app: vms-app
+    spec:
+      containers:
+      - name: vsm-app
+        image: ealberto/vms-app:latest
+        env:
+        - name: FLASK_ENV
+          value: "production"
+        - name: SERVICE_NAME
+          value: "Vendor Managetment Service"
+        - name: CURRENT_VERSION
+          value: "1.0-prod"
+        - name: SECRET_KEY
+          value: "my-guess-is-as-good-as-yours-but-you-will-never-guess-this%"                       
+        - name: POSTGRES_DB
+          value: "vms"
+        - name: POSTGRES_HOST
+          value: "postgres"
+        - name: POSTGRES_PORT
+          value: "5432"
+        - name: POSTGRES_USER
+          valueFrom:
+            secretKeyRef:
+              name: postgres-credentials
+              key: user
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: postgres-credentials
+              key: password
+      restartPolicy: Always
