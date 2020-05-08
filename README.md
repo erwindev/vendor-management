@@ -182,6 +182,7 @@ $ gcloud container clusters get-credentials vms-cluster --zone us-east1-b
 Upload the service the database service credentials
 ```
 $ kubectl create secret generic vms-cloudsql-instance-credentials --from-file=sql_credentials.json=/Users/ealberto/mystuff/erwindev-vms-db-b1dca3f9d9a1.json
+```
 
 Create the username and password as secrets
 ```
