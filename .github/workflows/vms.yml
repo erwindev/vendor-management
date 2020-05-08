@@ -36,10 +36,13 @@ jobs:
       with:
         version: '270.0.0'
         service_account_key: ${{ secrets.GCLOUD_AUTH }}
+        project_id: ${{ secrets.GCLOUD_PROJECT }}
 
-    - name: Google Auth Docker
+    - name: Google Auth
       run: |
         gcloud auth configure-docker     
+      run: |
+        gcloud container clusters get-credentials vms-cluster --zone us-east1-b          
         
     - name: Build docker image
       run: |        
@@ -49,9 +52,6 @@ jobs:
       run: |
         docker push gcr.io/${{ secrets.GCLOUD_PROJECT }}/vms-app:latest
 
-    - name: Deploy docker image to kubernetes
+    - name: Deploy docker image to GKE
       run: |
-        gcloud config set project ${{ secrets.GCLOUD_PROJECT }}
-        export CLOUDSDK_CONTAINER_USE_CLIENT_CERTIFICATE=True
-        gcloud container clusters get-credentials vms-cluster --zone us-east1-b
         kubectl rollout restart deployment vms-app
