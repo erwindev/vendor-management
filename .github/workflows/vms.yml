@@ -38,9 +38,11 @@ jobs:
         service_account_key: ${{ secrets.GCLOUD_AUTH }}
         project_id: ${{ secrets.GCLOUD_PROJECT }}
 
-    - name: Google Auth
+    - name: Google Auth Docker
       run: |
-        gcloud auth configure-docker     
+        gcloud auth configure-docker 
+
+    - name: Google Auth Container Cluster        
       run: |
         gcloud container clusters get-credentials vms-cluster --zone us-east1-b          
         
