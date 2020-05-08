@@ -51,7 +51,7 @@ jobs:
 
     - name: Deploy docker image to kubernetes
       run: |
-        gcloud config set project {{ secrets.GCLOUD_PROJECT }}
+        gcloud config set project ${{ secrets.GCLOUD_PROJECT }}
         export CLOUDSDK_CONTAINER_USE_CLIENT_CERTIFICATE=True
         gcloud container clusters get-credentials vms-cluster --zone us-east1-b
         kubectl rollout restart deployment vms-app
