@@ -51,5 +51,6 @@ jobs:
 
     - name: Deploy docker image to kubernetes
       run: |
+        gcloud config set project erwindev-vms
         gcloud container clusters get-credentials vms-cluster --zone us-east1-b
         kubectl rollout restart deployment vms-app
