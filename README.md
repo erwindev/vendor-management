@@ -97,7 +97,7 @@ POSTGRES_PORT=5432
 
 Build and run the docker containers.  `docker-compose build` will build your application into a docker image.  `docker-compose up` will run your application pointed to a Postgress database.  
 ```
-$ cd compose
+$ cd deployment/compose
 $ docker-compose build
 $ docker-compose up
 ```
@@ -105,6 +105,64 @@ $ docker-compose up
 Access the application via this url - http://localhost
 
 Access the API via this url - http://localhost/api/v1
+
+## Run in Kubernetes - Minikube
+minikube is a tool that allows to easily runs a local Kubernetes environment.  To install it,
+
+```
+$ brew update
+$ brew install kubectl
+$ brew install minikube
+```
+
+To run it,
+
+```
+$ minikube config set vm-driver hyperkit
+$ minikube start
+$ minikube dashboard
+```
+
+If you run into some problems, you can easily delete it.
+
+```
+$ minkube delete
+$ minikube delete
+$ rm /usr/local/bin/minikube
+$ rm -rf ~/.minikube
+```
+
+To deploy the application, first create the Postgres database.
+
+```
+$ cd deployment/minikube
+$ kubectl apply -f ./persistent-volume.yml
+$ kubectl apply -f ./persistent-volume-claim.yml
+$ kubectl apply -f ./secret.yml
+$ kubectl create -f ./postgres-deployment.yml
+$ kubectl create -f ./postgres-service.yml
+$ POD_NAME=$(kubectl get pod -l service=postgres -o jsonpath="{.items[0].metadata.name}")
+$ kubectl exec $POD_NAME --stdin --tty -- createdb -U vms_user vms
+```
+
+Before we deploy the application, first build the VMS docker image
+```
+$ cd ../..
+$ docker build -t ealberto/vms-app:latest .
+$ docker push ealberto/vms-app:latest
+```
+
+Deploy the application
+```
+$ cd deployment/minikube
+$ kubectl create -f ./vms-app-deployment.yml
+$ kubectl create -f ./vms-app-service.yml
+$ minikube addons enable ingress
+$ kubectl apply -f ./minikube-ingress.yml
+$ echo "$(minikube ip) erwindev.io" | sudo tee -a /etc/hosts
+```
+
+## Run in Kubernetes - GKE
 
 ## Load test the application
 For load testing, we will use [Locust](http://locust.io).  The load testing script is located under the `loadtest` folder.  Curerntly, we are only load testing the `/u/api/v1/auth/login` api.  To run the script,
