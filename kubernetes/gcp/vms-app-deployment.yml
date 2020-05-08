@@ -15,8 +15,8 @@ spec:
         app: vms-app
     spec:
       containers:
-      - name: vsm-app
-        image: ealberto/vms-app:latest
+      - name: vms-app
+        image: gcr.io/erwindev-vms/vms-app:latest
         env:
         - name: FLASK_ENV
           value: "production"
@@ -29,17 +29,29 @@ spec:
         - name: POSTGRES_DB
           value: "vms"
         - name: POSTGRES_HOST
-          value: "postgres"
+          value: "localhost"
         - name: POSTGRES_PORT
           value: "5432"
         - name: POSTGRES_USER
           valueFrom:
             secretKeyRef:
-              name: postgres-credentials
-              key: user
+              name: vms-cloudsql-db-credentials
+              key: username
         - name: POSTGRES_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: postgres-credentials
+              name: vms-cloudsql-db-credentials
               key: password
-      restartPolicy: Always
+      - name: cloudsql-proxy
+        image: gcr.io/cloudsql-docker/gce-proxy:1.16
+        command: ["/cloud_sql_proxy",
+          "-instances=erwindev-vms:us-east1:vms-app-db-01=tcp:5432",
+          "-credential_file=/secrets/cloudsql/sql_credentials.json"]
+        volumeMounts:
+          - name: my-secrets-volume
+            mountPath: /secrets/cloudsql
+            readOnly: true
+      volumes:
+        - name: my-secrets-volume
+          secret:
+            secretName: vms-cloudsql-instance-credentials
