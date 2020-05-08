@@ -166,7 +166,7 @@ $ echo "$(minikube ip) erwindev.io" | sudo tee -a /etc/hosts
 
 Create the cluster
 ```
-gcloud container clusters create vms-cluster --zone us-east1-b --machine-type=n1-standard-1 --max-nodes=3 --min-nodes=1
+$ gcloud container clusters create vms-cluster --zone us-east1-b --machine-type=n1-standard-1 --max-nodes=3 --min-nodes=1
 ```
 
 List the cluster
@@ -191,6 +191,7 @@ $ kubectl create secret generic vms-cloudsql-db-credentials --from-literal=usern
 
 Create deployment
 ```
+$ cd deployment/gcp
 $ kubectl create -f vms-app-deployment.yml
 ```
 
