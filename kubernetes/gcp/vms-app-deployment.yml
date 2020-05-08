@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: vms-app
-        image: gcr.io/erwindev-vms/vms-app:latest
+        image: gcr.io/erwindev-vms/vms-app
         env:
         - name: FLASK_ENV
           value: "production"
