@@ -164,6 +164,50 @@ $ echo "$(minikube ip) erwindev.io" | sudo tee -a /etc/hosts
 
 ## Run in Kubernetes - GKE
 
+Create the cluster
+```
+gcloud container clusters create vms-cluster --zone us-east1-b --machine-type=n1-standard-1 --max-nodes=3 --min-nodes=1
+```
+
+List the cluster
+```
+$ gcloud container clusters list
+```
+
+Get credentials for the cluster
+```
+$ gcloud container clusters get-credentials vms-cluster --zone us-east1-b
+```
+
+Upload the service the database service credentials
+```
+$ kubectl create secret generic vms-cloudsql-instance-credentials --from-file=sql_credentials.json=/Users/ealberto/mystuff/erwindev-vms-db-b1dca3f9d9a1.json
+
+Create the username and password as secrets
+```
+$ kubectl create secret generic vms-cloudsql-db-credentials --from-literal=username=vms_user --from-literal=password=D3qvzsAJHarhELzvK9
+```
+
+Create deployment
+```
+$ kubectl create -f vms-app-deployment.yml
+```
+
+List deployed apps
+```
+$ kubectl get deployments
+```
+
+Create service
+```
+$ kubectl create -f vms-app-service.yml
+```
+
+List Services
+```
+$ kubectl get services
+```
+
 ## Load test the application
 For load testing, we will use [Locust](http://locust.io).  The load testing script is located under the `loadtest` folder.  Curerntly, we are only load testing the `/u/api/v1/auth/login` api.  To run the script,
 ```
