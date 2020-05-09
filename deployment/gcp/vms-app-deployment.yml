@@ -17,6 +17,23 @@ spec:
       containers:
       - name: vms-app
         image: gcr.io/erwindev-vms/vms-app
+        ports: 
+          - containerPort: 5000
+        readinessProbe:
+          httpGet:
+            path: /u/api/v1/app/health
+            port: 5000
+          periodSeconds: 10
+          timeoutSeconds: 5
+          successThreshold: 1
+          failureThreshold: 2
+        livenessProbe:
+          httpGet:
+            path: /u/api/v1/app/health
+            port: 5000
+          initialDelaySeconds: 120
+          periodSeconds: 30
+          timeoutSeconds: 3          
         env:
         - name: FLASK_ENV
           value: "production"

@@ -210,6 +210,12 @@ List Services
 $ kubectl get services
 ```
 
+Create a static IP
+```
+$ gcloud compute addresses create vms-static-ip --global
+$ gcloud compute addresses list
+```
+
 ## Load test the application
 For load testing, we will use [Locust](http://locust.io).  The load testing script is located under the `loadtest` folder.  Curerntly, we are only load testing the `/u/api/v1/auth/login` api.  To run the script,
 ```

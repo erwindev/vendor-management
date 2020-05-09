@@ -1,0 +1,10 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: vms-app-ingress
+  annotations:
+    kubernetes.io/ingress.global-static-ip-name: "vms-static-ip"  
+spec:
+  backend:
+    serviceName: vms-app-svc
+    servicePort: 5000
