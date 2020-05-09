@@ -30,7 +30,7 @@ services:
       - vms-db
     image: ealberto/vms-app:latest
     build:
-      context: ../
+      context: ../../
       dockerfile: Dockerfile
     volumes:
       - "./:/app"

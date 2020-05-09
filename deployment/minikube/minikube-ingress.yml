@@ -5,10 +5,17 @@ metadata:
   annotations:
 spec:
   rules:
-  - host: erwindev.io
+  - host: vms-app.erwindev.local
     http:
       paths:
       - path: /
         backend:
           serviceName: vms-app
           servicePort: 5000
+  - host: vms-ui.erwindev.local
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: vms-ui
+          servicePort: 80          
