@@ -6,17 +6,17 @@ metadata:
     kubernetes.io/ingress.global-static-ip-name: "vms-static-ip"  
 spec:
   rules:
-    - host: vms-api.erwindev.com
-      http:
-        paths:
-        - path: /
-          backend:
-            serviceName: vms-app-svc
-            servicePort: 5000
-    - host: vms.erwindev.com
-      http:
-        paths:
-        - path: /
-          backend:
-            serviceName: vms-ui-svc
-            servicePort: 80    
+  - host: vms-api.erwindev.com
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: vms-app-svc
+          servicePort: 5000
+  - host: vms.erwindev.com
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: vms-ui-svc
+          servicePort: 80    
