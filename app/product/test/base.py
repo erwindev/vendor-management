@@ -17,7 +17,7 @@ class ProductBaseTestCase(BaseTestCase):
     @staticmethod
     def update_product(auth_token, vendor_id, product):
         return app.test_client().put(
-            '/p/api/v1/product',
+            '/p/v1/product',
             headers=dict(
                 Authorization='Bearer {}'.format(auth_token) 
             ),        
@@ -37,7 +37,7 @@ class ProductBaseTestCase(BaseTestCase):
     @staticmethod
     def get_all_product_by_vendor(auth_token, vendor_id):
         return app.test_client().get(
-            '/p/api/v1/product/vendor/{}'.format(vendor_id),
+            '/p/v1/product/vendor/{}'.format(vendor_id),
             headers=dict(
                 Authorization='Bearer {}'.format(auth_token) 
             ),        
@@ -47,7 +47,7 @@ class ProductBaseTestCase(BaseTestCase):
     @staticmethod
     def get_all_product(auth_token):
         return app.test_client().get(
-            '/p/api/v1/product',
+            '/p/v1/product',
             headers=dict(
                 Authorization='Bearer {}'.format(auth_token) 
             ),        

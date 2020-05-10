@@ -13,7 +13,7 @@ class NotesBaseTestCase(BaseTestCase):
     @staticmethod
     def add_notes(auth_token, notes):
         return app.test_client().post(
-            '/n/api/v1/notes',
+            '/n/v1/notes',
             headers=dict(
                 Authorization='Bearer {}'.format(auth_token) 
             ),        
@@ -29,7 +29,7 @@ class NotesBaseTestCase(BaseTestCase):
     @staticmethod
     def get_all_notes(auth_token, notes_id, notes_type_id):
         return app.test_client().get(
-            '/n/api/v1/notes/{}/{}'.format(notes_id, notes_type_id),
+            '/n/v1/notes/{}/{}'.format(notes_id, notes_type_id),
             headers=dict(
                 Authorization='Bearer {}'.format(auth_token) 
             ),        
@@ -39,7 +39,7 @@ class NotesBaseTestCase(BaseTestCase):
     @staticmethod
     def get_notes(auth_token, id):
         return app.test_client().get(
-            '/n/api/v1/notes/{}'.format(id),
+            '/n/v1/notes/{}'.format(id),
             headers=dict(
                 Authorization='Bearer {}'.format(auth_token) 
             ),        
@@ -49,7 +49,7 @@ class NotesBaseTestCase(BaseTestCase):
     @staticmethod
     def update_notes(auth_token, id, notes):
         return app.test_client().put(
-            '/n/api/v1/notes/{}'.format(id),
+            '/n/v1/notes/{}'.format(id),
             headers=dict(
                 Authorization='Bearer {}'.format(auth_token) 
             ),        
@@ -63,7 +63,7 @@ class NotesBaseTestCase(BaseTestCase):
     @staticmethod
     def delete_notes(auth_token, id):
         return app.test_client().delete(
-            '/n/api/v1/notes/{}'.format(id),
+            '/n/v1/notes/{}'.format(id),
             headers=dict(
                 Authorization='Bearer {}'.format(auth_token) 
             ),        

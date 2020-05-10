@@ -3,7 +3,7 @@ from flask_restplus import Api
 from app.config import Config
 from app.attachment.api.attachment import api as attachment_ns
 
-attachment_apiv1 = Blueprint('attachment_api', __name__, url_prefix='/a/api/v1')
+attachment_apiv1 = Blueprint('attachment_api', __name__, url_prefix='/a/v1')
 
 attachment_api = Api(attachment_apiv1, version=Config.CURRENT_VERSION, title='{} Attachment API'.format(Config.SERVICE_NAME),
           description='Attachment End Points',

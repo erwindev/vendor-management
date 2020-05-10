@@ -4,7 +4,7 @@ from app.config import Config
 from app.user.api.user import api as user_ns
 from app.user.api.auth import api as auth_ns
 
-user_apiv1 = Blueprint('user_api', __name__, url_prefix='/u/api/v1')
+user_apiv1 = Blueprint('user_api', __name__, url_prefix='/u/v1')
 
 user_api = Api(user_apiv1, version=Config.CURRENT_VERSION, title='{} User and Auth API'.format(Config.SERVICE_NAME),
           description='User End Points',

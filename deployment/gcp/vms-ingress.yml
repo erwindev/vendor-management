@@ -2,17 +2,17 @@ apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   name: vms-ingress
-  annotations:
-    kubernetes.io/ingress.global-static-ip-name: "vms-static-ip"  
+  # annotations:
+  #   kubernetes.io/ingress.global-static-ip-name: "vms-static-ip"  
 spec:
   rules:
-  - host: vms-api.erwindev.com
-    http:
-      paths:
-      - path: /
-        backend:
-          serviceName: vms-app-svc
-          servicePort: 5000
+  # - host: vms-api.erwindev.com
+  #   http:
+  #     paths:
+  #     - path: /
+  #       backend:
+  #         serviceName: vms-app-svc
+  #         servicePort: 5000
   - host: vms.erwindev.com
     http:
       paths:

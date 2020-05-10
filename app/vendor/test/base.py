@@ -21,7 +21,7 @@ class VendorBaseTestCase(BaseTestCase):
     @staticmethod
     def update_vendor(auth_token, vendor_id, vendor_name, website_name, status):
         return app.test_client().put(
-            '/v/api/v1/vendor',
+            '/v/v1/vendor',
             headers=dict(
                 Authorization='Bearer {}'.format(auth_token) 
             ),        
@@ -38,7 +38,7 @@ class VendorBaseTestCase(BaseTestCase):
     @staticmethod
     def get_all_vendor(auth_token):
         return app.test_client().get(
-            '/v/api/v1/vendor',
+            '/v/v1/vendor',
             headers=dict(
                 Authorization='Bearer {}'.format(auth_token) 
             ),        
@@ -48,7 +48,7 @@ class VendorBaseTestCase(BaseTestCase):
     @staticmethod
     def get_all_active_vendor(auth_token):
         return app.test_client().get(
-            '/v/api/v1/vendor/active',
+            '/v/v1/vendor/active',
             headers=dict(
                 Authorization='Bearer {}'.format(auth_token) 
             ),        

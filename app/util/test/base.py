@@ -37,7 +37,7 @@ class BaseTestCase(TestCase):
     @staticmethod
     def login_user(email, password):
         return app.test_client().post(
-            '/u/api/v1/auth/login',
+            '/u/v1/auth/login',
             data=json.dumps(dict(
                 email=email,
                 password=password
@@ -56,7 +56,7 @@ class BaseTestCase(TestCase):
     @staticmethod
     def logged_out(auth_token):
         return app.test_client().post(
-            '/u/api/v1/auth/logout',
+            '/u/v1/auth/logout',
             headers=dict(
                 Authorization='Bearer {}'.format(auth_token) 
             ),        
@@ -71,7 +71,7 @@ class BaseTestCase(TestCase):
     @staticmethod
     def add_vendor(auth_token, vendor_name, website_name):
         return app.test_client().post(
-            '/v/api/v1/vendor',
+            '/v/v1/vendor',
             headers=dict(
                 Authorization='Bearer {}'.format(auth_token) 
             ),        
@@ -87,7 +87,7 @@ class BaseTestCase(TestCase):
     @staticmethod
     def get_vendor(auth_token, vendor_id):
         return app.test_client().get(
-            '/v/api/v1/vendor/{}'.format(vendor_id),
+            '/v/v1/vendor/{}'.format(vendor_id),
             headers=dict(
                 Authorization='Bearer {}'.format(auth_token) 
             ),        
@@ -102,7 +102,7 @@ class BaseTestCase(TestCase):
     @staticmethod
     def add_product(auth_token, vendor_id, product):
         return app.test_client().post(
-            '/p/api/v1/product',
+            '/p/v1/product',
             headers=dict(
                 Authorization='Bearer {}'.format(auth_token) 
             ),        
@@ -118,7 +118,7 @@ class BaseTestCase(TestCase):
     @staticmethod
     def get_product(auth_token, product_id):
         return app.test_client().get(
-            '/p/api/v1/product/{}'.format(product_id),
+            '/p/v1/product/{}'.format(product_id),
             headers=dict(
                 Authorization='Bearer {}'.format(auth_token) 
             ),        
@@ -133,7 +133,7 @@ class BaseTestCase(TestCase):
     @staticmethod
     def add_contact(auth_token, contact):
         return app.test_client().post(
-            '/c/api/v1/contact',
+            '/c/v1/contact',
             headers=dict(
                 Authorization='Bearer {}'.format(auth_token) 
             ),        
