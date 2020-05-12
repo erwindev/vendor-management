@@ -21,7 +21,7 @@ spec:
           - containerPort: 5000
         readinessProbe:
           httpGet:
-            path: /u/api/v1/app/health
+            path: /u/v1/app/health
             port: 5000
           periodSeconds: 10
           timeoutSeconds: 5
@@ -29,7 +29,7 @@ spec:
           failureThreshold: 2
         livenessProbe:
           httpGet:
-            path: /u/api/v1/app/health
+            path: /u/v1/app/health
             port: 5000
           initialDelaySeconds: 120
           periodSeconds: 30
