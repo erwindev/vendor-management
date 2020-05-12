@@ -4,16 +4,17 @@ metadata:
   name: vms-ingress
   annotations:
     kubernetes.io/ingress.global-static-ip-name: "vms-static-ip"  
-    nginx.ingress.kubernetes.io/rewrite-target: /$2
 spec:
   rules:
-  - http:
+  - host: vms.erwindev.com
+    http:
       paths:
-      - path: /app/*
-        backend:
+      - backend:
           serviceName: vms-ui
           servicePort: 80   
-      - path: /api/*
-        backend:
+  - host: vms-api.erwindev.com          
+    http:
+      paths:
+      - backend:
           serviceName: vms-app
           servicePort: 5000           
