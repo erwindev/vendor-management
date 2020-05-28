@@ -4,13 +4,12 @@ from datetime import datetime
 
 class Product(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    vendor_id = db.Column(db.Integer, db.ForeignKey('vendor.id'))
+    vendor_id = db.Column(db.Integer)
     product_name = db.Column(db.String(80))
     create_date = db.Column(db.DateTime, default=datetime.utcnow)
     updated_date = db.Column(db.DateTime)
     status = db.Column(db.String(10))
     user_by = db.Column(db.String(100))
-    vendor = db.relationship("Vendor")
 
     def __repr__(self):
         return '<Product {}>'.format(self.product_name)
@@ -19,7 +18,6 @@ class Product(db.Model):
         json_result = {
             'id': self.id,
             'vendor_id': self.vendor_id,
-            'vendor_name': self.vendor.name,
             'product_name': self.product_name,
             'create_date': self.create_date,            
             'updated_date': self.updated_date,

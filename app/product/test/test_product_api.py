@@ -70,7 +70,7 @@ class TestProductApi(ProductBaseTestCase):
 
             product_list = data['productlist']
             for product in product_list:
-                 self.assertTrue(product['vendor_name'] == 'Vendor 1')
+                 self.assertTrue(product['vendor_id'] == '1')
 
 
     def test_update_product(self):
@@ -126,7 +126,7 @@ class TestProductApi(ProductBaseTestCase):
             response = ProductBaseTestCase.get_product(auth_token, product_id)
             data = json.loads(response.data.decode())
             self.assertTrue(data['product_name'] == 'Product 1')
-            self.assertTrue(data['vendor_name'] == 'Vendor 1')
+            self.assertTrue(data['vendor_id'] == '1')
             self.assertTrue(response.content_type == 'application/json')
             self.assertEqual(response.status_code, 200)         
 
