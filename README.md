@@ -49,14 +49,14 @@ $ flask db upgrade
 $ flask run
 ```
 
-Bring up your application in your browser
-* http://localhost:5000/
-
-Using the REST API
+Bring the Auth REST API
 
 Another way of interacting with this application is through a REST APIs.  To see the information about the REST API, you can access the Swagger docs
-* http://localhost:5000/api/v1/
-
+* Auth API (http://localhost:5000/u/v1/)
+* Product API (http://localhost:5000/p/v1)
+* Notes API (http://localhost:5000/n/v1)
+* Contacts API (http://localhost:5000/c/v1)
+* Attachment API (http://localhost:5000/a/v1)
 
 ## Test the application
 Run unittest
@@ -102,9 +102,7 @@ $ docker-compose build
 $ docker-compose up
 ```
 
-Access the application via this url - http://localhost
-
-Access the API via this url - http://localhost/api/v1
+Access the Auth API via this url - http://localhost/u/v1
 
 ## Run in Kubernetes - Minikube
 minikube is a tool that allows to easily runs a local Kubernetes environment.  To install it,
@@ -228,7 +226,7 @@ $ kubectl config use-context [CONTEXT]
 ```
 
 ## Load test the application
-For load testing, we will use [Locust](http://locust.io).  The load testing script is located under the `loadtest` folder.  Curerntly, we are only load testing the `/u/api/v1/auth/login` api.  To run the script,
+For load testing, we will use [Locust](http://locust.io).  The load testing script is located under the `loadtest` folder.  Curerntly, we are only load testing the `/u/v1/auth/login` api.  To run the script,
 ```
 $ cd loadtest
 $ locust -f vmsloadtest.py
