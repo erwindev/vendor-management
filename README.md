@@ -1,3 +1,5 @@
+![VMS application](https://github.com/erwindev/vendor-management/workflows/VMS%20application/badge.svg?branch=master)
+
 # Vendor Management System
 
 This is a sample application that will be used to teach SheCanCodeIT members how to build a web application using Python and Flask.
