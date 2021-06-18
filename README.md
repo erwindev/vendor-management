@@ -176,7 +176,7 @@ gcloud container clusters list
 
 Scale down the cluster
 ```
-gcloud container clusters resize vms-cluster --size 0 --zone us-east1-b
+gcloud container clusters resize vms-cluster --num-nodes 0 --zone us-east1-b
 ```
 
 Get credentials for the cluster
