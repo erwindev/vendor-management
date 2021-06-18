@@ -166,65 +166,65 @@ $ echo "$(minikube ip) erwindev.io" | sudo tee -a /etc/hosts
 
 Create the cluster
 ```
-$ gcloud container clusters create vms-cluster --zone us-east1-b --machine-type=n1-standard-1 --max-nodes=3 --min-nodes=1
+gcloud container clusters create vms-cluster --zone us-east1-b --machine-type=n1-standard-1 --max-nodes=3 --min-nodes=1
 ```
 
 List the cluster
 ```
-$ gcloud container clusters list
+gcloud container clusters list
 ```
 
 Scale down the cluster
 ```
-$ gcloud container clusters resize vms-cluster --size 0 --zone us-east1-b
+gcloud container clusters resize vms-cluster --size 0 --zone us-east1-b
 ```
 
 Get credentials for the cluster
 ```
-$ gcloud container clusters get-credentials vms-cluster --zone us-east1-b
+gcloud container clusters get-credentials vms-cluster --zone us-east1-b
 ```
 
 Upload the service the database service credentials
 ```
-$ kubectl create secret generic vms-cloudsql-instance-credentials --from-file=sql_credentials.json=/Users/ealberto/mystuff/erwindev-vms-db-b1dca3f9d9a1.json
+kubectl create secret generic vms-cloudsql-instance-credentials --from-file=sql_credentials.json=/Users/ealberto/mystuff/erwindev-vms-db-b1dca3f9d9a1.json
 ```
 
 Create the username and password as secrets
 ```
-$ kubectl create secret generic vms-cloudsql-db-credentials --from-literal=username=vms_user --from-literal=password=D3qvzsAJHarhELzvK9
+kubectl create secret generic vms-cloudsql-db-credentials --from-literal=username=vms_user --from-literal=password=D3qvzsAJHarhELzvK9
 ```
 
 Create deployment
 ```
-$ cd deployment/gcp
-$ kubectl create -f vms-app-deployment.yml
+cd deployment/gcp
+kubectl create -f vms-app-deployment.yml
 ```
 
 List deployed apps
 ```
-$ kubectl get deployments
+kubectl get deployments
 ```
 
 Create service
 ```
-$ kubectl create -f vms-app-service.yml
+kubectl create -f vms-app-service.yml
 ```
 
 List Services
 ```
-$ kubectl get services
+kubectl get services
 ```
 
 Create a static IP
 ```
-$ gcloud compute addresses create vms-static-ip --global
-$ gcloud compute addresses list
+gcloud compute addresses create vms-static-ip --global
+gcloud compute addresses list
 ```
 
 If working with multiple, context
 ```
-$ kubectl config get-contexts
-$ kubectl config use-context [CONTEXT]
+kubectl config get-contexts
+kubectl config use-context [CONTEXT]
 ```
 
 ## Load test the application
