@@ -1,4 +1,4 @@
-FROM python:3.8-alpine
+FROM python:3.9.2-alpine
 
 RUN adduser -D vms
 
@@ -8,7 +8,7 @@ COPY requirements.txt requirements.txt
 
 RUN \
  apk update && \
- apk add --no-cache postgresql-libs libzmq && \
+ apk add --no-cache build-base postgresql-libs libzmq && \
  apk add --no-cache --virtual .build-deps gcc musl-dev postgresql-dev libffi-dev zeromq-dev && \
  pip install cython && \
  pip install psycopg2 && \
