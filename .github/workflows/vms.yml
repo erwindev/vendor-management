@@ -31,29 +31,29 @@ jobs:
         coverage run vms_test_suite.py
         coverage report --fail-under=85 --omit="app/*/test/*.py" app/*/*/*.py
 
-    - name: Setup gcloud CLI
-      uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
-      with:
-        version: '290.0.1'
-        service_account_key: ${{ secrets.GCLOUD_AUTH }}
-        project_id: ${{ secrets.GCLOUD_PROJECT }}
+    # - name: Setup gcloud CLI
+    #   uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+    #   with:
+    #     version: '290.0.1'
+    #     service_account_key: ${{ secrets.GCLOUD_AUTH }}
+    #     project_id: ${{ secrets.GCLOUD_PROJECT }}
 
-    - name: Google Auth Docker
-      run: |
-        gcloud auth configure-docker 
+    # - name: Google Auth Docker
+    #   run: |
+    #     gcloud auth configure-docker 
 
-    - name: Google Auth Container Cluster        
-      run: |
-        gcloud container clusters get-credentials vms-cluster --zone us-east1-b          
+    # - name: Google Auth Container Cluster        
+    #   run: |
+    #     gcloud container clusters get-credentials vms-cluster --zone us-east1-b          
         
-    - name: Build docker image
-      run: |        
-        docker build --file Dockerfile --tag gcr.io/${{ secrets.GCLOUD_PROJECT }}/vms-app:latest .
+    # - name: Build docker image
+    #   run: |        
+    #     docker build --file Dockerfile --tag gcr.io/${{ secrets.GCLOUD_PROJECT }}/vms-app:latest .
         
-    - name: Publish docker image
-      run: |
-        docker push gcr.io/${{ secrets.GCLOUD_PROJECT }}/vms-app:latest
+    # - name: Publish docker image
+    #   run: |
+    #     docker push gcr.io/${{ secrets.GCLOUD_PROJECT }}/vms-app:latest
 
-    - name: Deploy docker image to GKE
-      run: |
-        kubectl rollout restart deployment vms-app
+    # - name: Deploy docker image to GKE
+    #   run: |
+    #     kubectl rollout restart deployment vms-app

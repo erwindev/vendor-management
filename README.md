@@ -184,7 +184,7 @@ Get credentials for the cluster
 gcloud container clusters get-credentials vms-cluster --zone us-east1-b
 ```
 
-Upload the service the database service credentials
+Upload the database service credentials
 ```
 kubectl create secret generic vms-cloudsql-instance-credentials --from-file=sql_credentials.json=/Users/ealberto/mystuff/erwindev-vms-db-b1dca3f9d9a1.json
 ```
@@ -218,6 +218,10 @@ kubectl get services
 Create a static IP
 ```
 gcloud compute addresses create vms-static-ip --global
+```
+
+List IP addresses
+```
 gcloud compute addresses list
 ```
 
