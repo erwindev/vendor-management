@@ -1,6 +1,9 @@
+from flask import request
 from flask_restx import Namespace, Resource, fields
 from app.product.dao.product import ProductDao
+from app.product.models.product import Product as ProductModel
 from app.util.decorator import token_required
+import sys
 
 
 class ProductDto:

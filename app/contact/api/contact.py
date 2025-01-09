@@ -1,7 +1,9 @@
+from flask import request
 from flask_restx import Namespace, Resource, fields
 from app.contact.dao.contact import ContactDao
 from app.util.decorator import token_required
 from app.util import NullableString
+from app.contact.models.contact import Contact as ContactModel
 
 
 class ContactDto:
