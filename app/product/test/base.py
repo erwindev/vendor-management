@@ -3,20 +3,42 @@ from vms import app
 from app.util.test.base import BaseTestCase
 
 class ProductBaseTestCase(BaseTestCase):
-    """ Product Base Tests """
+    """ Product Base Tests - Contains helper methods for testing product-related endpoints """
 
-   ######################
-    #
-    # product api
-    #
-    ######################
-    @staticmethod
-    def add_product(auth_token, vendor_id, product):
-        return BaseTestCase.add_product(auth_token, vendor_id, product)        
+    def add_product(self, auth_token, vendor_id, product):
+        """
+        Creates a new product
+        Args:
+            auth_token (str): JWT authentication token
+            vendor_id (int): ID of the vendor
+            product (Product): Product object containing details
+        Returns:
+            Response: Flask test client response
+        """
+        return super().add_product(auth_token, vendor_id, product)
 
-    @staticmethod
-    def update_product(auth_token, vendor_id, product):
-        return app.test_client().put(
+    def get_product(self, auth_token, product_id):
+        """
+        Retrieves a specific product
+        Args:
+            auth_token (str): JWT authentication token
+            product_id (int): ID of the product to retrieve
+        Returns:
+            Response: Flask test client response
+        """
+        return super().get_product(auth_token, product_id)
+
+    def update_product(self, auth_token, vendor_id, product):
+        """
+        Updates an existing product
+        Args:
+            auth_token (str): JWT authentication token
+            vendor_id (int): ID of the vendor
+            product (Product): Product object containing updated details
+        Returns:
+            Response: Flask test client response
+        """
+        return self.client.put(
             '/p/v1/product',
             headers=dict(
                 Authorization='Bearer {}'.format(auth_token) 
@@ -30,13 +52,16 @@ class ProductBaseTestCase(BaseTestCase):
             content_type='application/json'
         )    
 
-    @staticmethod
-    def get_product(auth_token, product_id):
-        return BaseTestCase.get_product(auth_token, product_id)    
-
-    @staticmethod
-    def get_all_product_by_vendor(auth_token, vendor_id):
-        return app.test_client().get(
+    def get_all_product_by_vendor(self, auth_token, vendor_id):
+        """
+        Retrieves all products for a specific vendor
+        Args:
+            auth_token (str): JWT authentication token
+            vendor_id (int): ID of the vendor
+        Returns:
+            Response: Flask test client response
+        """
+        return self.client.get(
             '/p/v1/product/vendor/{}'.format(vendor_id),
             headers=dict(
                 Authorization='Bearer {}'.format(auth_token) 
@@ -44,9 +69,15 @@ class ProductBaseTestCase(BaseTestCase):
             content_type='application/json'
         )  
 
-    @staticmethod
-    def get_all_product(auth_token):
-        return app.test_client().get(
+    def get_all_product(self, auth_token):
+        """
+        Retrieves all products
+        Args:
+            auth_token (str): JWT authentication token
+        Returns:
+            Response: Flask test client response
+        """
+        return self.client.get(
             '/p/v1/product',
             headers=dict(
                 Authorization='Bearer {}'.format(auth_token) 

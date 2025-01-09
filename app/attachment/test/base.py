@@ -5,14 +5,18 @@ from app.util.test.base import BaseTestCase
 class AttachmentBaseTestCase(BaseTestCase):
     """ Attachment Base Tests """
 
-    ######################
-    #
-    # attachment api
-    #
-    ######################
-    @staticmethod
-    def add_attachment(auth_token, attachment):
-        return app.test_client().post(
+    def add_attachment(self, auth_token, attachment):
+        """
+        Creates a new attachment.
+        
+        Args:
+            auth_token (str): JWT authentication token
+            attachment (Attachment): Attachment object containing details
+            
+        Returns:
+            Response: Flask test client response
+        """
+        return self.client.post(
             '/a/v1/attachment',
             headers=dict(
                 Authorization='Bearer {}'.format(auth_token) 
@@ -28,19 +32,38 @@ class AttachmentBaseTestCase(BaseTestCase):
             content_type='application/json'
         )        
 
-    @staticmethod
-    def get_all_attachments(auth_token, attachmment_id, attachment_type_id):
-        return app.test_client().get(
-            '/a/v1/attachment/{}/{}'.format(attachmment_id, attachment_type_id),
+    def get_all_attachments(self, auth_token, attachment_id, attachment_type_id):
+        """
+        Retrieves all attachments for a specific attachment_id and type.
+        
+        Args:
+            auth_token (str): JWT authentication token
+            attachment_id (str): Identifier for the attachment
+            attachment_type_id (str): Type identifier for the attachment
+            
+        Returns:
+            Response: Flask test client response
+        """
+        return self.client.get(
+            '/a/v1/attachment/{}/{}'.format(attachment_id, attachment_type_id),
             headers=dict(
                 Authorization='Bearer {}'.format(auth_token) 
             ),        
             content_type='application/json'
         )    
 
-    @staticmethod
-    def get_attachment(auth_token, id):
-        return app.test_client().get(
+    def get_attachment(self, auth_token, id):
+        """
+        Retrieves a specific attachment by ID.
+        
+        Args:
+            auth_token (str): JWT authentication token
+            id (str): Unique identifier of the attachment
+            
+        Returns:
+            Response: Flask test client response
+        """
+        return self.client.get(
             '/a/v1/attachment/{}'.format(id),
             headers=dict(
                 Authorization='Bearer {}'.format(auth_token) 
@@ -48,9 +71,19 @@ class AttachmentBaseTestCase(BaseTestCase):
             content_type='application/json'
         )            
 
-    @staticmethod
-    def update_attachment(auth_token, id, attachment):
-        return app.test_client().put(
+    def update_attachment(self, auth_token, id, attachment):
+        """
+        Updates an existing attachment.
+        
+        Args:
+            auth_token (str): JWT authentication token
+            id (str): Unique identifier of the attachment
+            attachment (Attachment): Attachment object with updated details
+            
+        Returns:
+            Response: Flask test client response
+        """
+        return self.client.put(
             '/a/v1/attachment/{}'.format(id),
             headers=dict(
                 Authorization='Bearer {}'.format(auth_token) 
@@ -62,9 +95,18 @@ class AttachmentBaseTestCase(BaseTestCase):
             content_type='application/json'
         )                    
 
-    @staticmethod
-    def delete_attachment(auth_token, id):
-        return app.test_client().delete(
+    def delete_attachment(self, auth_token, id):
+        """
+        Deletes a specific attachment.
+        
+        Args:
+            auth_token (str): JWT authentication token
+            id (str): Unique identifier of the attachment to delete
+            
+        Returns:
+            Response: Flask test client response
+        """
+        return self.client.delete(
             '/a/v1/attachment/{}'.format(id),
             headers=dict(
                 Authorization='Bearer {}'.format(auth_token) 

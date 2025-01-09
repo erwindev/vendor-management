@@ -10,10 +10,10 @@ from app.vendor.test.base import VendorBaseTestCase
 class TestVendorApi(VendorBaseTestCase):
     def test_add_vendor(self):
         """ Test for add vendor """
-        auth_token, user_loggedin_data = BaseTestCase.get_token_and_loggedin_user('joetester@se.com', 'test')
+        auth_token, user_loggedin_data = self.get_token_and_loggedin_user('joetester@se.com', 'test')
         with self.client:
             # add vendor
-            response = VendorBaseTestCase.add_vendor(auth_token, 'Vendor 1', 'www.vendor1.com')
+            response = self.add_vendor(auth_token, 'Vendor 1', 'www.vendor1.com')
             data = json.loads(response.data.decode())
             self.assertTrue(data['status'] == 'success')
             self.assertTrue(data['message'] == 'Vendor successfully added.')
@@ -22,10 +22,10 @@ class TestVendorApi(VendorBaseTestCase):
 
     def test_get_all_active_vendor(self):
         """ Test get all vendor"""
-        auth_token, user_loggedin_data = BaseTestCase.get_token_and_loggedin_user('joetester@se.com', 'test')
+        auth_token, user_loggedin_data = self.get_token_and_loggedin_user('joetester@se.com', 'test')
         with self.client:
             # add vendor
-            response = VendorBaseTestCase.add_vendor(auth_token, 'Vendor 1', 'www.vendor1.com')
+            response = self.add_vendor(auth_token, 'Vendor 1', 'www.vendor1.com')
             data = json.loads(response.data.decode())
             self.assertTrue(data['status'] == 'success')
             self.assertTrue(data['message'] == 'Vendor successfully added.')
@@ -33,7 +33,7 @@ class TestVendorApi(VendorBaseTestCase):
             self.assertEqual(response.status_code, 201)
 
             # get all vendor
-            response = VendorBaseTestCase.get_all_active_vendor(auth_token)
+            response = self.get_all_active_vendor(auth_token)
             data = json.loads(response.data.decode())
             self.assertTrue(len(data['active_vendors']) == 1)
             self.assertTrue(response.content_type == 'application/json')
@@ -41,10 +41,10 @@ class TestVendorApi(VendorBaseTestCase):
 
     def test_get_all_vendor(self):
         """ Test get all vendor"""
-        auth_token, user_loggedin_data = BaseTestCase.get_token_and_loggedin_user('joetester@se.com', 'test')
+        auth_token, user_loggedin_data = self.get_token_and_loggedin_user('joetester@se.com', 'test')
         with self.client:
             # add vendor
-            response = VendorBaseTestCase.add_vendor(auth_token, 'Vendor 1', 'www.vendor1.com')
+            response = self.add_vendor(auth_token, 'Vendor 1', 'www.vendor1.com')
             data = json.loads(response.data.decode())
             self.assertTrue(data['status'] == 'success')
             self.assertTrue(data['message'] == 'Vendor successfully added.')
@@ -52,7 +52,7 @@ class TestVendorApi(VendorBaseTestCase):
             self.assertEqual(response.status_code, 201)
 
             # get all vendor
-            response = VendorBaseTestCase.get_all_vendor(auth_token)
+            response = self.get_all_vendor(auth_token)
             data = json.loads(response.data.decode())
             self.assertTrue(len(data['vendorlist']) == 1)
             self.assertTrue(response.content_type == 'application/json')
@@ -60,10 +60,10 @@ class TestVendorApi(VendorBaseTestCase):
 
     def test_get_vendor(self):
         """ Test get vendor"""
-        auth_token, user_loggedin_data = BaseTestCase.get_token_and_loggedin_user('joetester@se.com', 'test')
+        auth_token, user_loggedin_data = self.get_token_and_loggedin_user('joetester@se.com', 'test')
         with self.client:
             # add vendor
-            response = VendorBaseTestCase.add_vendor(auth_token, 'Vendor X', 'www.vendorx.com')
+            response = self.add_vendor(auth_token, 'Vendor X', 'www.vendorx.com')
             data = json.loads(response.data.decode())
             self.assertTrue(data['status'] == 'success')
             self.assertTrue(data['message'] == 'Vendor successfully added.')
@@ -71,7 +71,7 @@ class TestVendorApi(VendorBaseTestCase):
             self.assertEqual(response.status_code, 201)
 
             # get vendor
-            response = VendorBaseTestCase.get_vendor(auth_token, 1)
+            response = self.get_vendor(auth_token, 1)
             data = json.loads(response.data.decode())
             self.assertTrue(data['vendor']['name'] == 'Vendor X')
             self.assertTrue(response.content_type == 'application/json')
@@ -94,7 +94,7 @@ class TestVendorApi(VendorBaseTestCase):
             temp_contact.country = "USA"
             temp_contact.status = "Active"
             
-            response = BaseTestCase.add_contact(auth_token, temp_contact)
+            response = self.add_contact(auth_token, temp_contact)
             data = json.loads(response.data.decode())
             self.assertTrue(data['status'] == 'success')
             self.assertTrue(data['message'] == 'Contact successfully added.')
@@ -106,7 +106,7 @@ class TestVendorApi(VendorBaseTestCase):
             temp_product.product_name = "Product 1"
             temp_product.status = "Active"
             
-            response = BaseTestCase.add_product(auth_token, vendor_id, temp_product)
+            response = self.add_product(auth_token, vendor_id, temp_product)
             data = json.loads(response.data.decode())
             self.assertTrue(data['status'] == 'success')
             self.assertTrue(data['message'] == 'Product successfully added.')
@@ -119,7 +119,7 @@ class TestVendorApi(VendorBaseTestCase):
             temp_product.expiration_date = datetime.date.today() + datetime.timedelta(days=365)
             temp_product.status = "Active"
             
-            response = BaseTestCase.add_product(auth_token, vendor_id, temp_product)
+            response = self.add_product(auth_token, vendor_id, temp_product)
             data = json.loads(response.data.decode())
             self.assertTrue(data['status'] == 'success')
             self.assertTrue(data['message'] == 'Product successfully added.')
@@ -127,7 +127,7 @@ class TestVendorApi(VendorBaseTestCase):
             self.assertEqual(response.status_code, 201)       
 
             # get vendor
-            response = VendorBaseTestCase.get_vendor(auth_token, 1)
+            response = self.get_vendor(auth_token, 1)
             data = json.loads(response.data.decode())
             self.assertTrue(data['vendor']['name'] == 'Vendor X')
             self.assertTrue(len(data['contacts']) == 1)
@@ -138,10 +138,10 @@ class TestVendorApi(VendorBaseTestCase):
 
     def test_update_vendor(self):
         """ Test update vendor"""
-        auth_token, user_loggedin_data = BaseTestCase.get_token_and_loggedin_user('joetester@se.com', 'test')
+        auth_token, user_loggedin_data = self.get_token_and_loggedin_user('joetester@se.com', 'test')
         with self.client:
             # add vendor
-            response = BaseTestCase.add_vendor(auth_token, 'Vendor X', 'www.vendorx.com')
+            response = self.add_vendor(auth_token, 'Vendor X', 'www.vendorx.com')
             data = json.loads(response.data.decode())
             self.assertTrue(data['status'] == 'success')
             self.assertTrue(data['message'] == 'Vendor successfully added.')
@@ -149,13 +149,13 @@ class TestVendorApi(VendorBaseTestCase):
             self.assertEqual(response.status_code, 201)   
 
             # update vendor
-            response = VendorBaseTestCase.update_vendor(auth_token, 1, 'Vendor Y', 'www.vendory.com', 'act')
+            response = self.update_vendor(auth_token, 1, 'Vendor Y', 'www.vendory.com', 'act')
             data = json.loads(response.data.decode())
             self.assertTrue(response.content_type == 'application/json')
             self.assertEqual(response.status_code, 200)    
 
             # get vendor
-            response = VendorBaseTestCase.get_vendor(auth_token, 1)
+            response = self.get_vendor(auth_token, 1)
             data = json.loads(response.data.decode())
             self.assertTrue(data['vendor']['name'] == 'Vendor Y')
             self.assertTrue(data['vendor']['status'] == 'act')

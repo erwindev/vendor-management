@@ -3,7 +3,7 @@ from vms import app
 from app.util.test.base import BaseTestCase
 import unittest
 
-class UserBaseTestCase(unittest.TestCase):
+class UserBaseTestCase(BaseTestCase):
     """
     Base test case class for user-related API endpoints.
     Provides helper methods for common user operations in tests.
@@ -48,61 +48,40 @@ class UserBaseTestCase(unittest.TestCase):
             }
         )
 
-    @staticmethod
-    def update_user(auth_token, id, firstname, lastname, status):
+    def update_user(self, auth_token, id, firstname, lastname, status):
         """
         Update an existing user's information.
-        
-        Args:
-            auth_token (str): Authentication token for the request
-            id (int): User ID to update
-            firstname (str): New first name
-            lastname (str): New last name
-            status (str): New user status
-            
-        Returns:
-            Response: Flask response object from the update request
         """
-        return app.test_client().put(
-            '/u/v1/user',
-            headers=dict(
-                Authorization='Bearer {}'.format(auth_token) 
-            ),        
-            data=json.dumps(dict(
-                id=id,
-                firstname=firstname,
-                lastname=lastname,
-                status=status
-            )),
-            content_type='application/json'
+        return self.client.put(
+            f'{self.base_url}/u/v1/user',
+            headers={
+                'Authorization': f'Bearer {auth_token}',
+                'Content-Type': 'application/json'
+            },
+            json={
+                'id': id,
+                'firstname': firstname,
+                'lastname': lastname,
+                'status': status
+            }
         )
 
-    @staticmethod
-    def change_password(auth_token, id, password, new_password):
+    def change_password(self, auth_token, id, password, new_password):
         """
         Change a user's password.
-        
-        Args:
-            auth_token (str): Authentication token for the request
-            id (int): User ID
-            password (str): Current password
-            new_password (str): New password to set
-            
-        Returns:
-            Response: Flask response object from the password change request
         """
-        return app.test_client().post(
-            '/u/v1/user/changepassword',
-            headers=dict(
-                Authorization='Bearer {}'.format(auth_token) 
-            ),        
-            data=json.dumps(dict(
-                id=id,
-                password=password,
-                newpassword=new_password
-            )),
-            content_type='application/json'
-        )                
+        return self.client.post(
+            f'{self.base_url}/u/v1/user/changepassword',
+            headers={
+                'Authorization': f'Bearer {auth_token}',
+                'Content-Type': 'application/json'
+            },
+            json={
+                'id': id,
+                'password': password,
+                'newpassword': new_password
+            }
+        )
 
     def get_user(self, auth_token, user_id):
         """

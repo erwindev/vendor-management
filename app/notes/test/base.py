@@ -5,14 +5,8 @@ from app.util.test.base import BaseTestCase
 class NotesBaseTestCase(BaseTestCase):
     """ Notes Base Tests """
 
-    ######################
-    #
-    # notes api
-    #
-    ######################
-    @staticmethod
-    def add_notes(auth_token, notes):
-        return app.test_client().post(
+    def add_notes(self, auth_token, notes):
+        return self.client.post(
             '/n/v1/notes',
             headers=dict(
                 Authorization='Bearer {}'.format(auth_token) 
@@ -26,9 +20,8 @@ class NotesBaseTestCase(BaseTestCase):
             content_type='application/json'
         )        
 
-    @staticmethod
-    def get_all_notes(auth_token, notes_id, notes_type_id):
-        return app.test_client().get(
+    def get_all_notes(self, auth_token, notes_id, notes_type_id):
+        return self.client.get(
             '/n/v1/notes/{}/{}'.format(notes_id, notes_type_id),
             headers=dict(
                 Authorization='Bearer {}'.format(auth_token) 
@@ -36,9 +29,8 @@ class NotesBaseTestCase(BaseTestCase):
             content_type='application/json'
         )    
 
-    @staticmethod
-    def get_notes(auth_token, id):
-        return app.test_client().get(
+    def get_notes(self, auth_token, id):
+        return self.client.get(
             '/n/v1/notes/{}'.format(id),
             headers=dict(
                 Authorization='Bearer {}'.format(auth_token) 
@@ -46,9 +38,8 @@ class NotesBaseTestCase(BaseTestCase):
             content_type='application/json'
         )            
 
-    @staticmethod
-    def update_notes(auth_token, id, notes):
-        return app.test_client().put(
+    def update_notes(self, auth_token, id, notes):
+        return self.client.put(
             '/n/v1/notes/{}'.format(id),
             headers=dict(
                 Authorization='Bearer {}'.format(auth_token) 
@@ -60,9 +51,8 @@ class NotesBaseTestCase(BaseTestCase):
             content_type='application/json'
         )            
 
-    @staticmethod
-    def delete_notes(auth_token, id):
-        return app.test_client().delete(
+    def delete_notes(self, auth_token, id):
+        return self.client.delete(
             '/n/v1/notes/{}'.format(id),
             headers=dict(
                 Authorization='Bearer {}'.format(auth_token) 

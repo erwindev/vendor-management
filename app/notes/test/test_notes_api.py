@@ -2,34 +2,27 @@ import unittest
 import json
 import datetime
 from app.notes.test.base import NotesBaseTestCase
-from app.util.test.base import BaseTestCase
 
 
-class TestNotesApi(BaseTestCase):
-    def setUp(self):
-        super().setUp()
-        # Use the class method directly
-        self.auth_token, _ = self.get_token_and_loggedin_user()
-        if not self.auth_token:
-            raise Exception("Failed to get auth token")
+class TestNotesApi(NotesBaseTestCase):
 
     def test_notes(self):
         """ Test for add notes """
+        auth_token, user_loggedin_data = self.get_token_and_loggedin_user('joetester@se.com', 'test')
+        
+        # Create a Notes object to pass to the add_notes method
+        notes = Object()
+        notes.notes_id = '12345'
+        notes.notes_type_id = 'TEST'
+        notes.notes = 'Test Description'
+        
         with self.client:
-            response = self.client.post(
-                '/v/v1/notes',
-                json={
-                    'notes_id': '12345',
-                    'notes_type_id': 'TEST',
-                    'name': 'Test Note',
-                    'description': 'Test Description',
-                    'user_by': 'test@test.com'
-                },
-                headers={'Authorization': f'Bearer {self.auth_token}'}
-            )
-            data = json.loads(response.data)
+            # Use the base class method instead of direct POST
+            response = self.add_notes(auth_token, notes)
+            
+            data = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 201)
-            self.assertEqual(data['message'], 'Note successfully added.')
+            self.assertEqual(data['message'], 'Notes successfully added.')
             self.assertEqual(data['status'], 'success')
 
 

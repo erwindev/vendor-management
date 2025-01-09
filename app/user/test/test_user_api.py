@@ -5,7 +5,7 @@ from app.user.test.base import UserBaseTestCase
 from app.util.test.base import BaseTestCase
 
 
-class TestUserResgistration(BaseTestCase, UserBaseTestCase):
+class TestUserResgistration(UserBaseTestCase):
     def setUp(self):
         # Initialize base test cases and set up test environment
         BaseTestCase.setUp(self)
@@ -197,14 +197,8 @@ class TestUserResgistration(BaseTestCase, UserBaseTestCase):
             self.assertEqual(response.content_type, 'application/json')
 
             # Try login with new password
-            response = self.client.post(
-                '/u/v1/auth/login',
-                json={
-                    'email': 'joetester@se.com',
-                    'password': 'my-new-password'
-                },
-                content_type='application/json'
-            )
+            response = self.login_user('joetester@se.com', 'my-new-password')
+
             data = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 200)
             self.assertIn('authdata', data)

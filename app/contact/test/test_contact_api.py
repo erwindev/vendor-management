@@ -8,13 +8,13 @@ from app.util.test.base import BaseTestCase
 class TestContactApi(ContactBaseTestCase):
     def test_contact(self):
         """ Test for add contact """
-        auth_token, user_loggedin_data = BaseTestCase.get_token_and_loggedin_user('joetester@se.com', 'test')
+        auth_token, user_loggedin_data = self.get_token_and_loggedin_user('joetester@se.com', 'test')
         with self.client:
 
             contact_type_id = '1000' 
 
             # add vendor
-            response = BaseTestCase.add_vendor(auth_token, 'Vendor 1', 'www.vendor1.com')
+            response = self.add_vendor(auth_token, 'Vendor 1', 'www.vendor1.com')
             data = json.loads(response.data.decode())
             self.assertTrue(data['status'] == 'success')
             self.assertTrue(data['message'] == 'Vendor successfully added.')
@@ -22,7 +22,7 @@ class TestContactApi(ContactBaseTestCase):
             self.assertEqual(response.status_code, 201)            
 
             # get vendor
-            response = BaseTestCase.get_vendor(auth_token, 1)
+            response = self.get_vendor(auth_token, 1)
             data = json.loads(response.data.decode())
             self.assertTrue(data['vendor']['name'] == 'Vendor 1')
             self.assertTrue(response.content_type == 'application/json')
@@ -44,7 +44,7 @@ class TestContactApi(ContactBaseTestCase):
             temp_contact.country = "USA"
             temp_contact.status = "Active"
             
-            response = ContactBaseTestCase.add_contact(auth_token, temp_contact)
+            response = self.add_contact(auth_token, temp_contact)
             data = json.loads(response.data.decode())
             self.assertTrue(data['status'] == 'success')
             self.assertTrue(data['message'] == 'Contact successfully added.')
@@ -52,12 +52,12 @@ class TestContactApi(ContactBaseTestCase):
             self.assertEqual(response.status_code, 201)
 
             # get all contacts by vendor
-            response = ContactBaseTestCase.get_contacts(auth_token, vendor_id, contact_type_id)
+            response = self.get_contacts(auth_token, vendor_id, contact_type_id)
             data = json.loads(response.data.decode())
             contact_id = data["contactlist"][0]['id']
 
             # get contact
-            response = ContactBaseTestCase.get_contact(auth_token, contact_id)
+            response = self.get_contact(auth_token, contact_id)
             data = json.loads(response.data.decode())
             self.assertTrue(data['name'] == 'Erwin Alberto')
             self.assertTrue(response.content_type == 'application/json')
@@ -67,13 +67,13 @@ class TestContactApi(ContactBaseTestCase):
             another_temp_contact = Object()
             another_temp_contact.name = 'Julian Alberto'
             another_temp_contact.id = contact_id
-            response = ContactBaseTestCase.update_contact(auth_token, another_temp_contact)
+            response = self.update_contact(auth_token, another_temp_contact)
             data = json.loads(response.data.decode())
             self.assertTrue(response.content_type == 'application/json')
             self.assertEqual(response.status_code, 200)           
 
             # get updated contact
-            response = ContactBaseTestCase.get_contact(auth_token, contact_id)
+            response = self.get_contact(auth_token, contact_id)
             data = json.loads(response.data.decode())
             self.assertTrue(data['name'] == 'Julian Alberto')
             self.assertTrue(data['user_by'] == 'jalberto')

@@ -10,12 +10,14 @@ from app.user.models.user import User
 app = create_app()
 
 class BaseTestCase(TestCase):
-    """ Base Tests """
+    """ Base Tests - Contains core testing functionality and common helper methods """
 
     def create_app(self):      
+        # Returns the Flask application instance for testing
         return app
 
     def setUp(self):
+        # Set up test database and create a test user before each test
         db.create_all()
         user = User()
         user.firstname = 'joe'
@@ -26,16 +28,22 @@ class BaseTestCase(TestCase):
         db.session.commit()
 
     def tearDown(self):
+        # Clean up test database after each test
         db.session.remove()
         db.drop_all()
 
     ######################
-    #
-    # auth api
-    #
+    # Authentication API Methods
     ######################
-    @staticmethod
-    def login_user(email, password):
+    def login_user(self, email, password):
+        """
+        Simulates a user login request
+        Args:
+            email (str): User's email address
+            password (str): User's password
+        Returns:
+            Response: Flask test client response
+        """
         return app.test_client().post(
             '/u/v1/auth/login',
             data=json.dumps(dict(
@@ -46,6 +54,14 @@ class BaseTestCase(TestCase):
         )
 
     def get_token_and_loggedin_user(self, email='test@test.com', password='test123'):
+        """
+        Helper method to get authentication token and user data
+        Args:
+            email (str, optional): User's email. Defaults to 'test@test.com'
+            password (str, optional): User's password. Defaults to 'test123'
+        Returns:
+            tuple: (auth_token, user_data) or (None, None) if login fails
+        """
         with self.client as client:
             resp = client.post(
                 '/u/v1/auth/login',
@@ -64,8 +80,14 @@ class BaseTestCase(TestCase):
                 print(f"Response: {resp.data}")
                 return None, None
 
-    @staticmethod
-    def logged_out(auth_token):
+    def logged_out(self, auth_token):
+        """
+        Simulates a user logout request
+        Args:
+            auth_token (str): JWT authentication token
+        Returns:
+            Response: Flask test client response
+        """
         return app.test_client().post(
             '/u/v1/auth/logout',
             headers=dict(
@@ -75,12 +97,18 @@ class BaseTestCase(TestCase):
         )  
 
     ######################
-    #
-    # base vendor api
-    #
+    # Vendor API Methods
     ######################
-    @staticmethod
-    def add_vendor(auth_token, vendor_name, website_name):
+    def add_vendor(self, auth_token, vendor_name, website_name):
+        """
+        Creates a new vendor
+        Args:
+            auth_token (str): JWT authentication token
+            vendor_name (str): Name of the vendor
+            website_name (str): Vendor's website URL
+        Returns:
+            Response: Flask test client response
+        """
         return app.test_client().post(
             '/v/v1/vendor',
             headers=dict(
@@ -95,8 +123,15 @@ class BaseTestCase(TestCase):
             content_type='application/json'
         )
 
-    @staticmethod
-    def get_vendor(auth_token, vendor_id):
+    def get_vendor(self, auth_token, vendor_id):
+        """
+        Retrieves a specific vendor's information
+        Args:
+            auth_token (str): JWT authentication token
+            vendor_id (int): ID of the vendor to retrieve
+        Returns:
+            Response: Flask test client response
+        """
         return app.test_client().get(
             '/v/v1/vendor/{}'.format(vendor_id),
             headers=dict(
@@ -105,13 +140,19 @@ class BaseTestCase(TestCase):
             content_type='application/json'
         )    
 
-   ######################
-    #
-    # base product api
-    #
     ######################
-    @staticmethod
-    def add_product(auth_token, vendor_id, product):
+    # Product API Methods
+    ######################
+    def add_product(self, auth_token, vendor_id, product):
+        """
+        Creates a new product
+        Args:
+            auth_token (str): JWT authentication token
+            vendor_id (int): ID of the vendor who owns the product
+            product (Product): Product object containing product details
+        Returns:
+            Response: Flask test client response
+        """
         return app.test_client().post(
             '/p/v1/product',
             headers=dict(
@@ -126,8 +167,15 @@ class BaseTestCase(TestCase):
             content_type='application/json'
         )        
 
-    @staticmethod
-    def get_product(auth_token, product_id):
+    def get_product(self, auth_token, product_id):
+        """
+        Retrieves a specific product's information
+        Args:
+            auth_token (str): JWT authentication token
+            product_id (int): ID of the product to retrieve
+        Returns:
+            Response: Flask test client response
+        """
         return app.test_client().get(
             '/p/v1/product/{}'.format(product_id),
             headers=dict(
@@ -137,12 +185,17 @@ class BaseTestCase(TestCase):
         )    
 
     ######################
-    #
-    # contact api
-    #
+    # Contact API Methods
     ######################
-    @staticmethod
-    def add_contact(auth_token, contact):
+    def add_contact(self, auth_token, contact):
+        """
+        Creates a new contact
+        Args:
+            auth_token (str): JWT authentication token
+            contact (Contact): Contact object containing contact details
+        Returns:
+            Response: Flask test client response
+        """
         return app.test_client().post(
             '/c/v1/contact',
             headers=dict(
