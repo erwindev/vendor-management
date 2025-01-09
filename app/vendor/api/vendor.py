@@ -1,6 +1,6 @@
 import sys
 from flask import jsonify, request
-from flask_restplus import Api, Resource, Namespace, fields
+from flask_restx import Api, Resource, Namespace, fields
 from app.vendor.dao.vendor import VendorDao
 from app.vendor.models.vendor import Vendor as VendorModel
 from app.contact.dao.contact import ContactDao

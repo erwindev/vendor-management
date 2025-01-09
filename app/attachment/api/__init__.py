@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, request
-from flask_restplus import Api
+from flask_restx import Api, Namespace, Resource, fields
 from app.config import Config
 from app.attachment.api.attachment import api as attachment_ns
 

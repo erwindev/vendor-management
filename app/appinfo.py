@@ -1,11 +1,17 @@
-from flask import jsonify
-from flask_restplus import Api, Resource, Namespace
+from flask import Blueprint, jsonify, request
+from flask_restx import Api, Namespace, Resource, fields
 from app.config import Config
+#from app.order.api.order import api as order_ns
 
-class AppInfoDto:
-    api = Namespace('appinfo', description='appinfo related operations')
+# Create Blueprint first
+appinfo_bp = Blueprint('appinfo', __name__)
 
-api = AppInfoDto.api
+# Then create Api instance with the Blueprint
+api = Api(appinfo_bp, 
+    title='App Info API',
+    version='1.0',
+    description='App information endpoints'
+)
 
 @api.route("/health")
 class Health(Resource):

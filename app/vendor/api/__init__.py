@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, request
-from flask_restplus import Api
+from flask_restx import Api
 from app.config import Config
 from app.vendor.api.vendor import api as vendor_ns
 

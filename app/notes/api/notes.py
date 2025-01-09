@@ -1,6 +1,6 @@
 import sys
 from flask import jsonify, request
-from flask_restplus import Api, Resource, Namespace, fields
+from flask_restx import Namespace, Resource, fields
 from app.notes.dao.notes import NotesDao
 from app.notes.models.notes import Notes as NotesModel
 from app.util.decorator import token_required
@@ -113,7 +113,7 @@ class Notes(Resource):
         except Exception as e:
             return {
                 'status': 'error',
-                'message': 'Internal Server Error'
+                'message': str(e)
             }, 500
 
 

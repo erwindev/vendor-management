@@ -1,6 +1,6 @@
 import sys
 from flask import jsonify, request
-from flask_restplus import Api, Resource, Namespace, fields
+from flask_restx import Namespace, Resource, fields
 from app.contact.dao.contact import ContactDao
 from app.contact.models.contact import Contact as ContactModel
 from app.util.decorator import token_required

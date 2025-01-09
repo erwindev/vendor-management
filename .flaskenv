@@ -1,1 +1,3 @@
 FLASK_APP=vms.py
+FLASK_ENV=development
+FLASK_DEBUG=1

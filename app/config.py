@@ -21,10 +21,13 @@ class DevelopmentConfig(Config):
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     PRESERVE_CONTEXT_ON_EXCEPTION = False
     SQLALCHEMY_POOL_SIZE = None
+    SQLALCHEMY_ECHO = True
 
 
 class TestingConfig(Config):
     DEBUG = True
+    SERVER_NAME = 'localhost:5000'
+    APPLICATION_ROOT = '/api/v1'
     # SQLITE database
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or 'sqlite:///' + os.path.join(basedir, 'app-test.db')
     SQLALCHEMY_TRACK_MODIFICATIONS = False    

@@ -45,13 +45,24 @@ class BaseTestCase(TestCase):
             content_type='application/json'
         )
 
-    @staticmethod
-    def get_token_and_loggedin_user(email, password):
-        response = BaseTestCase.login_user(email, password)
-        data = json.loads(response.data.decode())
-        user_loggedin_data = json.loads(response.data.decode())                  
-        auth_token = user_loggedin_data['authdata']['token']     
-        return auth_token, user_loggedin_data['authdata']  
+    def get_token_and_loggedin_user(self, email='test@test.com', password='test123'):
+        with self.client as client:
+            resp = client.post(
+                '/u/v1/auth/login',
+                json={
+                    'email': email,
+                    'password': password
+                },
+                mimetype='application/json'
+            )
+            if resp.status_code == 200:
+                response_data = json.loads(resp.data)
+                auth_token = response_data['authdata']['token']
+                return auth_token, response_data
+            else:
+                print(f"Login failed with status code: {resp.status_code}")
+                print(f"Response: {resp.data}")
+                return None, None
 
     @staticmethod
     def logged_out(auth_token):
