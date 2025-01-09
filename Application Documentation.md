@@ -19,6 +19,7 @@ This is a comprehensive Vendor Management System built with Flask, providing RES
 - **Contacts**: Contact information for vendors/products
 - **Notes**: Text annotations for vendors/products
 - **Attachments**: Files/links associated with vendors/contacts
+- **Users**: System users with role-based access control (admin/regular users)
 
 ### 3. API Structure
 Each module follows RESTful patterns with:
