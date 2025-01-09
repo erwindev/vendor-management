@@ -1,5 +1,5 @@
-from flask import Blueprint, jsonify, request
-from flask_restplus import Api
+from flask import Blueprint
+from flask_restx import Api
 from app.config import Config
 from app.user.api.user import api as user_ns
 from app.user.api.auth import api as auth_ns
@@ -16,3 +16,15 @@ user_api.add_namespace(user_ns, path="/user")
 
 from app.appinfo import api as appinfo_ns
 user_api.add_namespace(appinfo_ns, path="/app")
+
+authorizations = {
+    'Bearer Auth': {
+        'type': 'apiKey',
+        'in': 'header',
+        'name': 'Authorization',
+        'description': "Type in the *'Value'* input box below: **'Bearer &lt;JWT&gt;'**, where JWT is the token"
+    },
+}
+
+user_api.authorizations = authorizations
+user_api.security = 'Bearer Auth'

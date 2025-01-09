@@ -1,14 +1,41 @@
 import sys
 from flask import jsonify, request
-from flask_restplus import Api, Resource, Namespace, fields
+from flask_restx import Api, Resource, Namespace, fields
 from app.user.dao.user import UserDao
 from app.user.models.user import User as UserModel
 from app.util.exception import ApplicationException
 from app.util.decorator import token_required
+from typing import Dict, Any
+from http import HTTPStatus
+
+
+def create_response(status: str, message: str, data: Dict = None, status_code: int = HTTPStatus.OK) -> tuple:
+    """
+    Helper function to create standardized API responses
+    
+    Args:
+        status (str): Status of the response ('success' or 'fail')
+        message (str): Message to be included in response
+        data (Dict, optional): Additional data to include in response
+        status_code (int, optional): HTTP status code, defaults to 200 OK
+    
+    Returns:
+        tuple: Response dictionary and status code
+    """
+    response = {
+        'status': status,
+        'message': message
+    }
+    if data:
+        response.update(data)
+    return response, status_code
 
 
 class UserDto:
+    """Data Transfer Object for User API models"""
     api = Namespace('user', description='user related operations')
+    
+    # Model for user data validation and serialization
     user = api.model('user', {
         'id': fields.String(),
         'firstname': fields.String(required=True),
@@ -17,7 +44,7 @@ class UserDto:
         'password': fields.String(required=True),
         'create_date': fields.Date(),
         'last_login_date': fields.Date(),
-        'updated_date' :fields.Date(),
+        'updated_date': fields.Date(),
         'status': fields.String()
     })         
     changepassword = api.model('changepassword', {
@@ -28,6 +55,7 @@ class UserDto:
     message = api.model('message', {
         'status': fields.String(required=True),
         'message': fields.String(required=True),
+        'id': fields.String(required=True)
     })    
     result =  api.model('result', {
         'user': fields.Nested(user),
@@ -44,79 +72,89 @@ api = UserDto.api
 @api.route('')
 @api.expect(api.parser().add_argument('Authorization', location='headers'))
 class UserList(Resource):
-
     @api.doc('list_of_registered_users')
-    @api.marshal_with(UserDto.resultlist, code=200, description='Successful')
+    @api.marshal_with(UserDto.resultlist)
     @token_required
     def get(self):
-        """Get all users"""
+        """
+        Retrieve all users from the database
+        
+        Returns:
+            dict: Contains list of users and result metadata
+            int: HTTP status code
+        
+        Raises:
+            ApplicationException: If there's an error retrieving users
+        """
         try:
+            # Fetch all users from database
             users = UserDao.get_all()
-            user_ret_list = []
-            for user in users:
-                user.password = None
-                user_ret_list.append(user.to_json())
-
-            result = {
-                'status': 'success',
-                'message': 'User list returned.'
-            }             
-            response_object = {
+            # Convert user objects to JSON format
+            user_ret_list = [user.to_json() for user in users]
+            
+            # Structure the response according to API specification
+            response_data = {
                 'userlist': user_ret_list,
-                'result': result
-            }                
-            return response_object, 200
-        except Exception as e:
-            result = {
-                'status': 'error',
-                'message': 'Internal Server Error'
-            }             
-            response_object = {
-                'userlist': None,
-                'result': result
+                'result': {
+                    'status': 'success',
+                    'message': 'User list returned.'
+                }
             }
-            return response_object, 500    
+            return response_data, HTTPStatus.OK
+            
+        except Exception as e:
+            raise ApplicationException(str(e))
 
-    @api.marshal_with(UserDto.message, code=201, description='User successfully created.')
+    @api.marshal_with(UserDto.message)
     @api.response(code=409, description='User cannot be created.') 
     @api.doc('create a new user')
     @api.expect(UserDto.user, validate=True)
     def post(self):
-        """Insert a user"""
+        """
+        Create a new user
+        
+        Expected payload:
+        {
+            "firstname": "string",
+            "lastname": "string",
+            "email": "string",
+            "password": "string"
+        }
+        
+        Returns:
+            tuple: Response containing status and user ID if successful
+        
+        Raises:
+            ApplicationException: If user creation fails
+        """
         try:
             user_data = request.json
+            
+            # Check if user with email already exists
+            if UserDao.get_by_email(user_data['email']):
+                return create_response(
+                    'fail',
+                    'User already exists.',
+                    status_code=HTTPStatus.CONFLICT
+                )
 
-            if UserDao.get_by_email(user_data['email']) is not None:
-                response_object = {
-                    'status': 'fail',
-                    'message': 'User cannot be created.'
-                }
-                return response_object, 409
-
-            if UserDao.get_by_email(user_data['email']) is not None:
-                response_object = {
-                    'status': 'fail',
-                    'message': 'User cannot be created.'
-                }
-                return response_object, 409
-
-            new_user = UserModel()
-            new_user.firstname = user_data['firstname']
-            new_user.lastname = user_data['lastname']
-            new_user.email = user_data['email']
+            # Create new user instance
+            new_user = UserModel(
+                firstname=user_data['firstname'],
+                lastname=user_data['lastname'],
+                email=user_data['email']
+            )
             new_user.set_password(user_data['password'])
             new_user = UserDao.save_user(new_user)
-            response_object = {
-                'status': 'success',
-                'message': 'User successfully created.'
-            }
-            return response_object, 201
+            
+            return create_response(
+                'success',
+                'User successfully created.',
+                {'id': new_user.id},
+                HTTPStatus.CREATED
+            )
         except Exception as e:
-            response_object = {
-                'status': 'error',
-                'message': 'Internal Server Error'
-            }
-            return response_object, 500            
+            raise ApplicationException(str(e))
 
 
     @api.doc('update a user')
@@ -200,37 +238,45 @@ class User(Resource):
 @api.route("/changepassword")
 @api.expect(api.parser().add_argument('Authorization', location='headers'))
 class UserChangePassword(Resource):
-
-    @api.doc('change passwqord')
+    @api.doc('change password')
     @api.expect(UserDto.changepassword, validate=True)
-    @api.marshal_with(UserDto.message, code=201, description='Password changed.')
+    @api.marshal_with(UserDto.message)
     @api.response(code=401, description='Password cannot be changed.')
     def post(self):
-        """Change password"""
+        """
+        Change user password
+        
+        Expected payload:
+        {
+            "id": "string",
+            "password": "string",
+            "newpassword": "string"
+        }
+        
+        Returns:
+            tuple: Response containing status and message
+        
+        Raises:
+            ApplicationException: If password change fails
+        """
         try:
             user_data = request.json
-
+            
+            # Verify user exists and current password is correct
             user = UserDao.get_by_id(user_data['id'])
+            if not user or not user.check_password(user_data['password']):
+                return create_response(
+                    'fail',
+                    'Password cannot be changed.',
+                    status_code=HTTPStatus.UNAUTHORIZED
+                )
 
-            if user is not None and user.check_password(user_data['password']):
-                new_user = UserDao.change_password(user.id, user_data['newpassword'])
-                response_object = {
-                    'status': 'success',
-                    'message': 'Password changed.'
-                }
-            else:
-                response_object = {
-                    'status': 'fail',
-                    'message': 'Password cannot be changed.'
-                }                
-                return response_object, 401                
-
-            return response_object, 200
+            # Update password
+            UserDao.change_password(user.id, user_data['newpassword'])
+            return create_response('success', 'Password changed.')
+            
         except Exception as e:
-            return {
-                'status': 'error',
-                'message': 'Internal Server Error'
-            }, 500    
+            raise ApplicationException(str(e))
 
 
 @api.errorhandler(Exception)

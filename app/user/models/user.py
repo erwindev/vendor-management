@@ -24,14 +24,16 @@ class User(db.Model):
         return check_password_hash(self.password_hash, password)
 
     def to_json(self):
-        json_result = {
-            'id': self.id,
+        return {
+            'id': str(self.id),
             'firstname': self.firstname,
             'lastname': self.lastname,
             'email': self.email,
-            'create_date': self.create_date
+            'create_date': self.create_date.isoformat() if self.create_date else None,
+            'last_login_date': self.last_login_date.isoformat() if self.last_login_date else None,
+            'updated_date': self.updated_date.isoformat() if self.updated_date else None,
+            'status': self.status
         }
-        return json_result        
 
 
 class BlackListToken(db.Model):

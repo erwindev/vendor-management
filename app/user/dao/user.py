@@ -1,81 +1,93 @@
 import datetime
+from typing import Optional, List
+from sqlalchemy.exc import SQLAlchemyError
 from app import db
 from app.user.models.user import User, BlackListToken
 
 
 class UserDao:
     @staticmethod
-    def save_user(user):
-        db.session.add(user)
-        db.session.commit()
-        db.session.refresh(user)
-        return user
+    def _commit_and_refresh(instance) -> Optional[object]:
+        """Helper method to handle common commit and refresh operations"""
+        try:
+            db.session.commit()
+            db.session.refresh(instance)
+            return instance
+        except SQLAlchemyError:
+            db.session.rollback()
+            raise
 
     @staticmethod
-    def update_user(user):
+    def save_user(user: User) -> Optional[User]:
+        try:
+            db.session.add(user)
+            return UserDao._commit_and_refresh(user)
+        except SQLAlchemyError:
+            db.session.rollback()
+            raise
+
+    @staticmethod
+    def update_user(user: User) -> Optional[User]:
         existing_user = UserDao.get_by_id(user.id)
-        if user.firstname:
-            existing_user.fistname = user.firstname
+        if not existing_user:
+            return None
+
+        # Update fields using dictionary comprehension
+        update_fields = {
+            'firstname': user.firstname,
+            'lastname': user.lastname,
+            'password_hash': user.password_hash,
+            'status': user.status
+        }
         
-        if user.lastname:
-            existing_user.lastname = user.lastname
-
-        if user.password_hash:
-            existing_user.password_hash = user.password_hash            
-
-        if user.status:
-            existing_user.status = user.status
-            
+        # Only update non-None values
+        for field, value in update_fields.items():
+            if value is not None:
+                setattr(existing_user, field, value)
+        
         existing_user.updated_date = datetime.datetime.now()
-        db.session.commit()
-        db.session.refresh(existing_user)
-        return existing_user   
+        return UserDao._commit_and_refresh(existing_user)
 
     @staticmethod
-    def change_password(id, new_password):
+    def change_password(id: int, new_password: str) -> Optional[User]:
         user = UserDao.get_by_id(id)
+        if not user:
+            return None
+            
         user.set_password(new_password)
         user.updated_date = datetime.datetime.now()
-        db.session.commit()
-        db.session.refresh(user)
-        return user
+        return UserDao._commit_and_refresh(user)
 
     @staticmethod
-    def set_last_login_date(id):
-        existing_user = User.query.filter_by(id=id).first()
-        existing_user.last_login_date = datetime.datetime.now()
-        db.session.commit()
-        db.session.refresh(existing_user)
-        return existing_user   
+    def set_last_login_date(id: int) -> Optional[User]:
+        user = UserDao.get_by_id(id)
+        if not user:
+            return None
+            
+        user.last_login_date = datetime.datetime.now()
+        return UserDao._commit_and_refresh(user)
 
     @staticmethod
-    def get_by_id(id):
+    def get_by_id(id: int) -> Optional[User]:
         return User.query.filter_by(id=id).first()
 
     @staticmethod
-    def get_by_username(username):
-        return User.query.filter_by(username=username).first()
+    def get_by_email(email: str) -> Optional[User]:
+        return User.query.filter_by(email=email).first()
 
     @staticmethod
-    def get_by_email(email):
-        return User.query.filter_by(email=email).first()        
-
-    @staticmethod
-    def get_all():
+    def get_all() -> List[User]:
         return User.query.all()
-
-    @staticmethod
-    def get_by_email(email_data):
-        return User.query.filter_by(email=email_data).first()
 
 
 class BlackListTokenDao:
-
     @staticmethod
-    def save_token(token):
+    def save_token(token: str) -> Optional[BlackListToken]:
         blacklist_token = BlackListToken(token=token)
-        db.session.add(blacklist_token)
-        db.session.commit()
-        db.session.refresh(blacklist_token)
-        return blacklist_token
+        try:
+            db.session.add(blacklist_token)
+            return UserDao._commit_and_refresh(blacklist_token)
+        except SQLAlchemyError:
+            db.session.rollback()
+            raise
         

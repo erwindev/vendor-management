@@ -1,17 +1,23 @@
 from flask import jsonify, request
-from flask_restplus import Api, Resource, Namespace, fields
+from flask_restx import Namespace, Resource, fields
 from app.user.dao.user import UserDao, BlackListTokenDao
 from app.user.models.user import User, BlackListToken
 from app.util.exception import ApplicationException
 from app.util import TokenUtil
 
 
+# Data Transfer Object for authentication-related API models
 class AuthDto:
+    # Create namespace for authentication operations
     api = Namespace('auth', description='authentication related operations')
+    
+    # Model for login request data validation
     logindata = api.model('logindata', {
         'email': fields.String(required=True, description='The email address'),
         'password': fields.String(required=True, description='The user password '),
     })
+    
+    # Model for authentication response data
     authdata = api.model('authdata', {
         'firstname': fields.String(required=True, description='First name'),
         'lastname': fields.String(required=True, description='Last name'),
@@ -23,121 +29,125 @@ class AuthDto:
         'id': fields.String(required=True, description='User id'),
         'token': fields.String(required=True, description='Auth token'),
     })
+    
+    # Model for generic message responses
     message = api.model('message', {
         'status': fields.String(required=True),
         'message': fields.String(required=True),
     })
+    
+    # Combined model for full authentication response
     result =  api.model('result', {
         'authdata': fields.Nested(authdata),
         'result': fields.Nested(message)
     })
 
+# Create API instance from AuthDto
 api = AuthDto.api
-
 
 @api.route('/login')
 class UserLogin(Resource):
-    """
-        User Login Resource
-    """
+    """User Login Resource - Handles user authentication"""
+    
     @api.doc('user login')
     @api.expect(AuthDto.logindata, validate=True)
     @api.marshal_with(AuthDto.result, code=200, description='Successful user login.')
     @api.response(code=401, description='Email or password does not match.')
     def post(self):
-        # get the post data
-        post_data = request.json
         try:
-            user = UserDao.get_by_email(post_data['email'])
-            if user and user.check_password(post_data['password']):
-                auth_token = TokenUtil.encode_token(user.id)
-                if auth_token:
-                    authdata = {
-                        'firstname': user.firstname,
-                        'lastname': user.lastname,
-                        'email': user.email,
-                        'is_admin': 0,
-                        'id': user.id,
-                        'create_date': user.create_date,
-                        'updated_date': user.updated_date,
-                        'last_login_date': user.last_login_date,
-                        'token': auth_token.decode()
-                    }
-                    result = {
-                        'status': 'success',
-                        'message': 'Successful user login.'
-                    } 
-                    response_object = {
-                        'authdata': authdata,
-                        'result': result,
-                    }                  
-                    UserDao.set_last_login_date(user.id)
-                    return response_object, 200
-            else:
-                result = {
-                    'status': 'fail',
-                    'message': 'Email or password does not match.'
-                }
-                response_object = {
+            # Extract login credentials from request
+            post_data = request.json
+            # Attempt to retrieve user by email
+            user = UserDao.get_by_email(email=post_data.get('email'))
+            
+            # Validate user credentials
+            if not user or not user.check_password(post_data.get('password')):
+                return {
                     'authdata': None,
-                    'result': result
+                    'result': {
+                        'status': 'fail',
+                        'message': 'Email or password does not match.'
+                    }
+                }, 401
+
+            # Generate authentication token
+            auth_token = TokenUtil.encode_token(user.id)
+            if not auth_token:
+                raise ApplicationException("Failed to generate auth token")
+
+            # Update user's last login timestamp
+            UserDao.set_last_login_date(user.id)
+            
+            # Return successful login response with user data and token
+            return {
+                'authdata': {
+                    'firstname': user.firstname,
+                    'lastname': user.lastname,
+                    'email': user.email,
+                    'is_admin': 0,
+                    'id': user.id,
+                    'create_date': user.create_date,
+                    'updated_date': user.updated_date,
+                    'last_login_date': user.last_login_date,
+                    'token': auth_token
+                },
+                'result': {
+                    'status': 'success',
+                    'message': 'Successful user login.'
                 }
-                return response_object, 401   
-        except ApplicationException as e:
-            result = {
-                'status': 'fail',
-                'message': 'Internal Server Error'
-            }
-            response_object = {
+            }, 200
+
+        except Exception as e:
+            # Log any unexpected errors and return generic error response
+            print(f"Exception occurred: {str(e)}")
+            return {
                 'authdata': None,
-                'result': result
-            }
-            return response_object, 500       
+                'result': {
+                    'status': 'fail',
+                    'message': 'Internal Server Error'
+                }
+            }, 500
 
 
 @api.route('/logout')
 @api.header('Authorization: Bearer', 'JWT TOKEN', required=True)
 class LogoutApi(Resource):     
+    """Logout Resource - Handles user logout and token invalidation"""
 
     @api.marshal_with(AuthDto.message, code=200, description='Successfully logged out.')    
     @api.response(code=403, description='Provide a valid auth token.')
     @api.response(code=401, description='Token is blacklisted.')    
     def post(self):
+        # Extract token from Authorization header
         auth_header = request.headers.get('Authorization')
-
-        if auth_header:
-            auth_token = auth_header.split(" ")[1]
-        else:
-            auth_token = ''
+        auth_token = auth_header.split(" ")[1] if auth_header else ''
         
-        if auth_token:
-            is_blacklisted_token = BlackListToken.check(auth_token)
-            if is_blacklisted_token:
-                response_object = {
-                    'status': 'fail',
-                    'message': 'Token is blacklisted.'
-                }                
-                return response_object, 403
-            
-            resp = TokenUtil.decode_token(auth_token)
-
-            if not isinstance(resp, str):
-                BlackListTokenDao.save_token(auth_token)
-                response_object = {
-                    'status': 'success',
-                    'message': 'Successfully logged out.'
-                }
-                return response_object, 200
-            else:
-                response_object = {
-                    'status': 'fail',
-                    'message': resp
-                }
-                return response_object, 401
-        else:
-            response_object = {
+        # Validate token presence
+        if not auth_token:
+            return {
                 'status': 'fail',
                 'message': 'Provide a valid auth token.'
-            }
-            return response_object, 403            
+            }, 403
+
+        # Check if token is already blacklisted
+        if BlackListToken.check(auth_token):
+            return {
+                'status': 'fail',
+                'message': 'Token is blacklisted.'
+            }, 403
+        
+        # Validate token authenticity
+        resp = TokenUtil.decode_token(auth_token)
+        if isinstance(resp, str):
+            return {
+                'status': 'fail',
+                'message': resp
+            }, 401
+
+        # Blacklist the token and return success response
+        BlackListTokenDao.save_token(auth_token)
+        return {
+            'status': 'success',
+            'message': 'Successfully logged out.'
+        }, 200
                 
