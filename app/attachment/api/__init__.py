@@ -14,3 +14,15 @@ attachment_api.add_namespace(attachment_ns, path="/attachment")
 
 from app.appinfo import api as appinfo_ns
 attachment_api.add_namespace(appinfo_ns, path="/app")
+
+authorizations = {
+    'Bearer Auth': {
+        'type': 'apiKey',
+        'in': 'header',
+        'name': 'Authorization',
+        'description': "Type in the *'Value'* input box below: **'Bearer &lt;JWT&gt;'**, where JWT is the token"
+    },
+}
+
+attachment_api.authorizations = authorizations
+attachment_api.security = 'Bearer Auth'

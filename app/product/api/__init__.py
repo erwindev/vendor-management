@@ -14,3 +14,15 @@ product_api.add_namespace(product_ns, path="/product")
 
 from app.appinfo import api as appinfo_ns
 product_api.add_namespace(appinfo_ns, path="/app")
+
+authorizations = {
+    'Bearer Auth': {
+        'type': 'apiKey',
+        'in': 'header',
+        'name': 'Authorization',
+        'description': "Type in the *'Value'* input box below: **'Bearer &lt;JWT&gt;'**, where JWT is the token"
+    },
+}
+
+product_api.authorizations = authorizations
+product_api.security = 'Bearer Auth'

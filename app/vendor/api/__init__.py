@@ -14,3 +14,15 @@ vendor_api.add_namespace(vendor_ns, path="/vendor")
 
 from app.appinfo import api as appinfo_ns
 vendor_api.add_namespace(appinfo_ns, path="/app")
+
+authorizations = {
+    'Bearer Auth': {
+        'type': 'apiKey',
+        'in': 'header',
+        'name': 'Authorization',
+        'description': "Type in the *'Value'* input box below: **'Bearer &lt;JWT&gt;'**, where JWT is the token"
+    },
+}
+
+vendor_api.authorizations = authorizations
+vendor_api.security = 'Bearer Auth'
