@@ -1,7 +1,6 @@
-from flask import Blueprint, jsonify, request
-from flask_restx import Api, Namespace, Resource, fields
+from flask import Blueprint, jsonify
+from flask_restx import Api, Resource
 from app.config import Config
-#from app.order.api.order import api as order_ns
 
 # Create Blueprint first
 appinfo_bp = Blueprint('appinfo', __name__)

@@ -1,8 +1,6 @@
 import datetime
 from app import db
 from app.product.models.product import Product
-from app.vendor.models.vendor import Vendor
-
 
 class ProductDao:
 

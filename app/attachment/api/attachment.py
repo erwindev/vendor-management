@@ -1,8 +1,5 @@
-import sys
-from flask import jsonify, request
 from flask_restx import Api, Resource, Namespace, fields
 from app.attachment.dao.attachment import AttachmentDao
-from app.attachment.models.attachment import Attachment as AttachmentModel
 from app.util.decorator import token_required
 
 

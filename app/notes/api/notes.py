@@ -1,8 +1,5 @@
-import sys
-from flask import jsonify, request
 from flask_restx import Namespace, Resource, fields
 from app.notes.dao.notes import NotesDao
-from app.notes.models.notes import Notes as NotesModel
 from app.util.decorator import token_required
 
 
