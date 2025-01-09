@@ -25,7 +25,7 @@ class TokenUtil:
                 Config.SECRET_KEY,
                 algorithm='HS256'
             )
-        except ApplicationException as e:
+        except Exception as e:
             return e 
 
 
