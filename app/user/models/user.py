@@ -15,7 +15,7 @@ class User(db.Model):
     status = db.Column(db.String(10))
 
     def __repr__(self):
-        return '<User {}>'.format(self.username)
+        return '<User {}>'.format(self.email)
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
