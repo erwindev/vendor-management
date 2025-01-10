@@ -1,5 +1,4 @@
 import json
-from vms import app
 from app.util.test.base import BaseTestCase
 
 class ProductBaseTestCase(BaseTestCase):

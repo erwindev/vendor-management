@@ -1,8 +1,6 @@
 import unittest
 import json
-import datetime
 from app.attachment.test.base import AttachmentBaseTestCase
-
 
 class TestAttachmentApi(AttachmentBaseTestCase):
     def test_attachment(self):

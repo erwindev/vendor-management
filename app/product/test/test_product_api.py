@@ -1,8 +1,6 @@
 import unittest
 import json
-import datetime
 from app.product.test.base import ProductBaseTestCase
-from app.util.test.base import BaseTestCase
 
 class TestProductApi(ProductBaseTestCase):
     def test_add_product(self):

@@ -1,8 +1,6 @@
 import unittest
 import json
-import datetime
 from app.notes.test.base import NotesBaseTestCase
-
 
 class TestNotesApi(NotesBaseTestCase):
 

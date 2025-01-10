@@ -1,9 +1,7 @@
 import unittest
 import json
-from app import db, app
 from app.user.test.base import UserBaseTestCase
 from app.util.test.base import BaseTestCase
-
 
 class TestUserResgistration(UserBaseTestCase):
     def setUp(self):

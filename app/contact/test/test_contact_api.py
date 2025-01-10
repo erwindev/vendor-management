@@ -1,9 +1,7 @@
 import unittest
 import json
-import datetime
 from app.contact.test.base import ContactBaseTestCase
 from app.util.test.base import BaseTestCase
-
 
 class TestContactApi(ContactBaseTestCase):
     def test_contact(self):
