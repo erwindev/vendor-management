@@ -66,8 +66,6 @@ class BaseTestCase(TestCase):
                 },
                 mimetype='application/json'
             )
-            print("------resp-----")
-            print(resp)
             if resp.status_code == 200:
                 response_data = json.loads(resp.data)
                 auth_token = response_data['authdata']['token']
