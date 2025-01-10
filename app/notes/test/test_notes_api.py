@@ -1,12 +1,13 @@
 import unittest
 import json
 from app.notes.test.base import NotesBaseTestCase
+from app.util.constants import TEST_USER_EMAIL, TEST_USER_PASSWORD
 
 class TestNotesApi(NotesBaseTestCase):
 
     def test_notes(self):
         """ Test for add notes """
-        auth_token, user_loggedin_data = self.get_token_and_loggedin_user('joetester@se.com', 'test')
+        auth_token, user_loggedin_data = self.get_token_and_loggedin_user(TEST_USER_EMAIL, TEST_USER_PASSWORD)
         
         # Create a Notes object to pass to the add_notes method
         notes = Object()

@@ -1,12 +1,12 @@
 import unittest
 import json
 from app.contact.test.base import ContactBaseTestCase
-from app.util.test.base import BaseTestCase
+from app.util.constants import TEST_USER_EMAIL, TEST_USER_PASSWORD
 
 class TestContactApi(ContactBaseTestCase):
     def test_contact(self):
         """ Test for add contact """
-        auth_token, user_loggedin_data = self.get_token_and_loggedin_user('joetester@se.com', 'test')
+        auth_token, user_loggedin_data = self.get_token_and_loggedin_user(TEST_USER_EMAIL, TEST_USER_PASSWORD)
         with self.client:
 
             contact_type_id = '1000' 

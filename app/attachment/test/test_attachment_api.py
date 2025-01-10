@@ -1,11 +1,13 @@
 import unittest
 import json
 from app.attachment.test.base import AttachmentBaseTestCase
+from app.util.constants import TEST_USER_EMAIL, TEST_USER_PASSWORD
+
 
 class TestAttachmentApi(AttachmentBaseTestCase):
     def test_attachment(self):
         """ Test for add attachment """
-        auth_token, user_loggedin_data = self.get_token_and_loggedin_user('joetester@se.com', 'test')
+        auth_token, user_loggedin_data = self.get_token_and_loggedin_user(TEST_USER_EMAIL, TEST_USER_PASSWORD)
         with self.client:
 
             attachment_type_id = '1000' 

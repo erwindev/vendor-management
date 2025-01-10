@@ -4,6 +4,7 @@ import logging
 
 from app import db, app
 from app.user.models.user import User
+from app.util.constants import TEST_USER_EMAIL, TEST_USER_PASSWORD
 
 class BaseTestCase(TestCase):
     """ Base Tests - Contains core testing functionality and common helper methods """    
@@ -19,8 +20,8 @@ class BaseTestCase(TestCase):
         user = User()
         user.firstname = 'joe'
         user.lastname = 'tester'
-        user.email = 'joetester@se.com'
-        user.set_password('test')
+        user.email = TEST_USER_EMAIL
+        user.set_password(TEST_USER_PASSWORD)
         db.session.add(user)
         db.session.commit()
 
@@ -50,12 +51,12 @@ class BaseTestCase(TestCase):
             content_type='application/json'
         )
 
-    def get_token_and_loggedin_user(self, email='test@test.com', password='test123'):
+    def get_token_and_loggedin_user(self, email=TEST_USER_EMAIL, password=TEST_USER_PASSWORD):
         """
         Helper method to get authentication token and user data
         Args:
-            email (str, optional): User's email. Defaults to 'test@test.com'
-            password (str, optional): User's password. Defaults to 'test123'
+            email (str, optional): User's email. Defaults to 'joetester@se.com'
+            password (str, optional): User's password. Defaults to 'test'
         Returns:
             tuple: (auth_token, user_data) or (None, None) if login fails
         """

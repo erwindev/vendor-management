@@ -1,11 +1,12 @@
 import unittest
 import json
 from app.product.test.base import ProductBaseTestCase
+from app.util.constants import TEST_USER_EMAIL, TEST_USER_PASSWORD
 
 class TestProductApi(ProductBaseTestCase):
     def test_add_product(self):
         """ Test for add product """
-        auth_token, user_loggedin_data = self.get_token_and_loggedin_user('joetester@se.com', 'test')
+        auth_token, user_loggedin_data = self.get_token_and_loggedin_user(TEST_USER_EMAIL, TEST_USER_PASSWORD)
         with self.client:
             # add vendor
             response = self.add_vendor(auth_token, 'Vendor 1', 'www.vendor1.com')
@@ -73,7 +74,7 @@ class TestProductApi(ProductBaseTestCase):
 
     def test_update_product(self):
         """ Test for update product """
-        auth_token, user_loggedin_data = self.get_token_and_loggedin_user('joetester@se.com', 'test')
+        auth_token, user_loggedin_data = self.get_token_and_loggedin_user(TEST_USER_EMAIL, TEST_USER_PASSWORD)
         with self.client:        
             # add vendor
             response = self.add_vendor(auth_token, 'Vendor 1', 'www.vendor1.com')

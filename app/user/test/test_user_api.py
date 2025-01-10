@@ -3,12 +3,13 @@ import json
 from app.user.test.base import UserBaseTestCase
 from app.util.test.base import BaseTestCase
 import logging
+from app.util.constants import TEST_USER_EMAIL, TEST_USER_PASSWORD
 
 class TestUserResgistration(UserBaseTestCase):
 
     def test_registration(self):
         """ Test for user registration """
-        auth_token, user_loggedin_data = self.get_token_and_loggedin_user('joetester@se.com', 'test')
+        auth_token, user_loggedin_data = self.get_token_and_loggedin_user(TEST_USER_EMAIL, TEST_USER_PASSWORD)
         with self.client:
             try:
                 response = self.register_user(auth_token)
@@ -30,7 +31,7 @@ class TestUserResgistration(UserBaseTestCase):
         Test registration with duplicate user credentials
         Expected behavior: Should return 409 Conflict status code
         """
-        auth_token, user_loggedin_data = self.get_token_and_loggedin_user('joetester@se.com', 'test')
+        auth_token, user_loggedin_data = self.get_token_and_loggedin_user(TEST_USER_EMAIL, TEST_USER_PASSWORD)
         with self.client:
             try:
                 # First registration attempt should succeed
@@ -49,7 +50,7 @@ class TestUserResgistration(UserBaseTestCase):
 
     def test_get_user(self):
         """Test for getting user"""
-        auth_token, user_loggedin_data = self.get_token_and_loggedin_user('joetester@se.com', 'test')
+        auth_token, user_loggedin_data = self.get_token_and_loggedin_user(TEST_USER_EMAIL, TEST_USER_PASSWORD)
         with self.client:
             try:
                 # First register a user
@@ -79,7 +80,7 @@ class TestUserResgistration(UserBaseTestCase):
 
     def test_get_all_user(self):
         """ Test for getting all users """
-        auth_token, user_loggedin_data = self.get_token_and_loggedin_user('joetester@se.com', 'test')
+        auth_token, user_loggedin_data = self.get_token_and_loggedin_user(TEST_USER_EMAIL, TEST_USER_PASSWORD)
         with self.client:
             response = self.get_all_user(auth_token)
             data = json.loads(response.data.decode())
@@ -115,7 +116,7 @@ class TestUserResgistration(UserBaseTestCase):
         2. Update user information
         3. Verify the updates were successful
         """
-        auth_token, user_loggedin_data = self.get_token_and_loggedin_user('joetester@se.com', 'test')
+        auth_token, user_loggedin_data = self.get_token_and_loggedin_user(TEST_USER_EMAIL, TEST_USER_PASSWORD)
         user_id = user_loggedin_data['authdata']['id']
         with self.client:
             # Fetch initial user details
@@ -125,7 +126,7 @@ class TestUserResgistration(UserBaseTestCase):
             self.assertEqual(response.content_type, 'application/json')
 
             # Verify initial state before updates
-            self.assertEqual(data['user']['email'], 'joetester@se.com')
+            self.assertEqual(data['user']['email'], TEST_USER_EMAIL)
             self.assertEqual(data['user']['firstname'], 'joe')
             self.assertEqual(data['user']['lastname'], 'tester')
 
@@ -153,7 +154,7 @@ class TestUserResgistration(UserBaseTestCase):
     def test_changepassword(self):                         
         """ Test for changing password """
         try:
-            auth_token, user_loggedin_data = self.get_token_and_loggedin_user('joetester@se.com', 'test')
+            auth_token, user_loggedin_data = self.get_token_and_loggedin_user(TEST_USER_EMAIL, TEST_USER_PASSWORD)
             user_id = user_loggedin_data['authdata']['id']
             # Get user details using self.auth_token and self.user_id from setUp
             response = self.get_user(auth_token, user_id)
@@ -162,7 +163,7 @@ class TestUserResgistration(UserBaseTestCase):
             self.assertEqual(response.content_type, 'application/json')
             
             # Verify initial user data
-            self.assertEqual(data['user']['email'], 'joetester@se.com')
+            self.assertEqual(data['user']['email'], TEST_USER_EMAIL)
             self.assertEqual(data['user']['firstname'], 'joe')
             self.assertEqual(data['user']['lastname'], 'tester')
 
@@ -170,7 +171,7 @@ class TestUserResgistration(UserBaseTestCase):
             response = self.change_password(
                 auth_token, 
                 user_id, 
-                'test', 
+                TEST_USER_PASSWORD,
                 'my-new-password'
             )
             data = json.loads(response.data.decode())
@@ -178,13 +179,13 @@ class TestUserResgistration(UserBaseTestCase):
             self.assertEqual(response.content_type, 'application/json')
 
             # Try login with new password
-            response = self.login_user('joetester@se.com', 'my-new-password')
+            response = self.login_user(TEST_USER_EMAIL, 'my-new-password')
 
             data = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 200)
             self.assertIn('authdata', data)
             self.assertIn('token', data['authdata'])
-            self.assertEqual(data['authdata']['email'], 'joetester@se.com')
+            self.assertEqual(data['authdata']['email'], TEST_USER_EMAIL)
             
         except Exception as e:
             logging.error(f"Test failed with error: {str(e)}")
@@ -193,7 +194,7 @@ class TestUserResgistration(UserBaseTestCase):
 
     def test_successful_logout(self):
         """ Test for logout functionality with different token scenarios """
-        auth_token, user_loggedin_data = self.get_token_and_loggedin_user('joetester@se.com', 'test')
+        auth_token, user_loggedin_data = self.get_token_and_loggedin_user(TEST_USER_EMAIL, TEST_USER_PASSWORD)
         with self.client:
             try:
                 # Test Case 1: Valid token logout
