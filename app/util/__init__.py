@@ -2,8 +2,6 @@ import datetime
 import jwt
 from app.config import Config
 from flask_restx import fields
-from flask import Blueprint
-from flask_restx import Api
 
 
 class TokenUtil:
