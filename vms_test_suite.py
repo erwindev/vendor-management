@@ -1,6 +1,4 @@
 import unittest
-import logging
-from app import create_app
 
 class TestApp():
     def suite(self):
