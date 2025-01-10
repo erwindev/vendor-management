@@ -22,7 +22,9 @@ logging.basicConfig(
 def create_app():
 
     environment = os.environ.get('FLASK_ENV') or 'development'
-    print('Environment: {}'.format(environment))
+
+    # Use logging instead of print
+    logging.info('Environment: {}'.format(environment))
 
     app = Flask(__name__)
 
@@ -65,6 +67,10 @@ def create_app():
         file_handler = logging.FileHandler('logs/vms.log')
         file_handler.setLevel(logging.INFO)
         app.logger.addHandler(file_handler)
+
+    # Reduce SQLAlchemy logging during tests
+    if os.environ.get('FLASK_ENV') == 'test':
+        logging.getLogger('sqlalchemy.engine').setLevel(logging.WARNING)
 
     return app
 

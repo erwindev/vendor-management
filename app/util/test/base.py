@@ -3,11 +3,8 @@ import unittest
 import json
 from flask_testing import TestCase
 
-from app import create_app
-from app import db
+from app import db, app
 from app.user.models.user import User
-
-app = create_app()
 
 class BaseTestCase(TestCase):
     """ Base Tests - Contains core testing functionality and common helper methods """
@@ -71,6 +68,8 @@ class BaseTestCase(TestCase):
                 },
                 mimetype='application/json'
             )
+            print("------resp-----")
+            print(resp)
             if resp.status_code == 200:
                 response_data = json.loads(resp.data)
                 auth_token = response_data['authdata']['token']

@@ -1,8 +1,10 @@
+import logging
 import os
 from dotenv import load_dotenv
 
 
 basedir = os.path.abspath(os.path.dirname(__file__))
+logging.info('Loading environment variables from .env file')
 load_dotenv(os.path.join(basedir, '.env'))
 
 
@@ -12,6 +14,7 @@ class Config:
     CURRENT_VERSION = os.getenv('CURRENT_VERSION') or 'development'
     SERVICE_NAME = os.getenv('SERVICE_NAME') or 'Vendor Management System'
     DEBUG = False
+    LOG_LEVEL = logging.INFO
 
 
 class DevelopmentConfig(Config):
@@ -21,7 +24,8 @@ class DevelopmentConfig(Config):
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     PRESERVE_CONTEXT_ON_EXCEPTION = False
     SQLALCHEMY_POOL_SIZE = None
-    SQLALCHEMY_ECHO = True
+    SQLALCHEMY_ECHO = False
+    LOG_LEVEL = logging.DEBUG
 
 
 class TestingConfig(Config):
@@ -33,6 +37,8 @@ class TestingConfig(Config):
     SQLALCHEMY_TRACK_MODIFICATIONS = False    
     PRESERVE_CONTEXT_ON_EXCEPTION = False
     SQLALCHEMY_POOL_SIZE = None
+    SQLALCHEMY_ECHO = False
+    LOG_LEVEL = logging.DEBUG
 
 
 class ProductionConfig(Config):
@@ -50,6 +56,7 @@ class ProductionConfig(Config):
                                                                    POSTGRES_DB)
     SQLALCHEMY_POOL_SIZE = os.getenv('SQLALCHEMY_POOL_SIZE') or 10
     SQLALCHEMY_TRACK_MODIFICATIONS = False                                                                   
+    LOG_LEVEL = logging.WARNING
 
 
 config_by_name = dict(

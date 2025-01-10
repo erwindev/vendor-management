@@ -1,4 +1,5 @@
 import unittest
+import logging
 from app import create_app
 
 class TestApp():
@@ -22,5 +23,5 @@ class TestApp():
         return suite
 
 if __name__ == '__main__':
-    app = create_app()
+    # logging.info('Running test suite')
     unittest.TextTestRunner(verbosity=2).run(TestApp().suite())    

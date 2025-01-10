@@ -1,11 +1,10 @@
 import os
 import unittest
 from flask_cors import CORS
-from app import create_app
+from app import app
 from vms_test_suite import TestApp
 
     
-app = create_app()
 cors = CORS(app, resources={r"/*": {"origins": "*"}})    
 
 
