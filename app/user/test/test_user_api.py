@@ -5,38 +5,13 @@ from app.util.test.base import BaseTestCase
 import logging
 
 class TestUserResgistration(UserBaseTestCase):
-    def setUp(self):
-        # Initialize base test cases and set up test environment
-        BaseTestCase.setUp(self)
-        UserBaseTestCase.setUp(self)
-        
-        # Authenticate test user and get access token
-        self.auth_token, self.user_loggedin_data = self.get_token_and_loggedin_user('joetester@se.com', 'test')
-        if not self.auth_token:
-            raise Exception("Failed to get auth token")
-        if not self.user_loggedin_data:
-            raise Exception("Failed to get user data")
-        
-        # Extract user ID from login response, handling different possible response structures
-        try:
-            self.user_id = self.user_loggedin_data.get('user', {}).get('id')
-            if not self.user_id:
-                # Check alternative response formats for user ID
-                self.user_id = (self.user_loggedin_data.get('authdata', {}).get('id') or 
-                              self.user_loggedin_data.get('id'))
-            
-            if not self.user_id:
-                raise KeyError("Could not find user ID in any expected location")
-                
-        except Exception as e:
-            logging.error(f"Could not find user ID in login response: {e}")
-            raise
 
     def test_registration(self):
         """ Test for user registration """
+        auth_token, user_loggedin_data = self.get_token_and_loggedin_user('joetester@se.com', 'test')
         with self.client:
             try:
-                response = self.register_user(self.auth_token)
+                response = self.register_user(auth_token)
                 
                 if response.status_code == 404:
                     self.fail("Endpoint not found. Check URL path.")
@@ -55,13 +30,14 @@ class TestUserResgistration(UserBaseTestCase):
         Test registration with duplicate user credentials
         Expected behavior: Should return 409 Conflict status code
         """
+        auth_token, user_loggedin_data = self.get_token_and_loggedin_user('joetester@se.com', 'test')
         with self.client:
             try:
                 # First registration attempt should succeed
-                response = self.register_user(self.auth_token)
+                response = self.register_user(auth_token)
                 
                 # Second registration attempt with same credentials should fail
-                response = self.register_user(self.auth_token)
+                response = self.register_user(auth_token)
                 
                 data = json.loads(response.data.decode())
                 
@@ -73,10 +49,11 @@ class TestUserResgistration(UserBaseTestCase):
 
     def test_get_user(self):
         """Test for getting user"""
+        auth_token, user_loggedin_data = self.get_token_and_loggedin_user('joetester@se.com', 'test')
         with self.client:
             try:
                 # First register a user
-                reg_response = self.register_user(self.auth_token)
+                reg_response = self.register_user(auth_token)
                 reg_data = json.loads(reg_response.data.decode())
                 
                 # Get user ID from response
@@ -85,7 +62,7 @@ class TestUserResgistration(UserBaseTestCase):
                     self.fail("No user ID in registration response")
                 
                 # Then try to get the user
-                response = self.get_user(self.auth_token, user_id)
+                response = self.get_user(auth_token, user_id)
                 self.assertEqual(response.status_code, 200)
                 
                 data = json.loads(response.data.decode())
@@ -102,8 +79,9 @@ class TestUserResgistration(UserBaseTestCase):
 
     def test_get_all_user(self):
         """ Test for getting all users """
+        auth_token, user_loggedin_data = self.get_token_and_loggedin_user('joetester@se.com', 'test')
         with self.client:
-            response = self.get_all_user(self.auth_token)
+            response = self.get_all_user(auth_token)
             data = json.loads(response.data.decode())
             
             # Check response structure
@@ -137,9 +115,11 @@ class TestUserResgistration(UserBaseTestCase):
         2. Update user information
         3. Verify the updates were successful
         """
+        auth_token, user_loggedin_data = self.get_token_and_loggedin_user('joetester@se.com', 'test')
+        user_id = user_loggedin_data['authdata']['id']
         with self.client:
             # Fetch initial user details
-            response = self.get_user(self.auth_token, self.user_id)
+            response = self.get_user(auth_token, user_id)
             data = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 200)
             self.assertEqual(response.content_type, 'application/json')
@@ -151,8 +131,8 @@ class TestUserResgistration(UserBaseTestCase):
 
             # Perform user update
             response = self.update_user(
-                self.auth_token, 
-                self.user_id,
+                auth_token, 
+                user_id,
                 'joex',
                 'testerx',
                 'act'
@@ -162,7 +142,7 @@ class TestUserResgistration(UserBaseTestCase):
             self.assertEqual(response.content_type, 'application/json')
 
             # Verify the updates were applied correctly
-            response = self.get_user(self.auth_token, self.user_id)
+            response = self.get_user(auth_token, user_id)
             data = json.loads(response.data.decode())
             self.assertEqual(data['user']['email'], 'joetester@se.com')
             self.assertEqual(data['user']['firstname'], 'joex')
@@ -173,8 +153,10 @@ class TestUserResgistration(UserBaseTestCase):
     def test_changepassword(self):                         
         """ Test for changing password """
         try:
+            auth_token, user_loggedin_data = self.get_token_and_loggedin_user('joetester@se.com', 'test')
+            user_id = user_loggedin_data['authdata']['id']
             # Get user details using self.auth_token and self.user_id from setUp
-            response = self.get_user(self.auth_token, self.user_id)
+            response = self.get_user(auth_token, user_id)
             data = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 200)
             self.assertEqual(response.content_type, 'application/json')
@@ -186,8 +168,8 @@ class TestUserResgistration(UserBaseTestCase):
 
             # Change password
             response = self.change_password(
-                self.auth_token, 
-                self.user_id, 
+                auth_token, 
+                user_id, 
                 'test', 
                 'my-new-password'
             )
@@ -234,7 +216,8 @@ class TestUserResgistration(UserBaseTestCase):
 
         try:
             # Test Case 1: Valid token logout
-            response = self.logged_out(self.auth_token)
+            auth_token, user_loggedin_data = self.get_token_and_loggedin_user('joetester@se.com', 'test')
+            response = self.logged_out(auth_token)
             verify_response(
                 response, 
                 200, 
@@ -243,7 +226,7 @@ class TestUserResgistration(UserBaseTestCase):
             )
 
             # Test Case 2: Blacklisted token logout
-            response = self.logged_out(self.auth_token)
+            response = self.logged_out(auth_token)
             verify_response(
                 response, 
                 403, 

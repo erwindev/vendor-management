@@ -1,7 +1,12 @@
 import unittest
 
+from app.util.test.base import BaseTestCase
+
 class TestApp():
     def suite(self):
+        # Initialize base test cases and set up test environment
+        BaseTestCase.setUp(self)
+
         suite = unittest.TestSuite()
 
         user_tests = unittest.TestLoader().discover(start_dir='app/user/test', pattern='test_*.py')

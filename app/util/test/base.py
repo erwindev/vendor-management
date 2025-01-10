@@ -6,7 +6,7 @@ from app import db, app
 from app.user.models.user import User
 
 class BaseTestCase(TestCase):
-    """ Base Tests - Contains core testing functionality and common helper methods """
+    """ Base Tests - Contains core testing functionality and common helper methods """    
 
     def create_app(self):      
         # Returns the Flask application instance for testing
@@ -14,6 +14,7 @@ class BaseTestCase(TestCase):
 
     def setUp(self):
         # Set up test database and create a test user before each test
+        db.drop_all()
         db.create_all()
         user = User()
         user.firstname = 'joe'
@@ -58,7 +59,7 @@ class BaseTestCase(TestCase):
         Returns:
             tuple: (auth_token, user_data) or (None, None) if login fails
         """
-        with self.client as client:
+        with app.test_client() as client:
             resp = client.post(
                 '/u/v1/auth/login',
                 json={

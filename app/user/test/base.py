@@ -3,19 +3,7 @@ from app import app
 from app.util.test.base import BaseTestCase
 
 class UserBaseTestCase(BaseTestCase):
-    """
-    Base test case class for user-related API endpoints.
-    Provides helper methods for common user operations in tests.
-    """
-    def setUp(self):
-        """
-        Initialize test environment with Flask test client and base URL.
-        Called before each test method.
-        """
-        self.app = app
-        self.client = self.app.test_client()
-        self.base_url = 'http://localhost:5000'  # Base URL for API endpoints
-        
+
     ######################
     # User API Methods
     # Helper methods for testing user-related endpoints
@@ -31,10 +19,8 @@ class UserBaseTestCase(BaseTestCase):
         Returns:
             Response: Flask response object from the registration request
         """
-        url = f'{self.base_url}/u/v1/user'
-        
         return app.test_client().post(
-            url,
+            '/u/v1/user',
             headers={
                 'Authorization': f'Bearer {auth_token}',
                 'Content-Type': 'application/json'
@@ -52,7 +38,7 @@ class UserBaseTestCase(BaseTestCase):
         Update an existing user's information.
         """
         return app.test_client().put(
-            f'{self.base_url}/u/v1/user',
+            '/u/v1/user',
             headers={
                 'Authorization': f'Bearer {auth_token}',
                 'Content-Type': 'application/json'
@@ -70,7 +56,7 @@ class UserBaseTestCase(BaseTestCase):
         Change a user's password.
         """
         return app.test_client().post(
-            f'{self.base_url}/u/v1/user/changepassword',
+            '/u/v1/user/changepassword',
             headers={
                 'Authorization': f'Bearer {auth_token}',
                 'Content-Type': 'application/json'
@@ -93,9 +79,8 @@ class UserBaseTestCase(BaseTestCase):
         Returns:
             Response: Flask response object containing user data
         """
-        url = f'{self.base_url}/u/v1/user/{user_id}'
-        return self.client.get(
-            url,
+        return app.test_client().get(
+            f'/u/v1/user/{user_id}',
             headers={'Authorization': f'Bearer {auth_token}'}
         )    
 
@@ -110,6 +95,6 @@ class UserBaseTestCase(BaseTestCase):
             Response: Flask response object containing all users' data
         """
         return app.test_client().get(
-            f'{self.base_url}/u/v1/user',
+            f'/u/v1/user',
             headers={'Authorization': f'Bearer {auth_token}'}
         )  
