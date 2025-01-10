@@ -1,7 +1,6 @@
 import unittest
 import json
 from app.user.test.base import UserBaseTestCase
-from app.util.test.base import BaseTestCase
 import logging
 from app.util.constants import TEST_USER_EMAIL, TEST_USER_PASSWORD
 
