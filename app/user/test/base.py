@@ -1,5 +1,5 @@
 import json
-from vms import app
+from app import app
 from app.util.test.base import BaseTestCase
 
 class UserBaseTestCase(BaseTestCase):
@@ -33,7 +33,7 @@ class UserBaseTestCase(BaseTestCase):
         """
         url = f'{self.base_url}/u/v1/user'
         
-        return self.client.post(
+        return app.test_client().post(
             url,
             headers={
                 'Authorization': f'Bearer {auth_token}',
@@ -51,7 +51,7 @@ class UserBaseTestCase(BaseTestCase):
         """
         Update an existing user's information.
         """
-        return self.client.put(
+        return app.test_client().put(
             f'{self.base_url}/u/v1/user',
             headers={
                 'Authorization': f'Bearer {auth_token}',
@@ -69,7 +69,7 @@ class UserBaseTestCase(BaseTestCase):
         """
         Change a user's password.
         """
-        return self.client.post(
+        return app.test_client().post(
             f'{self.base_url}/u/v1/user/changepassword',
             headers={
                 'Authorization': f'Bearer {auth_token}',
@@ -109,7 +109,7 @@ class UserBaseTestCase(BaseTestCase):
         Returns:
             Response: Flask response object containing all users' data
         """
-        return self.client.get(
+        return app.test_client().get(
             f'{self.base_url}/u/v1/user',
             headers={'Authorization': f'Bearer {auth_token}'}
         )  
