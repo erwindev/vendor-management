@@ -4,7 +4,7 @@ import logging
 
 from app import db, app
 from app.user.models.user import User
-from app.util.constants import TEST_USER_EMAIL, TEST_USER_PASSWORD
+from app.util.constants import TEST_FIRSTNAME, TEST_LASTNAME, TEST_USER_EMAIL, TEST_USER_PASSWORD
 
 class BaseTestCase(TestCase):
     """ Base Tests - Contains core testing functionality and common helper methods """    
@@ -18,8 +18,8 @@ class BaseTestCase(TestCase):
         db.drop_all()
         db.create_all()
         user = User()
-        user.firstname = 'joe'
-        user.lastname = 'tester'
+        user.firstname = TEST_FIRSTNAME
+        user.lastname = TEST_LASTNAME
         user.email = TEST_USER_EMAIL
         user.set_password(TEST_USER_PASSWORD)
         db.session.add(user)
@@ -212,7 +212,7 @@ class BaseTestCase(TestCase):
                 country = contact.country,
                 zipcode = contact.zipcode,
                 status = contact.status,
-                user_by = 'ealberto'            
+                user_by = 'xxxx'            
             )),
             content_type='application/json'
         )        
