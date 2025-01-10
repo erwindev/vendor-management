@@ -1,5 +1,6 @@
 import json
 from flask_testing import TestCase
+import logging
 
 from app import db, app
 from app.user.models.user import User
@@ -71,8 +72,8 @@ class BaseTestCase(TestCase):
                 auth_token = response_data['authdata']['token']
                 return auth_token, response_data
             else:
-                print(f"Login failed with status code: {resp.status_code}")
-                print(f"Response: {resp.data}")
+                logging.error(f"Login failed with status code: {resp.status_code}")
+                logging.error(f"Response: {resp.data}")
                 return None, None
 
     def logged_out(self, auth_token):

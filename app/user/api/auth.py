@@ -4,6 +4,7 @@ from app.user.dao.user import UserDao, BlackListTokenDao
 from app.user.models.user import User, BlackListToken
 from app.util.exception import ApplicationException
 from app.util import TokenUtil
+import logging
 
 
 # Data Transfer Object for authentication-related API models
@@ -99,7 +100,7 @@ class UserLogin(Resource):
 
         except Exception as e:
             # Log any unexpected errors and return generic error response
-            print(f"Exception occurred: {str(e)}")
+            logging.error(f"Login failed: {str(e)}")
             return {
                 'authdata': None,
                 'result': {

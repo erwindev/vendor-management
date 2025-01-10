@@ -2,6 +2,7 @@ import unittest
 import json
 from app.user.test.base import UserBaseTestCase
 from app.util.test.base import BaseTestCase
+import logging
 
 class TestUserResgistration(UserBaseTestCase):
     def setUp(self):
@@ -28,8 +29,8 @@ class TestUserResgistration(UserBaseTestCase):
                 raise KeyError("Could not find user ID in any expected location")
                 
         except Exception as e:
-            print("Login response structure:", self.user_loggedin_data)
-            raise Exception(f"Could not find user ID in login response: {e}")
+            logging.error(f"Could not find user ID in login response: {e}")
+            raise
 
     def test_registration(self):
         """ Test for user registration """
@@ -46,7 +47,7 @@ class TestUserResgistration(UserBaseTestCase):
                 data = json.loads(response.data.decode())
                 self.assertTrue(data['status'] == 'success')
             except Exception as e:
-                print(f"Error occurred: {str(e)}")
+                logging.error(f"Error occurred: {str(e)}")
                 raise
 
     def test_registered_with_already_registered_user(self):
@@ -67,7 +68,7 @@ class TestUserResgistration(UserBaseTestCase):
                 self.assertEqual(response.status_code, 409)  # Conflict status code
                 self.assertEqual(data.get('status'), 'fail')
             except Exception as e:
-                print(f"Error occurred: {str(e)}")
+                logging.error(f"Error occurred: {str(e)}")
                 raise
 
     def test_get_user(self):
@@ -96,7 +97,7 @@ class TestUserResgistration(UserBaseTestCase):
                 self.assertEqual(data['user']['lastname'], 'alberto')
                 
             except Exception as e:
-                print(f"Error occurred: {str(e)}")
+                logging.error(f"Error occurred: {str(e)}")
                 raise
 
     def test_get_all_user(self):
@@ -204,7 +205,7 @@ class TestUserResgistration(UserBaseTestCase):
             self.assertEqual(data['authdata']['email'], 'joetester@se.com')
             
         except Exception as e:
-            print(f"Test failed with error: {str(e)}")
+            logging.error(f"Test failed with error: {str(e)}")
             raise
 
 
@@ -260,7 +261,8 @@ class TestUserResgistration(UserBaseTestCase):
             )
 
         except Exception as e:
-            self.fail(f"Test failed with error: {str(e)}")
+            logging.error(f"Test failed with error: {str(e)}")
+            raise
 
 
 if __name__ == '__main__':
