@@ -1,5 +1,3 @@
-import os
-import unittest
 import json
 from flask_testing import TestCase
 
