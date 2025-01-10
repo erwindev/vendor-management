@@ -192,60 +192,37 @@ class TestUserResgistration(UserBaseTestCase):
 
 
     def test_successful_logout(self):
-        """
-        Test logout functionality with different token scenarios:
-        1. Valid token logout
-        2. Already blacklisted token logout
-        3. Invalid token logout
-        """
-        def verify_response(response, expected_status_code, expected_status, expected_message):
-            """
-            Helper function to verify logout response
-            Args:
-                response: HTTP response object
-                expected_status_code: Expected HTTP status code
-                expected_status: Expected status message
-                expected_message: Expected response message
-            """
-            data = json.loads(response.data.decode())
-            self.assertEqual(response.status_code, expected_status_code)
-            self.assertEqual(response.content_type, 'application/json')
-            self.assertEqual(data['status'], expected_status)
-            self.assertEqual(data['message'], expected_message)
-            return data
+        """ Test for logout functionality with different token scenarios """
+        auth_token, user_loggedin_data = self.get_token_and_loggedin_user('joetester@se.com', 'test')
+        with self.client:
+            try:
+                # Test Case 1: Valid token logout
+                response = self.logged_out(auth_token)
+                data = json.loads(response.data.decode())
+                self.assertEqual(response.status_code, 200)
+                self.assertEqual(response.content_type, 'application/json')
+                self.assertEqual(data['status'], 'success')
+                self.assertEqual(data['message'], 'Successfully logged out.')
 
-        try:
-            # Test Case 1: Valid token logout
-            auth_token, user_loggedin_data = self.get_token_and_loggedin_user('joetester@se.com', 'test')
-            response = self.logged_out(auth_token)
-            verify_response(
-                response, 
-                200, 
-                'success',
-                'Successfully logged out.'
-            )
+                # Test Case 2: Blacklisted token logout
+                response = self.logged_out(auth_token)
+                data = json.loads(response.data.decode())
+                self.assertEqual(response.status_code, 403)
+                self.assertEqual(response.content_type, 'application/json')
+                self.assertEqual(data['status'], 'fail')
+                self.assertEqual(data['message'], 'Token is blacklisted.')
 
-            # Test Case 2: Blacklisted token logout
-            response = self.logged_out(auth_token)
-            verify_response(
-                response, 
-                403, 
-                'fail',
-                'Token is blacklisted.'
-            )
+                # Test Case 3: Invalid token logout
+                response = self.logged_out('xxx')
+                data = json.loads(response.data.decode())
+                self.assertEqual(response.status_code, 401)
+                self.assertEqual(response.content_type, 'application/json')
+                self.assertEqual(data['status'], 'fail')
+                self.assertEqual(data['message'], 'Invalid token.')
 
-            # Test Case 3: Invalid token logout
-            response = self.logged_out('xxx')
-            verify_response(
-                response, 
-                401, 
-                'fail',
-                'Invalid token.'
-            )
-
-        except Exception as e:
-            logging.error(f"Test failed with error: {str(e)}")
-            raise
+            except Exception as e:
+                logging.error(f"Test failed with error: {str(e)}")
+                raise
 
 
 if __name__ == '__main__':
