@@ -63,7 +63,6 @@ Another way of interacting with this application is through a REST APIs.  To see
 ## Test the application
 Run unittest
 ```
-$ export FLASK_ENV=test
 $ flask test
 ```
 Run test coverage and show coverage reports
