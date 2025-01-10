@@ -1,6 +1,6 @@
+import os
 import unittest
-import logging
-from app import create_app
+from app import app
 from app.util.test.base import BaseTestCase
 
 class TestApp():
@@ -27,11 +27,6 @@ class TestApp():
         return suite
 
 if __name__ == '__main__':
-    # Set the environment to test
-    environment = 'test'
-    logging.info('Environment: {}'.format(environment)) 
-
-    app = create_app(environment)
     with app.app_context():
         result = unittest.TextTestRunner(verbosity=2).run(TestApp().suite())    
         exit(not result.wasSuccessful())

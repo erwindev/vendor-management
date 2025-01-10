@@ -14,7 +14,20 @@ class Config:
     CURRENT_VERSION = os.getenv('CURRENT_VERSION') or 'development'
     SERVICE_NAME = os.getenv('SERVICE_NAME') or 'Vendor Management System'
     DEBUG = False
-    LOG_LEVEL = logging.INFO
+
+    # Logging Configuration
+    LOGGING_LEVEL = logging.INFO
+    LOGGING_FORMAT = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    LOGGING_LOCATION = None  # None means log to console
+    LOGGING_FILENAME = None  # None means log to console
+
+    @staticmethod
+    def init_app(app):
+        # Set up basic logging to console
+        logging.basicConfig(
+            level=app.config['LOGGING_LEVEL'],
+            format=app.config['LOGGING_FORMAT']
+        )
 
 
 class DevelopmentConfig(Config):
@@ -25,7 +38,7 @@ class DevelopmentConfig(Config):
     PRESERVE_CONTEXT_ON_EXCEPTION = False
     SQLALCHEMY_POOL_SIZE = None
     SQLALCHEMY_ECHO = False
-    LOG_LEVEL = logging.DEBUG
+    LOG_LEVEL = logging.INFO
 
 
 class TestingConfig(Config):
@@ -38,7 +51,7 @@ class TestingConfig(Config):
     PRESERVE_CONTEXT_ON_EXCEPTION = False
     SQLALCHEMY_POOL_SIZE = None
     SQLALCHEMY_ECHO = False
-    LOG_LEVEL = logging.DEBUG
+    LOG_LEVEL = logging.INFO
 
 
 class ProductionConfig(Config):

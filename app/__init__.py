@@ -19,19 +19,14 @@ logging.basicConfig(
     format='%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]'
 )
 
-def create_app():
-
-    environment = os.environ.get('FLASK_ENV') or 'development'
-
-    # Use logging instead of print
-    logging.info('Environment: {}'.format(environment))
-
+def create_app(config_name='default'):
     app = Flask(__name__)
-
+    
+    # Load config
+    app.config.from_object(config_by_name[config_name])
+    config_by_name[config_name].init_app(app)  # Initialize logging
+    
     bootstrap.init_app(app)
-
-    # load the config
-    app.config.from_object(config_by_name[environment])
 
     # initialize the database and create tables
     from app.user.models.user import User, BlackListToken
@@ -74,5 +69,10 @@ def create_app():
 
     return app
 
+#load the environment
+environment = os.environ.get('FLASK_ENV') or 'development'
+# Use logging instead of print
+logging.info('Environment: {}'.format(environment))
+print(environment)
 # Create the app instance
-app = create_app()
+app = create_app(environment)
